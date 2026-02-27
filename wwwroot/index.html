@@ -81,7 +81,7 @@
                 background-color: #2980b9;
             }
 
-        /* Kartların boyutu buradan küçültüldü */
+      
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -248,7 +248,7 @@
                 return;
             }
 
-            // Butonu geçici olarak devre dışı bırak ki üst üste tıklanmasın
+            // Butonu geçici olarak devre dışı bırak
             const btn = document.querySelector('.add-btn');
             btn.disabled = true;
             btn.innerText = "Ekleniyor...";
@@ -284,7 +284,7 @@
         // Sayfa ilk açıldığında verileri yükle
         loadIps();
 
-        // 30 saniyede bir tabloyu otomatik güncelle
+        // 15 saniyede bir tabloyu otomatik güncelle
         setInterval(loadIps, 15000);
     </script>
 </body>
