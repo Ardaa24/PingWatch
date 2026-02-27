@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PingWatch.Data;
 using PingWatch.Models;
-using System.Net;
 
 namespace PingWatch.Controllers;
 
@@ -17,7 +16,6 @@ public class IpController : ControllerBase
         _context = context;
     }
 
-    // 📌 IP Listeleme
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -25,26 +23,11 @@ public class IpController : ControllerBase
         return Ok(ips);
     }
 
-    // 📌 IP Ekleme
     [HttpPost]
     public async Task<IActionResult> Add(IpAddress model)
     {
         _context.IpAddresses.Add(model);
         await _context.SaveChangesAsync();
         return Ok(model);
-    }
-
-    // 📌 IP Silme
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var ip = await _context.IpAddresses.FindAsync(id);
-        if (ip == null)
-            return NotFound();
-
-        _context.IpAddresses.Remove(ip);
-        await _context.SaveChangesAsync();
-
-        return Ok();
     }
 }
