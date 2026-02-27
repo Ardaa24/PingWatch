@@ -239,16 +239,24 @@
             font-size: 12px;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s;
             margin-top: 5px;
             width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
 
-            .delete-btn:hover {
-                background-color: #e74c3c;
-                color: white;
-                border-color: #e74c3c;
-            }
+        /* KARTIN ÜSTÜNE GELİNDİĞİNDE BUTONU GÖSTER */
+        .card:hover .delete-btn {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .delete-btn:hover {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #e74c3c;
+        }
 
         footer {
             background-color: #2c3e50;
@@ -284,7 +292,7 @@
         <div class="nav-links">
             <a href="#" class="nav-link active">Anasayfa</a>
             <a href="#" class="nav-link disabled">Sıcaklık İzleme</a>
-            <a href="#" class="nav-link disabled">Ayarlar</a>
+            <a href="#" class="nav-link disabled">İstatistik</a>
         </div>
     </nav>
 
