@@ -1,60 +1,212 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PingWatch</title>
     <style>
         body {
-            font-family: Arial;
-            margin: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        table {
-            border-collapse: collapse;
-            width: 400px;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
+        .hero {
+            background-color: #2c3e50;
+            color: white;
             text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        button {
-            padding: 5px 10px;
+        .hero-logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 10px;
         }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 0 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            padding: 10px 15px;
+            font-size: 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 250px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+            input[type="text"]:focus {
+                border-color: #3498db;
+            }
+
+        .add-btn {
+            padding: 10px 20px;
+            font-size: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+            .add-btn:hover {
+                background-color: #2980b9;
+            }
+
+        /* Kartların boyutu buradan küçültüldü */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            .card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            }
+
+            .card.up {
+                border-top: 4px solid #2ecc71;
+            }
+
+            .card.down {
+                border-top: 4px solid #e74c3c;
+            }
+
+        .ip-address {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+
+        .status {
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 15px;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+            .status.up {
+                background-color: #e8f8f5;
+                color: #2ecc71;
+            }
+
+            .status.down {
+                background-color: #fdedec;
+                color: #e74c3c;
+            }
+
+        .delete-btn {
+            background-color: transparent;
+            color: #95a5a6;
+            border: 1px solid #bdc3c7;
+            padding: 5px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+            .delete-btn:hover {
+                background-color: #e74c3c;
+                color: white;
+                border-color: #e74c3c;
+            }
+
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: auto;
+            font-size: 14px;
+        }
+
+            footer a {
+                color: #3498db;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                }
     </style>
 </head>
 <body>
 
-    <h2>PingWatch - IP Monitoring</h2>
+    <div class="hero">
+        <img src="https://via.placeholder.com/150x50?text=LOGO" alt="PingWatch Logo" class="hero-logo">
+        <h1>PingWatch - Ağ İzleme Paneli</h1>
+    </div>
 
-    <input type="text" id="ipInput" placeholder="IP Address" />
-    <button onclick="addIp()">Ekle</button>
+    <div class="main-content">
+        <div class="controls">
+            <input type="text" id="ipInput" placeholder="IP Adresi (Örn: 192.168.1.1)" />
+            <button class="add-btn" onclick="addIp()">Ekle</button>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <!--<th>ID</th>-->
-                <th>IP</th>
-                <th>Durum</th>
-            </tr>
-        </thead>
-        <tbody id="ipTable"></tbody>
-    </table>
+        <div class="dashboard" id="ipCards"></div>
+    </div>
+
+    <footer>
+        <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p>
+    </footer>
 
     <script>
-
         const baseUrl = "/api/Ip";
 
-        // deleteIp fonksiyonunu global kapsama (dışarıya) aldık
         async function deleteIp(id) {
             try {
                 await fetch(baseUrl + "/" + id, {
                     method: "DELETE"
                 });
-
-                // Silme işlemi bittikten sonra tabloyu güncelle
                 loadIps();
             } catch (error) {
                 console.error("Silme hatası:", error);
@@ -62,51 +214,78 @@
         }
 
         async function loadIps() {
-            const response = await fetch(baseUrl);
-            const data = await response.json();
+            try {
+                const response = await fetch(baseUrl);
+                const data = await response.json();
 
-            const table = document.getElementById("ipTable");
-            table.innerHTML = "";
+                const container = document.getElementById("ipCards");
+                container.innerHTML = "";
 
-            data.forEach(ip => {
-                table.innerHTML += `
-        <tr>
-            <td>${ip.address}</td>
-            <td style="color:${ip.isUp ? 'green' : 'red'}">
-                ${ip.isUp ? "UP" : "DOWN"}
-            </td>
-            <td>
-                <button onclick="deleteIp(${ip.id})">Sil</button>
-            </td>
-        </tr>
-        `;
-            });
-        
+                data.forEach(ip => {
+                    const isUp = ip.isUp;
+                    const cardClass = isUp ? "up" : "down";
+                    const statusText = isUp ? "ONLİNE" : "OFFLİNE";
+
+                    container.innerHTML += `
+                            <div class="card ${cardClass}">
+                                <div class="status ${cardClass}">${statusText}</div>
+                                <div class="ip-address">${ip.address}</div>
+                                <button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>
+                            </div>
+                        `;
+                });
+            } catch (error) {
+                console.error("Yükleme hatası:", error);
+            }
         }
 
         async function addIp() {
-            const ipValue = document.getElementById("ipInput").value;
+            const ipInput = document.getElementById("ipInput");
+            const ipValue = ipInput.value.trim();
 
-            await fetch(baseUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    address: ipValue,
-                    isUp: false,
-                    isActive: true
-                })
-            });
+            if (!ipValue) {
+                alert("Lütfen bir IP adresi girin!");
+                return;
+            }
 
-            document.getElementById("ipInput").value = "";
-            loadIps();
+            // Butonu geçici olarak devre dışı bırak ki üst üste tıklanmasın
+            const btn = document.querySelector('.add-btn');
+            btn.disabled = true;
+            btn.innerText = "Ekleniyor...";
+
+            try {
+                const response = await fetch(baseUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        address: ipValue,
+                        isUp: false,
+                        isActive: true
+                    })
+                });
+
+                if (response.ok) {
+                    ipInput.value = "";
+                    loadIps();
+                } else {
+                    alert("IP eklenirken sunucuda bir hata oluştu.");
+                }
+            } catch (error) {
+                console.error("Ekleme hatası:", error);
+            } finally {
+                // İşlem bitince butonu eski haline getir
+                btn.disabled = false;
+                btn.innerText = "Ekle";
+            }
         }
 
-        // Sayfa yüklendiğinde IP'leri getir
+        // Sayfa ilk açıldığında verileri yükle
         loadIps();
 
+        // 30 saniyede bir tabloyu otomatik güncelle
+        setInterval(loadIps, 15000);
     </script>
-
 </body>
 </html>
