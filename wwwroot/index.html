@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PingWatch</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 400px;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>PingWatch - IP Monitoring</h2>
+
+    <input type="text" id="ipInput" placeholder="IP Address" />
+    <button onclick="addIp()">Ekle</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>IP</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody id="ipTable"></tbody>
+    </table>
+
+    <script>
+
+const baseUrl = "/api/Ip";
+
+async function loadIps() {
+    const response = await fetch(baseUrl);
+    const data = await response.json();
+
+    const table = document.getElementById("ipTable");
+    table.innerHTML = "";
+
+    data.forEach(ip => {
+        table.innerHTML += `
+            <tr>
+                <td>${ip.id}</td>
+                <td>${ip.address}</td>
+                <td>${ip.isUp ? "UP" : "DOWN"}</td>
+            </tr>
+        `;
+    });
+}
+
+async function addIp() {
+    const ipValue = document.getElementById("ipInput").value;
+
+    await fetch(baseUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            address: ipValue,
+            isUp: false,
+            isActive: true
+        })
+    });
+
+    document.getElementById("ipInput").value = "";
+    loadIps();
+}
+
+loadIps();
+
+    </script>
+
+</body>
+</html>
