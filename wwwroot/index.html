@@ -35,7 +35,7 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th>
+                <!--<th>ID</th>-->
                 <th>IP</th>
                 <th>Durum</th>
             </tr>
@@ -45,19 +45,32 @@
 
     <script>
 
-const baseUrl = "/api/Ip";
+        const baseUrl = "/api/Ip";
 
-async function loadIps() {
-    const response = await fetch(baseUrl);
-    const data = await response.json();
+        // deleteIp fonksiyonunu global kapsama (dışarıya) aldık
+        async function deleteIp(id) {
+            try {
+                await fetch(baseUrl + "/" + id, {
+                    method: "DELETE"
+                });
 
-    const table = document.getElementById("ipTable");
-    table.innerHTML = "";
+                // Silme işlemi bittikten sonra tabloyu güncelle
+                loadIps();
+            } catch (error) {
+                console.error("Silme hatası:", error);
+            }
+        }
 
-    data.forEach(ip => {
-        table.innerHTML += `
+        async function loadIps() {
+            const response = await fetch(baseUrl);
+            const data = await response.json();
+
+            const table = document.getElementById("ipTable");
+            table.innerHTML = "";
+
+            data.forEach(ip => {
+                table.innerHTML += `
         <tr>
-            <td>${ip.id}</td>
             <td>${ip.address}</td>
             <td style="color:${ip.isUp ? 'green' : 'red'}">
                 ${ip.isUp ? "UP" : "DOWN"}
@@ -66,37 +79,32 @@ async function loadIps() {
                 <button onclick="deleteIp(${ip.id})">Sil</button>
             </td>
         </tr>
-    `;
-    });
-    async function deleteIp(id) {
-        await fetch(baseUrl + "/" + id, {
-            method: "DELETE"
-        });
+        `;
+            });
+        
+        }
 
+        async function addIp() {
+            const ipValue = document.getElementById("ipInput").value;
+
+            await fetch(baseUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    address: ipValue,
+                    isUp: false,
+                    isActive: true
+                })
+            });
+
+            document.getElementById("ipInput").value = "";
+            loadIps();
+        }
+
+        // Sayfa yüklendiğinde IP'leri getir
         loadIps();
-    }
-}
-
-async function addIp() {
-    const ipValue = document.getElementById("ipInput").value;
-
-    await fetch(baseUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            address: ipValue,
-            isUp: false,
-            isActive: true
-        })
-    });
-
-    document.getElementById("ipInput").value = "";
-    loadIps();
-}
-
-loadIps();
 
     </script>
 
