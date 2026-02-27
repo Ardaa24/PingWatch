@@ -56,13 +56,25 @@ async function loadIps() {
 
     data.forEach(ip => {
         table.innerHTML += `
-            <tr>
-                <td>${ip.id}</td>
-                <td>${ip.address}</td>
-                <td>${ip.isUp ? "UP" : "DOWN"}</td>
-            </tr>
-        `;
+        <tr>
+            <td>${ip.id}</td>
+            <td>${ip.address}</td>
+            <td style="color:${ip.isUp ? 'green' : 'red'}">
+                ${ip.isUp ? "UP" : "DOWN"}
+            </td>
+            <td>
+                <button onclick="deleteIp(${ip.id})">Sil</button>
+            </td>
+        </tr>
+    `;
     });
+    async function deleteIp(id) {
+        await fetch(baseUrl + "/" + id, {
+            method: "DELETE"
+        });
+
+        loadIps();
+    }
 }
 
 async function addIp() {
