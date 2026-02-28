@@ -19,27 +19,8 @@ public class IpController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetIps()
     {
+        
         var ips = await _context.IpAddresses.ToListAsync();
-
-        foreach (var ip in ips)
-        {
-            using (Ping ping = new Ping())
-            {
-                try
-                {
-                    // Timeout süresi eklemek (örn: 1000ms) her zaman daha iyidir
-                    PingReply reply = await ping.SendPingAsync(ip.Address, 1000);
-                    ip.IsUp = (reply.Status == IPStatus.Success);
-                }
-                catch (Exception)
-                {
-                    // Bir hata oluşursa (adrese ulaşılamazsa) cihazı kapalı say
-                    ip.IsUp = false;
-                }
-            }
-        }
-
-        await _context.SaveChangesAsync();
         return Ok(ips);
     }
 
