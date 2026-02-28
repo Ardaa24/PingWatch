@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="TR-tr">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +17,7 @@
             overflow-x: hidden;
         }
 
-        /* --- YÜKLEME EKRANI (SPLASH SCREEN) CSS --- */
+        /* --- YÜKLEME EKRANI  --- */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -33,7 +33,7 @@
         }
 
         .loading-logo {
-            max-width: 250px;
+            max-width: 200px;
             animation: pulse 1.5s infinite ease-in-out;
         }
 
@@ -54,7 +54,7 @@
             }
         }
 
-        /* --- NAVBAR CSS --- */
+        /* --- NAVBAR  --- */
         .navbar {
             background-color: #1a252f;
             padding: 15px 30px;
@@ -72,11 +72,11 @@
             letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 12px; /* Logo ile yazı arasındaki boşluk */
+            gap: 15px; 
         }
 
         .nav-logo {
-            height:50px; /* Navbar logosunun yüksekliği */
+            height: 55px;
             width: auto;
             border-radius: 4px;
         }
@@ -113,35 +113,70 @@
                 pointer-events: none;
             }
 
-        /* --- İÇERİK VE KARTLAR CSS --- */
+        /* --- HERO VE İSTATİSTİKLER (Küçültüldü) --- */
         .hero {
             background-color: #2c3e50;
             color: white;
             text-align: center;
             padding: 10px 20px;
-            margin-bottom: 25px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
             .hero h1 {
-                margin: 0;
-                font-size: 26px;
+                margin: 0 0 10px 0;
+                font-size: 24px; 
                 letter-spacing: 1px;
             }
 
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px; 
+            margin-bottom: 5px;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            font-size: 13px; 
+            font-weight: bold;
+        }
+
+        .stat-total {
+            color: #ecf0f1;
+        }
+
+        .stat-active {
+            color: #2ecc71;
+        }
+
+        .stat-passive {
+            color: #e74c3c;
+        }
+
+        /* --- İÇERİK KONTROLLERİ --- */
         .main-content {
             flex: 1;
-            padding: 0 20px;
-            max-width: 1000px;
+            padding: 25px 20px;
+            max-width: 1100px;
             margin: 0 auto;
             width: 100%;
         }
 
         .controls {
             display: flex;
-            justify-content: center;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 30px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .add-group, .search-group {
+            display: flex;
+            gap: 10px;
         }
 
         input[type="text"] {
@@ -149,7 +184,7 @@
             font-size: 15px;
             border: 2px solid #ddd;
             border-radius: 6px;
-            width: 250px;
+            width: 220px;
             outline: none;
             transition: border-color 0.3s;
         }
@@ -173,6 +208,7 @@
                 background-color: #2980b9;
             }
 
+        /* --- KARTLAR --- */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -246,7 +282,6 @@
             transition: all 0.3s ease;
         }
 
-        /* KARTIN ÜSTÜNE GELİNDİĞİNDE BUTONU GÖSTER */
         .card:hover .delete-btn {
             opacity: 1;
             visibility: visible;
@@ -262,7 +297,7 @@
             background-color: #2c3e50;
             color: #ecf0f1;
             text-align: center;
-            padding: 10px 0;
+            padding: 15px 0;
             margin-top: auto;
             font-size: 14px;
         }
@@ -287,36 +322,44 @@
     <nav class="navbar">
         <a href="#" class="navbar-brand">
             <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo" class="nav-logo">
-            SiseWatch
+            PingWatch
         </a>
         <div class="nav-links">
             <a href="#" class="nav-link active">Anasayfa</a>
             <a href="#" class="nav-link disabled">Sıcaklık İzleme</a>
-            <a href="#" class="nav-link disabled">İstatistik</a>
+            <a href="#" class="nav-link disabled">Ayarlar</a>
         </div>
     </nav>
 
     <div class="hero">
         <h1>Ağ İzleme Paneli</h1>
+        <div class="stats-container">
+            <div class="stat-box stat-total">Toplam: <span id="countTotal">0</span></div>
+            <div class="stat-box stat-active">Aktif: <span id="countActive">0</span></div>
+            <div class="stat-box stat-passive">Down: <span id="countPassive">0</span></div>
+        </div>
     </div>
 
     <div class="main-content">
         <div class="controls">
-            <input type="text" id="ipInput" placeholder="IP Adresi Ekleyin." />
-            <button class="add-btn" onclick="addIp()">Ekle</button>
+            <div class="add-group">
+                <input type="text" id="ipInput" placeholder="IP Adresi (Örn: 192.168.1.1)" />
+                <button class="add-btn" onclick="addIp()">Cihaz Ekle</button>
+            </div>
+            <div class="search-group">
+                <input type="text" id="searchInput" placeholder="Cihaz Ara..." onkeyup="renderCards()" />
+            </div>
         </div>
 
         <div class="dashboard" id="ipCards"></div>
     </div>
 
     <footer>
-        <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">Arda</a> | Sisecam PingWatch © 2026</p>
+        <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p>
     </footer>
 
     <script>
-        // --- YÜKLEME EKRANI KONTROLÜ ---
         window.addEventListener('load', () => {
-            // 2000 milisaniye (2 saniye) bekle, sonra gizle
             setTimeout(() => {
                 const loader = document.getElementById('loading-screen');
                 loader.style.opacity = '0';
@@ -324,43 +367,53 @@
             }, 2000);
         });
 
-        // --- PING KONTROL İŞLEMLERİ ---
         const baseUrl = "/api/Ip";
-
-        async function deleteIp(id) {
-            try {
-                await fetch(baseUrl + "/" + id, {
-                    method: "DELETE"
-                });
-                loadIps();
-            } catch (error) {
-                console.error("Silme hatası:", error);
-            }
-        }
+        let allData = [];
 
         async function loadIps() {
             try {
                 const response = await fetch(baseUrl);
-                const data = await response.json();
-
-                const container = document.getElementById("ipCards");
-                container.innerHTML = "";
-
-                data.forEach(ip => {
-                    const isUp = ip.isUp;
-                    const cardClass = isUp ? "up" : "down";
-                    const statusText = isUp ? "ONLINE" : "OFFLINE";
-
-                    container.innerHTML += `
-                            <div class="card ${cardClass}">
-                                <div class="status ${cardClass}">${statusText}</div>
-                                <div class="ip-address">${ip.address}</div>
-                                <button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>
-                            </div>
-                        `;
-                });
+                allData = await response.json();
+                renderCards();
             } catch (error) {
                 console.error("Yükleme hatası:", error);
+            }
+        }
+
+        function renderCards() {
+            const container = document.getElementById("ipCards");
+            container.innerHTML = "";
+
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+            let filteredData = allData.filter(ip => ip.address.toLowerCase().includes(searchTerm));
+
+            filteredData.sort((a, b) => (a.isUp === b.isUp) ? 0 : a.isUp ? 1 : -1);
+
+            document.getElementById("countTotal").innerText = allData.length;
+            document.getElementById("countActive").innerText = allData.filter(ip => ip.isUp).length;
+            document.getElementById("countPassive").innerText = allData.filter(ip => !ip.isUp).length;
+
+            filteredData.forEach(ip => {
+                const isUp = ip.isUp;
+                const cardClass = isUp ? "up" : "down";
+                const statusText = isUp ? "ONLINE" : "OFFLINE";
+
+                container.innerHTML += `
+                        <div class="card ${cardClass}">
+                            <div class="status ${cardClass}">${statusText}</div>
+                            <div class="ip-address">${ip.address}</div>
+                            <button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>
+                        </div>
+                    `;
+            });
+        }
+
+        async function deleteIp(id) {
+            try {
+                await fetch(baseUrl + "/" + id, { method: "DELETE" });
+                loadIps();
+            } catch (error) {
+                console.error("Silme hatası:", error);
             }
         }
 
@@ -380,32 +433,26 @@
             try {
                 const response = await fetch(baseUrl, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        address: ipValue,
-                        isUp: false,
-                        isActive: true
-                    })
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ address: ipValue, isUp: false, isActive: true })
                 });
 
                 if (response.ok) {
                     ipInput.value = "";
                     loadIps();
                 } else {
-                    alert("IP eklenirken sunucuda bir hata oluştu.");
+                    alert("IP eklenirken hata oluştu.");
                 }
             } catch (error) {
                 console.error("Ekleme hatası:", error);
             } finally {
                 btn.disabled = false;
-                btn.innerText = "Ekle";
+                btn.innerText = "Cihaz Ekle";
             }
         }
 
         loadIps();
-        setInterval(loadIps, 1000);
+        setInterval(loadIps, 30000);
     </script>
 </body>
 </html>

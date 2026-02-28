@@ -19,22 +19,19 @@ public class PingWorkerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Ping İzleme Servisi Başladı...");
+        _logger.LogInformation("Ping İzleme Servisi Başladı (Paralel Mod)...");
 
-        // Uygulama kapanana kadar bu döngü çalışmaya devam edecek
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
-                // DbContext'i (veritabanı bağlantısı) arka planda kullanabilmek için yeni bir Scope (kapsam) oluşturmalıyız
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-                    // Sadece aktif olan IP'leri getir
                     var ips = context.IpAddresses.Where(ip => ip.IsActive).ToList();
 
-                    foreach (var ip in ips)
+                    // Paralel Ping İşlemi (Tüm pingleri aynı anda başlat)
+                    var pingTasks = ips.Select(async ip =>
                     {
                         using (Ping ping = new Ping())
                         {
@@ -45,12 +42,15 @@ public class PingWorkerService : BackgroundService
                             }
                             catch
                             {
-                                ip.IsUp = false; // Hata verirse veya ulaşılamazsa Down say
+                                ip.IsUp = false; // Hata veya Timeout olursa Down say
                             }
                         }
-                    }
+                    });
 
-                    // Değişiklikleri veritabanına kaydet
+                    // Tüm ping işlemlerinin bitmesini bekle
+                    await Task.WhenAll(pingTasks);
+
+                    // Sonuçları veritabanına kaydet
                     await context.SaveChangesAsync();
                 }
             }
@@ -59,7 +59,7 @@ public class PingWorkerService : BackgroundService
                 _logger.LogError(ex, "Ping işlemi sırasında arka planda bir hata oluştu.");
             }
 
-            // Döngüyü 30 saniye beklet (30 saniyede bir kontrol et)
+            // Döngüyü 30 saniye beklet
             await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
         }
     }
