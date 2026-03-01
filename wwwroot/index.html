@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sise PingWatch</title>
+    <title>PingWatch</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,7 +17,6 @@
             overflow-x: hidden;
         }
 
-        /* --- YÜKLEME EKRANI  --- */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -54,7 +53,6 @@
             }
         }
 
-        /* --- NAVBAR  --- */
         .navbar {
             background-color: #1a252f;
             padding: 15px 30px;
@@ -72,7 +70,7 @@
             letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 15px; 
+            gap: 15px;
         }
 
         .nav-logo {
@@ -113,34 +111,33 @@
                 pointer-events: none;
             }
 
-        /* --- HERO VE İSTATİSTİKLER --- */
         .hero {
             background-color: #2c3e50;
             color: white;
             text-align: center;
-            padding: 10px;
+            padding: 10px 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
             .hero h1 {
                 margin: 0 0 10px 0;
-                font-size: 20px; 
+                font-size: 24px;
                 letter-spacing: 1px;
-                margin-bottom:15px;
             }
 
         .stats-container {
             display: flex;
             justify-content: center;
-            gap: 15px; 
+            gap: 15px;
             margin-bottom: 5px;
         }
 
         .stat-box {
             background: rgba(255, 255, 255, 0.1);
             padding: 8px 15px;
-            font-size: 13px; 
+            font-size: 13px;
             font-weight: bold;
+            border-radius: 6px;
         }
 
         .stat-total {
@@ -155,7 +152,12 @@
             color: #e74c3c;
         }
 
-        /* --- İÇERİK KONTROLLERİ --- */
+        .last-update {
+            font-size: 12px;
+            color: #bdc3c7;
+            margin-top: 5px;
+        }
+
         .main-content {
             flex: 1;
             padding: 25px 20px;
@@ -209,7 +211,6 @@
                 background-color: #2980b9;
             }
 
-        /* --- KARTLAR --- */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -298,10 +299,9 @@
             background-color: #2c3e50;
             color: #ecf0f1;
             text-align: center;
-            padding: 5px 0;
+            padding: 15px 0;
             margin-top: auto;
             font-size: 14px;
-            font-style: oblique;
         }
 
             footer a {
@@ -340,6 +340,7 @@
             <div class="stat-box stat-active">Aktif: <span id="countActive">0</span></div>
             <div class="stat-box stat-passive">Down: <span id="countPassive">0</span></div>
         </div>
+        <div class="last-update" id="lastUpdateText"></div>
     </div>
 
     <div class="main-content">
@@ -352,7 +353,6 @@
                 <input type="text" id="searchInput" placeholder="Cihaz Ara..." onkeyup="renderCards()" />
             </div>
         </div>
-
         <div class="dashboard" id="ipCards"></div>
     </div>
 
@@ -374,12 +374,11 @@
 
         async function loadIps() {
             try {
-                // cache: 'no-store' parametresi ile tarayıcının tembellik yapıp eski veriyi göstermesini engelle
                 const response = await fetch(baseUrl, { cache: "no-store" });
                 allData = await response.json();
                 renderCards();
             } catch (error) {
-                console.error("Yükleme hatası:", error);
+                console.error(error);
             }
         }
 
@@ -395,6 +394,9 @@
             document.getElementById("countTotal").innerText = allData.length;
             document.getElementById("countActive").innerText = allData.filter(ip => ip.isUp).length;
             document.getElementById("countPassive").innerText = allData.filter(ip => !ip.isUp).length;
+
+            const now = new Date();
+            document.getElementById("lastUpdateText").innerText = "Son Güncelleme: " + now.toLocaleTimeString('tr-TR');
 
             filteredData.forEach(ip => {
                 const isUp = ip.isUp;
@@ -416,7 +418,7 @@
                 await fetch(baseUrl + "/" + id, { method: "DELETE" });
                 loadIps();
             } catch (error) {
-                console.error("Silme hatası:", error);
+                console.error(error);
             }
         }
 
@@ -447,7 +449,7 @@
                     alert("IP eklenirken hata oluştu.");
                 }
             } catch (error) {
-                console.error("Ekleme hatası:", error);
+                console.error(error);
             } finally {
                 btn.disabled = false;
                 btn.innerText = "Cihaz Ekle";
@@ -457,6 +459,5 @@
         loadIps();
         setInterval(loadIps, 30000);
     </script>
-    <!--Arda24-->
 </body>
 </html>
