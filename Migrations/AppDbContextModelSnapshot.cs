@@ -47,6 +47,10 @@ namespace PingWatch.Migrations
                     b.Property<bool>("IsUp")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("IpAddresses");

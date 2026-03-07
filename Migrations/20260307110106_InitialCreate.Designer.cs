@@ -10,7 +10,7 @@ using PingWatch.Data;
 namespace PingWatch.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260227145816_InitialCreate")]
+    [Migration("20260307110106_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -49,6 +49,10 @@ namespace PingWatch.Migrations
 
                     b.Property<bool>("IsUp")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
