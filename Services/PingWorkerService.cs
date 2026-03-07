@@ -19,7 +19,7 @@ public class PingWorkerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Ping İzleme Servisi Başladı (Paralel Mod)...");
+        _logger.LogInformation("Ping İzleme Servisi Başladı (Mail Korumalı)...");
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -28,38 +28,56 @@ public class PingWorkerService : BackgroundService
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    // Email Servisini Çağırıyoruz
+                    var emailService = scope.ServiceProvider.GetRequiredService<EmailService>();
+
                     var ips = context.IpAddresses.Where(ip => ip.IsActive).ToList();
 
-                    // Paralel Ping İşlemi (Tüm pingleri aynı anda başlat)
                     var pingTasks = ips.Select(async ip =>
                     {
+                        bool previousState = ip.IsUp; // Veritabanındaki eski durum (Örn: TRUE)
+                        bool newState = false;        // Ping sonrası yeni durum
+
                         using (Ping ping = new Ping())
                         {
                             try
                             {
                                 PingReply reply = await ping.SendPingAsync(ip.Address, 2000);
-                                ip.IsUp = reply.Status == IPStatus.Success;
+                                newState = reply.Status == IPStatus.Success;
                             }
                             catch
                             {
-                                ip.IsUp = false; // Hata veya Timeout olursa Down say
+                                newState = false;
+                            }
+                        }
+
+                        // EĞER DURUM DEĞİŞTİYSE (Örn: True iken False olduysa veya tam tersi)
+                        if (previousState != newState)
+                        {
+                            ip.IsUp = newState; // Veritabanı için durumu güncelle
+
+                            try
+                            {
+                                // Mail Gönder!
+                                await emailService.SendAlertAsync(ip.Name, ip.Address, newState);
+                                _logger.LogInformation($"Mail başarıyla gönderildi: {ip.Name} cihazı {newState} durumuna geçti.");
+                            }
+                            catch (Exception mailEx)
+                            {
+                                _logger.LogError($"Mail GÖNDERİLEMEDİ: {mailEx.Message}");
                             }
                         }
                     });
 
-                    // Tüm ping işlemlerinin bitmesini bekle
                     await Task.WhenAll(pingTasks);
-
-                    // Sonuçları veritabanına kaydet
                     await context.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ping işlemi sırasında arka planda bir hata oluştu.");
+                _logger.LogError(ex, "Ping döngüsünde kritik bir hata oluştu.");
             }
 
-            // Döngüyü 30 saniye beklet
             await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
         }
     }

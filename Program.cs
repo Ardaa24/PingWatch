@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddTransient<PingWatch.Services.EmailService>(); // Mail servisini kaydet
 builder.Services.AddHostedService<PingWorkerService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
