@@ -3,6 +3,6 @@ obj/
 .vs/
 *.user
 *.db
-.db-wal
-.db-shm
-Assets/
+*.db-shm
+*.db-wal
+*.sqlite
