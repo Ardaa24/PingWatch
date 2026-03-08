@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PingWatch | Kurumsal İzleme Sistemi</title>
     <style>
+        /* --- GENEL AYARLAR --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
@@ -12,6 +13,9 @@
             padding: 0;
             color: #333;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* --- LOADING EKRANI --- */
@@ -51,7 +55,7 @@
             }
         }
 
-        /* --- LOGIN PANELİ (DÜZELTİLDİ) --- */
+        /* --- LOGIN PANELİ --- */
         #login-container {
             position: fixed;
             top: 0;
@@ -79,18 +83,17 @@
                 margin-bottom: 20px;
             }
 
-            /* Login kutusundaki TÜM inputlar için ortak ve eşit stil */
             .login-box input {
                 width: 100%;
                 padding: 12px 15px;
                 margin: 10px 0;
                 border: 1px solid #ddd;
                 border-radius: 6px;
-                box-sizing: border-box; /* Padding'i boyuta dahil et */
+                box-sizing: border-box;
                 outline: none;
                 transition: 0.3s;
                 font-size: 14px;
-                height: 45px; /* Yüksekliği sabitle */
+                height: 45px;
             }
 
                 .login-box input:focus {
@@ -122,16 +125,37 @@
             margin-bottom: 10px;
         }
 
-        /* --- ANA UYGULAMA --- */
+        /* --- ANA UYGULAMA YAPISI --- */
         #main-app {
             display: none;
             flex-direction: column;
-            min-height: 100vh;
+            flex: 1;
             width: 100%;
         }
 
-        /* --- NAVBAR --- */
-        .navbar {
+        .mode-wrapper {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+        }
+
+            .mode-wrapper.active {
+                display: flex;
+            }
+
+        .main-content {
+            flex: 1;
+            padding: 25px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* ==========================================================================
+           1. ANASAYFA VE YÖNETİM MODU ORTAK STİLLERİ (KLASİK)
+           ========================================================================== */
+        .normal-navbar {
             background-color: #1a252f;
             padding: 15px 30px;
             display: flex;
@@ -170,6 +194,7 @@
             border-radius: 5px;
             transition: all 0.3s;
             font-weight: 500;
+            cursor: pointer;
         }
 
             .nav-link.active {
@@ -182,14 +207,19 @@
                 color: white;
             }
 
+            /* Kilitli/Pasif Buton Stili */
             .nav-link.disabled {
                 color: #7f8c8d;
                 cursor: not-allowed;
-                opacity: 0.5;
-                pointer-events: none;
+                opacity: 0.6;
             }
 
-        .user-badge {
+                .nav-link.disabled:hover {
+                    background-color: transparent;
+                    color: #7f8c8d;
+                }
+
+        .user-badge-home {
             background-color: #2c3e50;
             color: #ecf0f1;
             padding: 8px 15px;
@@ -200,7 +230,7 @@
             border: 1px solid #34495e;
         }
 
-        .logout-btn {
+        .logout-btn-home {
             background-color: transparent;
             color: #e74c3c;
             border: 1px solid #e74c3c;
@@ -212,12 +242,11 @@
             transition: 0.3s;
         }
 
-            .logout-btn:hover {
+            .logout-btn-home:hover {
                 background-color: #e74c3c;
                 color: white;
             }
 
-        /* --- HERO & STATS --- */
         .hero {
             background-color: #2c3e50;
             color: white;
@@ -247,10 +276,6 @@
             border-radius: 6px;
         }
 
-        .stat-total {
-            color: #ecf0f1;
-        }
-
         .stat-active {
             color: #2ecc71;
         }
@@ -263,16 +288,6 @@
             font-size: 12px;
             color: #bdc3c7;
             margin-top: 5px;
-        }
-
-        /* --- MAIN CONTENT & KONTROLLER (DÜZELTİLDİ) --- */
-        .main-content {
-            flex: 1;
-            padding: 25px 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .controls {
@@ -288,26 +303,19 @@
             gap: 15px;
         }
 
-        .add-group, .search-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        /* Dashboard'daki inputlar için ÖZEL kural (Login'i etkilemez) */
-        .controls input[type="text"] {
-            padding: 10px 15px;
-            font-size: 14px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            width: 180px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-            .controls input[type="text"]:focus {
-                border-color: #3498db;
+            .controls input[type="text"] {
+                padding: 10px 15px;
+                font-size: 14px;
+                border: 2px solid #ddd;
+                border-radius: 6px;
+                width: 180px;
+                outline: none;
+                transition: 0.3s;
             }
+
+                .controls input[type="text"]:focus {
+                    border-color: #3498db;
+                }
 
         .add-btn {
             padding: 10px 20px;
@@ -317,7 +325,7 @@
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: 0.3s;
             white-space: nowrap;
         }
 
@@ -325,12 +333,12 @@
                 background-color: #2980b9;
             }
 
-        /* --- KARTLAR --- */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 15px;
             margin-bottom: 40px;
+            align-items: start;
         }
 
         .card {
@@ -342,7 +350,7 @@
             flex-direction: column;
             align-items: center;
             position: relative;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: 0.2s;
             text-align: center;
         }
 
@@ -379,7 +387,6 @@
             padding: 5px 12px;
             border-radius: 15px;
             margin-bottom: 5px;
-            letter-spacing: 0.5px;
         }
 
             .status.up {
@@ -404,7 +411,7 @@
             width: 100%;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transition: 0.3s;
         }
 
         .card:hover .delete-btn {
@@ -418,8 +425,7 @@
             border-color: #e74c3c;
         }
 
-        /* --- FOOTER --- */
-        footer {
+        .normal-footer {
             background-color: #2c3e50;
             color: #ecf0f1;
             text-align: center;
@@ -429,15 +435,320 @@
             width: 100%;
         }
 
-            footer a {
+            .normal-footer a {
                 color: #3498db;
                 text-decoration: none;
                 font-weight: bold;
             }
 
-                footer a:hover {
+                .normal-footer a:hover {
                     text-decoration: underline;
                 }
+
+        /* ==========================================================================
+           2. İZLEME (MONITORING) MODU STİLLERİ
+           ========================================================================== */
+        #monitor-navbar {
+            background-color: #1a252f;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 998;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .hamburger-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 15px;
+        }
+
+            .hamburger-btn:hover {
+                color: #3498db;
+            }
+
+        .monitor-brand {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .monitor-brand img {
+                height: 35px;
+                border-radius: 4px;
+            }
+
+        /* Arda İmzası */
+        .signature {
+            font-size: 11px;
+            color: #7f8c8d;
+            font-style: italic;
+            font-weight: normal;
+            margin-left: 5px;
+            letter-spacing: 0.5px;
+            opacity: 0.8;
+        }
+
+        /* İzleme Navbara Gelen Yeni İstatistik Alanı */
+        .monitor-stats {
+            display: flex;
+            gap: 15px;
+            margin-left: auto;
+            background: rgba(0,0,0,0.15);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #bdc3c7;
+            border: 1px solid #2c3e50;
+        }
+
+            .monitor-stats span {
+                font-weight: bold;
+                color: white;
+            }
+
+        .m-active {
+            color: #2ecc71;
+        }
+
+            .m-active span {
+                color: #2ecc71;
+            }
+
+        .m-passive {
+            color: #e74c3c;
+        }
+
+            .m-passive span {
+                color: #e74c3c;
+            }
+
+        .monitor-status-text {
+            color: #7f8c8d;
+            font-size: 12px;
+            margin-left: 15px;
+        }
+
+        /* Minimalist İzleme Kartları - (minmax(190px, 1fr) sayesinde 5 adet yan yana sığar) */
+        .compact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 10px;
+            padding-bottom: 30px;
+            align-items: start;
+        }
+
+        .compact-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s ease-in-out;
+        }
+
+            .compact-card:hover {
+                border-color: #bdc3c7;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+            .compact-card.down {
+                background-color: #fdf5f5;
+                border-color: #fadada;
+            }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+            .status-dot.up {
+                background-color: #2ecc71;
+                box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
+            }
+
+            .status-dot.down {
+                background-color: #e74c3c;
+                box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+                animation: blink 1.5s infinite;
+            }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .compact-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .compact-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #2c3e50;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px;
+        }
+
+        .compact-ip {
+            font-size: 12px;
+            color: #7f8c8d;
+            font-family: monospace;
+        }
+
+        /* YAN MENÜ (SIDEBAR) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background-color: #2c3e50;
+            z-index: 10000;
+            transition: 0.3s ease-in-out;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #34495e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-user {
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .sidebar-role {
+            color: #3498db;
+            font-size: 12px;
+        }
+
+        .sidebar .close-btn {
+            background: none;
+            border: none;
+            color: #bdc3c7;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding-top: 15px;
+        }
+
+            .sidebar-menu a {
+                display: block;
+                color: #ecf0f1;
+                padding: 15px 25px;
+                text-decoration: none;
+                font-size: 15px;
+                transition: 0.2s;
+                border-left: 3px solid transparent;
+            }
+
+                .sidebar-menu a:hover, .sidebar-menu a.active {
+                    background-color: #34495e;
+                    border-left-color: #3498db;
+                }
+
+                .sidebar-menu a.logout {
+                    color: #e74c3c;
+                    margin-top: 15px;
+                }
+
+                    .sidebar-menu a.logout:hover {
+                        background-color: #e74c3c;
+                        color: white;
+                        border-left-color: #c0392b;
+                    }
+
+        /* Sidebar Kilitli Link Stili */
+        .sidebar-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+            .sidebar-disabled:hover {
+                background-color: transparent !important;
+                border-left-color: transparent !important;
+            }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            font-size: 12px;
+            color: #bdc3c7;
+            border-top: 1px solid #34495e;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+            .sidebar-footer a {
+                color: #3498db;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .sidebar-footer a:hover {
+                    text-decoration: underline;
+                }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            .overlay.show {
+                display: block;
+                opacity: 1;
+            }
     </style>
 </head>
 <body>
@@ -458,64 +769,140 @@
     </div>
 
     <div id="main-app">
-        <nav class="navbar">
-            <a href="#" class="navbar-brand">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo" class="nav-logo">
-                PingWatch
-            </a>
-            <div class="nav-links">
-                <a href="#" class="nav-link active">Anasayfa</a>
-                <a href="#" class="nav-link disabled">Dashboard (İzleme)</a>
-                <a href="#" class="nav-link disabled" id="nav-admin-link">🔒 Yönetim Paneli</a>
-                <span class="user-badge" id="nav-user-info">Kullanıcı</span>
-                <button class="logout-btn" onclick="handleLogout()">Çıkış</button>
-            </div>
-        </nav>
 
-        <div class="hero">
-            <h1>Ağ İzleme Paneli</h1>
-            <div class="stats-container">
-                <div class="stat-box stat-total">Toplam: <span id="countTotal">0</span></div>
-                <div class="stat-box stat-active">Aktif: <span id="countActive">0</span></div>
-                <div class="stat-box stat-passive">Down: <span id="countPassive">0</span></div>
+        <div id="home-mode" class="mode-wrapper">
+            <nav class="normal-navbar">
+                <a href="#" class="navbar-brand">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo" class="nav-logo">
+                    PingWatch
+                </a>
+                <div class="nav-links">
+                    <a class="nav-link active">Anasayfa</a>
+                    <a class="nav-link" onclick="switchMode('monitor')">Dashboard (İzleme)</a>
+                    <a class="nav-link disabled" title="Çok Yakında">🌡️ Sıcaklık İzleme</a>
+
+                    <a class="nav-link" id="nav-admin-link" onclick="switchMode('management')">🔒 Yönetim Paneli</a>
+                    <span class="user-badge-home" id="home-user-info">User</span>
+                    <button class="logout-btn-home" onclick="handleLogout()">Çıkış</button>
+                </div>
+            </nav>
+
+            <div class="hero">
+                <h1>Sistem Önizleme Paneli</h1>
+                <div class="stats-container">
+                    <div class="stat-box">Toplam: <span id="homeTotal">0</span></div>
+                    <div class="stat-box stat-active">Aktif: <span id="homeActive">0</span></div>
+                    <div class="stat-box stat-passive">Down: <span id="homePassive">0</span></div>
+                </div>
+                <div class="last-update" id="homeLastUpdate"></div>
             </div>
-            <div class="last-update" id="lastUpdateText"></div>
+
+            <div class="main-content">
+                <div class="controls">
+                    <div class="add-group" id="admin-add-form">
+                        <input type="text" id="nameInput" placeholder="Cihaz Adı (Örn: Router)" />
+                        <input type="text" id="ipInput" placeholder="IP Adresi" />
+                        <button class="add-btn" onclick="addIp()">Cihaz Ekle</button>
+                    </div>
+                    <div class="search-group">
+                        <input type="text" id="searchInput" placeholder="Cihaz Adı veya IP Ara..." onkeyup="renderCards()" />
+                    </div>
+                </div>
+                <div class="dashboard" id="home-cards"></div>
+            </div>
+
+            <footer class="normal-footer">
+                <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p>
+            </footer>
         </div>
 
-        <div class="main-content">
-            <div class="controls">
-                <div class="add-group" id="admin-add-form">
-                    <input type="text" id="nameInput" placeholder="Cihaz Adı (Örn: Ana Router)" />
-                    <input type="text" id="ipInput" placeholder="IP Adresi (Örn: 192.168.1.1)" />
-                    <button class="add-btn" onclick="addIp()">Cihaz Ekle</button>
+        <div id="monitor-mode" class="mode-wrapper">
+            <nav id="monitor-navbar">
+                <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+                <div class="monitor-brand">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo">
+                    PingWatch İzleme Merkezi <span class="signature">by Arda</span>
                 </div>
-                <div class="search-group">
-                    <input type="text" id="searchInput" placeholder="Cihaz Adı veya IP Ara..." onkeyup="renderCards()" />
+
+                <div class="monitor-stats">
+                    <div>Toplam: <span id="monitorTotal">0</span></div>
+                    <div class="m-active">Aktif: <span id="monitorActive">0</span></div>
+                    <div class="m-passive">Down: <span id="monitorPassive">0</span></div>
+                </div>
+
+                <div class="monitor-status-text" id="monitorLastUpdate"></div>
+            </nav>
+
+            <div class="overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <div>
+                        <div class="sidebar-user" id="side-user-name">User</div>
+                        <div class="sidebar-role" id="side-user-role">Role</div>
+                    </div>
+                    <button class="close-btn" onclick="toggleSidebar()">✖</button>
+                </div>
+                <div class="sidebar-menu">
+                    <a href="#" onclick="switchMode('home')">🏠 Anasayfa (Önizleme)</a>
+                    <a href="#" class="active" onclick="toggleSidebar()">🖥️ Dashboard (İzleme)</a>
+                    <a href="#" class="sidebar-disabled" title="Çok Yakında">🌡️ Sıcaklık İzleme</a>
+
+                    <a href="#" id="side-admin-link" onclick="switchMode('management')">⚙️ Yönetim Paneli</a>
+                    <a href="#" class="logout" onclick="handleLogout()">🚪 Çıkış Yap</a>
+                </div>
+                <div class="sidebar-footer">
+                    Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a><br>
+                    PingWatch © 2026
                 </div>
             </div>
-            <div class="dashboard" id="ipCards"></div>
+
+            <div class="main-content" style="padding-top: 30px;">
+                <div class="compact-grid" id="monitor-cards"></div>
+            </div>
         </div>
 
-        <footer>
-            <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p>
-        </footer>
+        <div id="management-mode" class="mode-wrapper">
+            <nav class="normal-navbar">
+                <a href="#" class="navbar-brand" onclick="switchMode('home')">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo" class="nav-logo">
+                    PingWatch
+                </a>
+                <div class="nav-links">
+                    <a class="nav-link" onclick="switchMode('home')">Anasayfa</a>
+                    <a class="nav-link" onclick="switchMode('monitor')">Dashboard (İzleme)</a>
+                    <a class="nav-link disabled" title="Çok Yakında">🌡️ Sıcaklık İzleme</a>
+
+                    <a class="nav-link active">🔒 Yönetim Paneli</a>
+                    <button class="logout-btn-home" onclick="handleLogout()">Çıkış</button>
+                </div>
+            </nav>
+            <div class="main-content" style="display: flex; justify-content: center; align-items: center; text-align: center;">
+                <div>
+                    <h1 style="color: #2c3e50; font-size: 36px; margin-bottom: 10px;">Yönetim Paneli</h1>
+                    <p style="color: #7f8c8d; font-size: 18px;">Gelişmiş ayarlar ve detaylı yönetim özellikleri çok yakında burada olacak.</p>
+                </div>
+            </div>
+            <footer class="normal-footer">
+                <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p>
+            </footer>
+        </div>
+
     </div>
 
     <script>
         const baseUrl = "/api/Ip";
         let allData = [];
         let pollingInterval = null;
+        let currentMode = 'home';
 
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const loader = document.getElementById('loading-screen');
                 loader.style.opacity = '0';
                 setTimeout(() => loader.style.display = 'none', 500);
-            }, 1500);
+            }, 1000);
 
-            if (localStorage.getItem("isLoggedIn") === "true") {
-                showApp();
-            }
+            if (localStorage.getItem("isLoggedIn") === "true") startApp();
         });
 
         async function handleLogin() {
@@ -525,8 +912,7 @@
 
             try {
                 const response = await fetch("/api/auth/login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    method: "POST", headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username: user, password: pass })
                 });
 
@@ -535,122 +921,152 @@
                     localStorage.setItem("isLoggedIn", "true");
                     localStorage.setItem("username", data.username);
                     localStorage.setItem("role", data.role);
-                    showApp();
-                } else {
-                    errorMsg.style.display = "block";
-                }
-            } catch (error) {
-                alert("Sunucuya bağlanılamadı!");
-            }
+                    startApp();
+                } else { errorMsg.style.display = "block"; }
+            } catch (error) { alert("Sunucu hatası!"); }
         }
 
-        function handleLogout() {
-            localStorage.clear();
-            location.reload();
-        }
+        function handleLogout() { localStorage.clear(); location.reload(); }
 
-        function showApp() {
+        function startApp() {
             document.getElementById("login-container").style.display = "none";
             document.getElementById("main-app").style.display = "flex";
 
             const username = localStorage.getItem("username");
             const role = localStorage.getItem("role");
-
             const capitalizedUser = username.charAt(0).toUpperCase() + username.slice(1);
-            document.getElementById("nav-user-info").innerText = `${capitalizedUser} (${role})`;
+
+            document.getElementById("home-user-info").innerText = `${capitalizedUser} (${role})`;
+            document.getElementById("side-user-name").innerText = capitalizedUser;
+            document.getElementById("side-user-role").innerText = role + " Yetkisi";
 
             if (role !== "Admin") {
                 document.getElementById("admin-add-form").style.display = "none";
                 document.getElementById("nav-admin-link").style.display = "none";
+                document.getElementById("side-admin-link").style.display = "none";
             }
 
+            switchMode('home');
             loadIps();
-            if (!pollingInterval) {
-                pollingInterval = setInterval(loadIps, 30000);
+            if (!pollingInterval) pollingInterval = setInterval(loadIps, 15000);
+        }
+
+        function switchMode(modeName) {
+            currentMode = modeName;
+            document.querySelectorAll('.mode-wrapper').forEach(el => el.classList.remove('active'));
+            document.getElementById(`${modeName}-mode`).classList.add('active');
+
+            if (document.getElementById('sidebar').classList.contains('open')) {
+                toggleSidebar();
             }
+            renderCards();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('open');
+            if (sidebar.classList.contains('open')) overlay.classList.add('show');
+            else overlay.classList.remove('show');
         }
 
         async function loadIps() {
             try {
                 const response = await fetch(baseUrl, { cache: "no-store" });
                 allData = await response.json();
+                updateStats();
                 renderCards();
             } catch (error) { console.error(error); }
         }
 
+        function updateStats() {
+            const total = allData.length;
+            const active = allData.filter(ip => ip.isUp).length;
+            const passive = total - active;
+            const timeStr = new Date().toLocaleTimeString('tr-TR');
+
+            // Anasayfa İstatistikleri
+            document.getElementById("homeTotal").innerText = total;
+            document.getElementById("homeActive").innerText = active;
+            document.getElementById("homePassive").innerText = passive;
+            document.getElementById("homeLastUpdate").innerText = "Son Güncelleme: " + timeStr;
+
+            // Monitor İstatistikleri (Navbar)
+            document.getElementById("monitorTotal").innerText = total;
+            document.getElementById("monitorActive").innerText = active;
+            document.getElementById("monitorPassive").innerText = passive;
+            document.getElementById("monitorLastUpdate").innerText = "Senkron: " + timeStr;
+        }
+
         function renderCards() {
-            const container = document.getElementById("ipCards");
+            if (currentMode === 'home') renderHomeCards();
+            else if (currentMode === 'monitor') renderMonitorCards();
+        }
+
+        function renderHomeCards() {
+            const container = document.getElementById("home-cards");
             container.innerHTML = "";
-
             const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
-            const role = localStorage.getItem("role");
-            const isAdmin = role === "Admin";
+            const isAdmin = localStorage.getItem("role") === "Admin";
 
-            let filteredData = allData.filter(ip =>
-                ip.address.toLowerCase().includes(searchTerm) ||
-                (ip.name && ip.name.toLowerCase().includes(searchTerm))
-            );
+            let filtered = allData.filter(ip => ip.address.toLowerCase().includes(searchTerm) || (ip.name && ip.name.toLowerCase().includes(searchTerm)));
+            filtered.sort((a, b) => (a.isUp === b.isUp) ? 0 : a.isUp ? 1 : -1);
 
-            filteredData.sort((a, b) => (a.isUp === b.isUp) ? 0 : a.isUp ? 1 : -1);
-
-            document.getElementById("countTotal").innerText = allData.length;
-            document.getElementById("countActive").innerText = allData.filter(ip => ip.isUp).length;
-            document.getElementById("countPassive").innerText = allData.filter(ip => !ip.isUp).length;
-
-            const now = new Date();
-            document.getElementById("lastUpdateText").innerText = "Son Güncelleme: " + now.toLocaleTimeString('tr-TR');
-
-            filteredData.forEach(ip => {
-                const isUp = ip.isUp;
-                const cardClass = isUp ? "up" : "down";
-                const statusText = isUp ? "ONLINE" : "OFFLINE";
-                const deviceName = ip.name || "İsimsiz Cihaz";
-
-                const deleteButtonHtml = isAdmin
-                    ? `<button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>`
-                    : '';
-
+            filtered.forEach(ip => {
+                const stateClass = ip.isUp ? "up" : "down";
+                const deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>` : "";
                 container.innerHTML += `
-                        <div class="card ${cardClass}">
-                            <div class="status ${cardClass}">${statusText}</div>
-                            <div class="device-name">${deviceName}</div>
+                        <div class="card ${stateClass}">
+                            <div class="status ${stateClass}">${ip.isUp ? 'ONLINE' : 'OFFLINE'}</div>
+                            <div class="device-name">${ip.name || "Cihaz"}</div>
                             <div class="ip-address">${ip.address}</div>
-                            ${deleteButtonHtml}
+                            ${deleteBtn}
+                        </div>
+                    `;
+            });
+        }
+
+        function renderMonitorCards() {
+            const container = document.getElementById("monitor-cards");
+            container.innerHTML = "";
+            let sorted = [...allData].sort((a, b) => (a.isUp === b.isUp) ? 0 : a.isUp ? 1 : -1);
+
+            sorted.forEach(ip => {
+                const stateClass = ip.isUp ? "up" : "down";
+                // Büyütme kaldırıldı, sadece saf ve minimal kart basılıyor
+                container.innerHTML += `
+                        <div class="compact-card ${stateClass}">
+                            <div class="status-dot ${stateClass}"></div>
+                            <div class="compact-info">
+                                <div class="compact-name">${ip.name || "Cihaz"}</div>
+                                <div class="compact-ip">${ip.address}</div>
+                            </div>
                         </div>
                     `;
             });
         }
 
         async function addIp() {
-            if (localStorage.getItem("role") !== "Admin") return alert("Yetkiniz yok!");
-
+            if (localStorage.getItem("role") !== "Admin") return;
             const nameInput = document.getElementById("nameInput");
             const ipInput = document.getElementById("ipInput");
-            if (!ipInput.value.trim()) return alert("Lütfen bir IP adresi girin!");
-
-            const btn = document.querySelector('.add-btn');
-            btn.disabled = true; btn.innerText = "Ekleniyor...";
-
+            if (!ipInput.value.trim()) return alert("IP zorunludur!");
             try {
                 await fetch(baseUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    method: "POST", headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ name: nameInput.value.trim(), address: ipInput.value.trim(), isUp: false, isActive: true })
                 });
                 nameInput.value = ""; ipInput.value = "";
                 loadIps();
-            } finally {
-                btn.disabled = false; btn.innerText = "Cihaz Ekle";
-            }
+            } catch (e) { alert("Hata!"); }
         }
 
         async function deleteIp(id) {
-            if (localStorage.getItem("role") !== "Admin") return alert("Yetkiniz yok!");
-
-            try {
+            if (localStorage.getItem("role") !== "Admin") return;
+            if (confirm("Silmek istediğinize emin misiniz?")) {
                 await fetch(baseUrl + "/" + id, { method: "DELETE" });
                 loadIps();
-            } catch (error) { console.error(error); }
+            }
         }
     </script>
 </body>
