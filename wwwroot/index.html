@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PingWatch</title>
+    <title>PingWatch | Kurumsal İzleme Sistemi</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,12 +11,10 @@
             margin: 0;
             padding: 0;
             color: #333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
             overflow-x: hidden;
         }
 
+        /* --- LOADING EKRANI --- */
         #loading-screen {
             position: fixed;
             top: 0;
@@ -27,7 +25,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 10001;
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
 
@@ -53,11 +51,89 @@
             }
         }
 
+        /* --- LOGIN PANELİ --- */
+        #login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f4f7f6;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+            .login-box img {
+                width: 150px;
+                margin-bottom: 20px;
+            }
+
+            .login-box input {
+                width: 100%;
+                padding: 12px;
+                margin: 10px 0;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                box-sizing: border-box;
+                outline: none;
+                transition: 0.3s;
+            }
+
+                .login-box input:focus {
+                    border-color: #3498db;
+                }
+
+            .login-box button {
+                width: 100%;
+                padding: 12px;
+                background: #1a252f;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: bold;
+                margin-top: 10px;
+                transition: 0.3s;
+            }
+
+                .login-box button:hover {
+                    background: #2c3e50;
+                }
+
+        #login-error {
+            color: #e74c3c;
+            display: none;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* --- ANA UYGULAMA (FLEX YAPI FOOTER İÇİN) --- */
+        #main-app {
+            display: none; /* JS ile "flex" yapılacak */
+            flex-direction: column;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* --- NAVBAR --- */
         .navbar {
             background-color: #1a252f;
             padding: 15px 30px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
@@ -66,22 +142,21 @@
             font-size: 20px;
             font-weight: bold;
             text-decoration: none;
-            margin-right: 40px;
-            letter-spacing: 1px;
             display: flex;
             align-items: center;
             gap: 15px;
+            letter-spacing: 1px;
         }
 
         .nav-logo {
             height: 55px;
-            width: auto;
             border-radius: 4px;
         }
 
         .nav-links {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         .nav-link {
@@ -111,6 +186,35 @@
                 pointer-events: none;
             }
 
+        .user-badge {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: 10px;
+            border: 1px solid #34495e;
+        }
+
+        .logout-btn {
+            background-color: transparent;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 7px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+            .logout-btn:hover {
+                background-color: #e74c3c;
+                color: white;
+            }
+
+        /* --- HERO & STATS --- */
         .hero {
             background-color: #2c3e50;
             color: white;
@@ -158,12 +262,14 @@
             margin-top: 5px;
         }
 
+        /* --- MAIN CONTENT & KONTROLLER --- */
         .main-content {
-            flex: 1;
+            flex: 1; /* FOOTER'I EN ALTA İTER */
             padding: 25px 20px;
             max-width: 1100px;
             margin: 0 auto;
             width: 100%;
+            box-sizing: border-box;
         }
 
         .controls {
@@ -175,7 +281,7 @@
             padding: 15px 20px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            flex-wrap: wrap; /* Dar ekranlarda alt alta kaysın */
+            flex-wrap: wrap;
             gap: 15px;
         }
 
@@ -187,10 +293,10 @@
 
         input[type="text"] {
             padding: 10px 15px;
-            font-size: 14px; /* İki input sığması için küçültüldü */
+            font-size: 14px;
             border: 2px solid #ddd;
             border-radius: 6px;
-            width: 180px; /* Genişlik ayarlandı */
+            width: 180px;
             outline: none;
             transition: border-color 0.3s;
         }
@@ -215,6 +321,7 @@
                 background-color: #2980b9;
             }
 
+        /* --- KARTLAR --- */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -248,7 +355,6 @@
                 border-top: 4px solid #e74c3c;
             }
 
-        /* Cihaz İsmi ve IP Tasarımı */
         .device-name {
             font-size: 16px;
             font-weight: bold;
@@ -290,7 +396,7 @@
             font-size: 12px;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: auto; /* Butonu en alta iter */
+            margin-top: auto;
             width: 100%;
             opacity: 0;
             visibility: hidden;
@@ -308,6 +414,7 @@
             border-color: #e74c3c;
         }
 
+        /* --- FOOTER --- */
         footer {
             background-color: #2c3e50;
             color: #ecf0f1;
@@ -315,6 +422,7 @@
             padding: 15px 0;
             margin-top: auto;
             font-size: 14px;
+            width: 100%;
         }
 
             footer a {
@@ -330,71 +438,145 @@
 </head>
 <body>
 
-
     <div id="loading-screen">
         <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Yükleniyor" class="loading-logo">
     </div>
 
-    <nav class="navbar">
-        <a href="#" class="navbar-brand">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo" class="nav-logo">
-            PingWatch
-        </a>
-        <div class="nav-links">
-            <a href="#" class="nav-link active">Anasayfa</a>
-            <a href="#" class="nav-link disabled">Dashboard (İzleme)</a>
-            <a href="#" class="nav-link disabled">🔒 Yönetim Paneli</a>
+    <div id="login-container">
+        <div class="login-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo">
+            <h2>PingWatch Giriş</h2>
+            <div id="login-error">Hatalı kullanıcı adı veya şifre!</div>
+            <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
+            <input type="password" id="password" placeholder="Şifre">
+            <button onclick="handleLogin()">Giriş Yap</button>
         </div>
-    </nav>
-
-    <div class="hero">
-        <h1>Ağ İzleme Paneli</h1>
-        <div class="stats-container">
-            <div class="stat-box stat-total">Toplam: <span id="countTotal">0</span></div>
-            <div class="stat-box stat-active">Aktif: <span id="countActive">0</span></div>
-            <div class="stat-box stat-passive">Down: <span id="countPassive">0</span></div>
-        </div>
-        <div class="last-update" id="lastUpdateText"></div>
     </div>
 
-    <div class="main-content">
-        <div class="controls">
-            <div class="add-group">
-                <input type="text" id="nameInput" placeholder="Cihaz Adı (Örn: Ana Router)" />
-                <input type="text" id="ipInput" placeholder="IP Adresi (Örn: 192.168.1.1)" />
-                <button class="add-btn" onclick="addIp()">Cihaz Ekle</button>
-            </div>
-            <div class="search-group">
-                <input type="text" id="searchInput" placeholder="Cihaz Adı veya IP Ara..." onkeyup="renderCards()" />
-            </div>
-        </div>
-        <div class="dashboard" id="ipCards"></div>
-    </div>
+    <div id="main-app">
+        <nav class="navbar">
+            <a href="#" class="navbar-brand">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo" class="nav-logo">
+                PingWatch
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">Anasayfa</a>
+                <a href="#" class="nav-link disabled">Dashboard (İzleme)</a>
+                <a href="#" class="nav-link disabled" id="nav-admin-link">🔒 Yönetim Paneli</a>
 
-    <footer>
-        <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p>
-    </footer>
+                <span class="user-badge" id="nav-user-info">Kullanıcı</span>
+                <button class="logout-btn" onclick="handleLogout()">Çıkış</button>
+            </div>
+        </nav>
+
+        <div class="hero">
+            <h1>Ağ İzleme Paneli</h1>
+            <div class="stats-container">
+                <div class="stat-box stat-total">Toplam: <span id="countTotal">0</span></div>
+                <div class="stat-box stat-active">Aktif: <span id="countActive">0</span></div>
+                <div class="stat-box stat-passive">Down: <span id="countPassive">0</span></div>
+            </div>
+            <div class="last-update" id="lastUpdateText"></div>
+        </div>
+
+        <div class="main-content">
+            <div class="controls">
+                <div class="add-group" id="admin-add-form">
+                    <input type="text" id="nameInput" placeholder="Cihaz Adı (Örn: Ana Router)" />
+                    <input type="text" id="ipInput" placeholder="IP Adresi (Örn: 192.168.1.1)" />
+                    <button class="add-btn" onclick="addIp()">Cihaz Ekle</button>
+                </div>
+
+                <div class="search-group">
+                    <input type="text" id="searchInput" placeholder="Cihaz Adı veya IP Ara..." onkeyup="renderCards()" />
+                </div>
+            </div>
+            <div class="dashboard" id="ipCards"></div>
+        </div>
+
+        <footer>
+            <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p>
+        </footer>
+    </div>
 
     <script>
+        const baseUrl = "/api/Ip";
+        let allData = [];
+        let pollingInterval = null;
+
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const loader = document.getElementById('loading-screen');
                 loader.style.opacity = '0';
-                loader.style.visibility = 'hidden';
-            }, 2000);
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 1500);
+
+            if (localStorage.getItem("isLoggedIn") === "true") {
+                showApp();
+            }
         });
 
-        const baseUrl = "/api/Ip";
-        let allData = [];
+        async function handleLogin() {
+            const user = document.getElementById("username").value;
+            const pass = document.getElementById("password").value;
+            const errorMsg = document.getElementById("login-error");
+
+            try {
+                const response = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("username", data.username);
+                    localStorage.setItem("role", data.role);
+                    showApp();
+                } else {
+                    errorMsg.style.display = "block";
+                }
+            } catch (error) {
+                alert("Sunucuya bağlanılamadı!");
+            }
+        }
+
+        function handleLogout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        function showApp() {
+            document.getElementById("login-container").style.display = "none";
+            // Flexbox yapısını etkinleştirerek footer'ın aşağı itilmesini sağlar
+            document.getElementById("main-app").style.display = "flex";
+
+            const username = localStorage.getItem("username");
+            const role = localStorage.getItem("role");
+
+            // Kullanıcı adının ilk harfini büyüt
+            const capitalizedUser = username.charAt(0).toUpperCase() + username.slice(1);
+            document.getElementById("nav-user-info").innerText = `${capitalizedUser} (${role})`;
+
+            // Rol Admin değilse formu ve Yönetim Paneli linkini gizle
+            if (role !== "Admin") {
+                document.getElementById("admin-add-form").style.display = "none";
+                document.getElementById("nav-admin-link").style.display = "none";
+            }
+
+            loadIps();
+            if (!pollingInterval) {
+                pollingInterval = setInterval(loadIps, 30000);
+            }
+        }
 
         async function loadIps() {
             try {
                 const response = await fetch(baseUrl, { cache: "no-store" });
                 allData = await response.json();
                 renderCards();
-            } catch (error) {
-                console.error(error);
-            }
+            } catch (error) { console.error(error); }
         }
 
         function renderCards() {
@@ -402,8 +584,9 @@
             container.innerHTML = "";
 
             const searchTerm = document.getElementById("searchInput").value.toLowerCase().trim();
+            const role = localStorage.getItem("role");
+            const isAdmin = role === "Admin";
 
-            // Arama filtresi hem IP'yi hem de Cihaz İsmini kapsayacak şekilde güncellendi
             let filteredData = allData.filter(ip =>
                 ip.address.toLowerCase().includes(searchTerm) ||
                 (ip.name && ip.name.toLowerCase().includes(searchTerm))
@@ -422,70 +605,55 @@
                 const isUp = ip.isUp;
                 const cardClass = isUp ? "up" : "down";
                 const statusText = isUp ? "ONLINE" : "OFFLINE";
-                const deviceName = ip.name || "İsimsiz Cihaz"; // Eğer isim yoksa varsayılan metin
+                const deviceName = ip.name || "İsimsiz Cihaz";
 
-                // Kart HTML'ine deviceName eklendi
+                // Admin değilse silme butonu eklenmez
+                const deleteButtonHtml = isAdmin
+                    ? `<button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>`
+                    : '';
+
                 container.innerHTML += `
-                    <div class="card ${cardClass}">
-                        <div class="status ${cardClass}">${statusText}</div>
-                        <div class="device-name">${deviceName}</div>
-                        <div class="ip-address">${ip.address}</div>
-                        <button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>
-                    </div>
-                `;
+                        <div class="card ${cardClass}">
+                            <div class="status ${cardClass}">${statusText}</div>
+                            <div class="device-name">${deviceName}</div>
+                            <div class="ip-address">${ip.address}</div>
+                            ${deleteButtonHtml}
+                        </div>
+                    `;
             });
         }
 
+        async function addIp() {
+            if (localStorage.getItem("role") !== "Admin") return alert("Yetkiniz yok!");
+
+            const nameInput = document.getElementById("nameInput");
+            const ipInput = document.getElementById("ipInput");
+            if (!ipInput.value.trim()) return alert("Lütfen bir IP adresi girin!");
+
+            const btn = document.querySelector('.add-btn');
+            btn.disabled = true; btn.innerText = "Ekleniyor...";
+
+            try {
+                await fetch(baseUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name: nameInput.value.trim(), address: ipInput.value.trim(), isUp: false, isActive: true })
+                });
+                nameInput.value = ""; ipInput.value = "";
+                loadIps();
+            } finally {
+                btn.disabled = false; btn.innerText = "Cihaz Ekle";
+            }
+        }
+
         async function deleteIp(id) {
+            if (localStorage.getItem("role") !== "Admin") return alert("Yetkiniz yok!");
+
             try {
                 await fetch(baseUrl + "/" + id, { method: "DELETE" });
                 loadIps();
-            } catch (error) {
-                console.error(error);
-            }
+            } catch (error) { console.error(error); }
         }
-
-        async function addIp() {
-            const nameInput = document.getElementById("nameInput");
-            const ipInput = document.getElementById("ipInput");
-
-            const nameValue = nameInput.value.trim();
-            const ipValue = ipInput.value.trim();
-
-            if (!ipValue) {
-                alert("Lütfen bir IP adresi girin!");
-                return;
-            }
-
-            const btn = document.querySelector('.add-btn');
-            btn.disabled = true;
-            btn.innerText = "Ekleniyor...";
-
-            try {
-                const response = await fetch(baseUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    // İsmi de JSON verisi olarak C#'a gönderiyoruz
-                    body: JSON.stringify({ name: nameValue, address: ipValue, isUp: false, isActive: true })
-                });
-
-                if (response.ok) {
-                    nameInput.value = "";
-                    ipInput.value = "";
-                    loadIps();
-                } else {
-                    alert("IP eklenirken hata oluştu.");
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "Cihaz Ekle";
-            }
-        }
-
-        loadIps();
-        setInterval(loadIps, 30000);
     </script>
 </body>
 </html>
