@@ -36,14 +36,14 @@ app.UseDefaultFiles();
 
 app.UseStaticFiles();
 
-// Varsayılan Admin Hesabı Oluşturma (Seed Data)
+// Varsayılan Kullanıcıları (Admin ve Viewer) Oluşturma (Seed Data)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<PingWatch.Data.AppDbContext>();
 
-    // Eğer Users tablosunda hiç kayıt yoksa varsayılan admini ekle
-    if (!context.Users.Any())
+    // Admin hesabı yoksa oluştur
+    if (!context.Users.Any(u => u.Username == "admin"))
     {
         context.Users.Add(new PingWatch.Models.User
         {
@@ -51,8 +51,21 @@ using (var scope = app.Services.CreateScope())
             PasswordHash = PingWatch.Helpers.PasswordHelper.HashPassword("admin123"),
             Role = "Admin"
         });
-        context.SaveChanges();      
     }
+
+    // Viewer (İzleyici) hesabı yoksa oluştur
+    if (!context.Users.Any(u => u.Username == "viewer"))
+    {
+        context.Users.Add(new PingWatch.Models.User
+        {
+            Username = "viewer",
+            PasswordHash = PingWatch.Helpers.PasswordHelper.HashPassword("viewer123"),
+            Role = "Viewer" // Yetkisi sadece izleyici
+        });
+    }
+
+    // Değişiklikleri veritabanına kaydet
+    context.SaveChanges();
 }
 
 app.Run();
