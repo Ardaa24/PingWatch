@@ -51,7 +51,7 @@
             }
         }
 
-        /* --- LOGIN PANELİ --- */
+        /* --- LOGIN PANELİ (DÜZELTİLDİ) --- */
         #login-container {
             position: fixed;
             top: 0;
@@ -79,15 +79,18 @@
                 margin-bottom: 20px;
             }
 
+            /* Login kutusundaki TÜM inputlar için ortak ve eşit stil */
             .login-box input {
                 width: 100%;
-                padding: 12px;
+                padding: 12px 15px;
                 margin: 10px 0;
                 border: 1px solid #ddd;
                 border-radius: 6px;
-                box-sizing: border-box;
+                box-sizing: border-box; /* Padding'i boyuta dahil et */
                 outline: none;
                 transition: 0.3s;
+                font-size: 14px;
+                height: 45px; /* Yüksekliği sabitle */
             }
 
                 .login-box input:focus {
@@ -119,9 +122,9 @@
             margin-bottom: 10px;
         }
 
-        /* --- ANA UYGULAMA (FLEX YAPI FOOTER İÇİN) --- */
+        /* --- ANA UYGULAMA --- */
         #main-app {
-            display: none; /* JS ile "flex" yapılacak */
+            display: none;
             flex-direction: column;
             min-height: 100vh;
             width: 100%;
@@ -262,9 +265,9 @@
             margin-top: 5px;
         }
 
-        /* --- MAIN CONTENT & KONTROLLER --- */
+        /* --- MAIN CONTENT & KONTROLLER (DÜZELTİLDİ) --- */
         .main-content {
-            flex: 1; /* FOOTER'I EN ALTA İTER */
+            flex: 1;
             padding: 25px 20px;
             max-width: 1100px;
             margin: 0 auto;
@@ -291,7 +294,8 @@
             align-items: center;
         }
 
-        input[type="text"] {
+        /* Dashboard'daki inputlar için ÖZEL kural (Login'i etkilemez) */
+        .controls input[type="text"] {
             padding: 10px 15px;
             font-size: 14px;
             border: 2px solid #ddd;
@@ -301,7 +305,7 @@
             transition: border-color 0.3s;
         }
 
-            input[type="text"]:focus {
+            .controls input[type="text"]:focus {
                 border-color: #3498db;
             }
 
@@ -463,7 +467,6 @@
                 <a href="#" class="nav-link active">Anasayfa</a>
                 <a href="#" class="nav-link disabled">Dashboard (İzleme)</a>
                 <a href="#" class="nav-link disabled" id="nav-admin-link">🔒 Yönetim Paneli</a>
-
                 <span class="user-badge" id="nav-user-info">Kullanıcı</span>
                 <button class="logout-btn" onclick="handleLogout()">Çıkış</button>
             </div>
@@ -486,7 +489,6 @@
                     <input type="text" id="ipInput" placeholder="IP Adresi (Örn: 192.168.1.1)" />
                     <button class="add-btn" onclick="addIp()">Cihaz Ekle</button>
                 </div>
-
                 <div class="search-group">
                     <input type="text" id="searchInput" placeholder="Cihaz Adı veya IP Ara..." onkeyup="renderCards()" />
                 </div>
@@ -549,17 +551,14 @@
 
         function showApp() {
             document.getElementById("login-container").style.display = "none";
-            // Flexbox yapısını etkinleştirerek footer'ın aşağı itilmesini sağlar
             document.getElementById("main-app").style.display = "flex";
 
             const username = localStorage.getItem("username");
             const role = localStorage.getItem("role");
 
-            // Kullanıcı adının ilk harfini büyüt
             const capitalizedUser = username.charAt(0).toUpperCase() + username.slice(1);
             document.getElementById("nav-user-info").innerText = `${capitalizedUser} (${role})`;
 
-            // Rol Admin değilse formu ve Yönetim Paneli linkini gizle
             if (role !== "Admin") {
                 document.getElementById("admin-add-form").style.display = "none";
                 document.getElementById("nav-admin-link").style.display = "none";
@@ -607,7 +606,6 @@
                 const statusText = isUp ? "ONLINE" : "OFFLINE";
                 const deviceName = ip.name || "İsimsiz Cihaz";
 
-                // Admin değilse silme butonu eklenmez
                 const deleteButtonHtml = isAdmin
                     ? `<button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>`
                     : '';
