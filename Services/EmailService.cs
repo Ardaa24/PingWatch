@@ -22,7 +22,7 @@ public class EmailService
         var toEmail = _config["SmtpSettings:ToEmail"];
 
         // Cihazın durumuna göre başlık ve mesajı ayarla
-        string statusText = isUp ? "YENİDEN AKTİF (UP) 🟢" : "ÇÖKTÜ (DOWN) 🔴";
+        string statusText = isUp ? "YENİDEN AKTİF (UP) 🟢" : "DOWN 🔴";
         string subject = $"[PingWatch Alert] {deviceName} - {statusText}";
 
         string body = $@"Merhaba,
@@ -35,7 +35,7 @@ Yeni Durum: {statusText}
 Tarih/Saat: {DateTime.Now:dd.MM.yyyy HH:mm:ss}
 
 İyi çalışmalar,
-PingWatch Otomatik Bildirim Sistemi - Arda Can Süren";
+PingWatch Otomatik Bildirim Sistemi from A";
 
         using (var client = new SmtpClient(server, port))
         {
