@@ -54,6 +54,7 @@
             }
         }
 
+        /* --- LOGIN PANELİ --- */
         #login-container {
             position: fixed;
             top: 0;
@@ -78,16 +79,9 @@
             overflow: hidden;
         }
 
-        /* LOGO TRANSPARANLIK DÜZELTMESİ (Arka plan ve padding silindi) */
         .app-logo-img {
             width: 150px;
             margin-bottom: 20px;
-            object-fit: contain;
-            background: transparent;
-        }
-
-        .nav-logo {
-            height: 45px;
             object-fit: contain;
             background: transparent;
         }
@@ -151,6 +145,7 @@
                 opacity: 0.5;
             }
 
+        /* --- ANA UYGULAMA YAPISI --- */
         #main-app {
             display: none;
             flex-direction: column;
@@ -188,7 +183,7 @@
             box-sizing: border-box;
         }
 
-        /* --- ORTAK NAVBAR STİLLERİ --- */
+        /* --- ORTAK NAVBAR --- */
         .normal-navbar {
             background-color: #1a252f;
             padding: 15px 30px;
@@ -200,13 +195,19 @@
 
         .navbar-brand {
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 15px;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-logo {
+            height: 45px;
+            object-fit: contain;
+            background: transparent;
         }
 
         .nav-links {
@@ -270,47 +271,20 @@
                 color: white;
             }
 
-        /* FOOTER STANDARTLAŞTIRILDI */
-        .normal-footer {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            text-align: center;
-            padding: 15px 0;
-            margin-top: auto;
-            font-size: 14px;
-            width: 100%;
-        }
-
-            .normal-footer a {
-                color: #3498db;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-                .normal-footer a:hover {
-                    text-decoration: underline;
-                }
-
-        /* --- ANASAYFA / YÖNETİM ORTAK KAHRAMAN ALANI --- */
+        /* --- KÜÇÜLTÜLMÜŞ KAHRAMAN (HERO) ALANI --- */
         .hero {
             background-color: #2c3e50;
             color: white;
             text-align: center;
-            padding: 15px 20px;
+            padding: 12px 20px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
-            .hero h1 {
-                margin: 0 0 10px 0;
-                font-size: 22px;
-                letter-spacing: 1px;
-            }
 
         .stats-container {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .stat-box {
@@ -329,13 +303,14 @@
             color: #e74c3c;
         }
 
-        /* SON GÜNCELLEME ALANI DÜZELTİLDİ */
         .last-update {
             font-size: 13px;
             color: #bdc3c7;
             font-weight: 500;
+            margin-top: 5px;
         }
 
+        /* --- ARAÇ ÇUBUĞU --- */
         .controls {
             display: flex;
             justify-content: center;
@@ -349,7 +324,7 @@
             gap: 10px;
         }
 
-            .controls input[type="text"] {
+            .controls input[type="text"], .controls select {
                 padding: 8px 12px;
                 font-size: 13px;
                 border: 2px solid #ddd;
@@ -359,7 +334,7 @@
                 transition: 0.3s;
             }
 
-                .controls input[type="text"]:focus {
+                .controls input[type="text"]:focus, .controls select:focus {
                     border-color: #3498db;
                 }
 
@@ -383,7 +358,7 @@
                 background-color: #2980b9;
             }
 
-        /* KART BOYUTLARI VE MİMARİSİ (Şişme engellendi, stretch ile eşit boy) */
+        /* --- ANASAYFA KARTLARI (KAYMA/ŞİŞME SORUNU ÇÖZÜLDÜ) --- */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -465,6 +440,7 @@
             box-sizing: border-box;
         }
 
+        /* Kusursuz Hover Butonu: Alan rezerve edildi, sadece opacity değişir */
         .delete-btn {
             background-color: transparent;
             color: #95a5a6;
@@ -473,17 +449,16 @@
             font-size: 12px;
             border-radius: 4px;
             cursor: pointer;
-            margin-top: auto;
+            margin-top: 15px;
             width: 100%;
             opacity: 0;
-            visibility: hidden;
+            pointer-events: none;
             transition: 0.3s;
         }
 
         .card:hover .delete-btn {
             opacity: 1;
-            visibility: visible;
-            margin-top: 15px;
+            pointer-events: auto;
         }
 
         .delete-btn:hover {
@@ -580,7 +555,6 @@
             font-weight: bold;
         }
 
-        /* İzleme Kartları Şişme Engeli */
         .compact-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -593,7 +567,7 @@
             background: white;
             border: 1px solid #e0e0e0;
             border-radius: 6px;
-            padding: 10px 12px;
+            padding: 12px 15px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -668,7 +642,182 @@
             padding-top: 4px;
         }
 
-        /* SIDEBAR VE YÖNETİM (Öncekiyle Aynı, Kusursuz) */
+        /* --- YÖNETİM PANELİ VE KULLANICI ARAYÜZÜ --- */
+        .mgmt-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+        }
+
+        .mgmt-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .mgmt-tab {
+            padding: 15px 25px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #7f8c8d;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+            .mgmt-tab.active {
+                color: #3498db;
+                border-bottom-color: #3498db;
+                background: white;
+            }
+
+        .mgmt-content {
+            padding: 30px;
+            flex: 1;
+            display: none;
+        }
+
+            .mgmt-content.active {
+                display: block;
+                animation: fadeIn 0.3s;
+            }
+
+        .mgmt-form-card {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+            .form-group label {
+                font-size: 12px;
+                font-weight: bold;
+                color: #7f8c8d;
+            }
+
+            .form-group input, .form-group select {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+                outline: none;
+            }
+
+        .mgmt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+            .mgmt-table th {
+                background-color: #f1f2f6;
+                color: #2c3e50;
+                text-align: left;
+                padding: 12px;
+                font-size: 13px;
+                border-bottom: 2px solid #ddd;
+            }
+
+            .mgmt-table td {
+                padding: 12px;
+                border-bottom: 1px solid #e0e0e0;
+                font-size: 14px;
+                vertical-align: middle;
+            }
+
+        .btn-action {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            color: white;
+        }
+
+        .btn-primary {
+            background: #3498db;
+        }
+
+            .btn-primary:hover {
+                background: #2980b9;
+            }
+
+        .btn-danger {
+            background: #e74c3c;
+            padding: 6px 12px;
+        }
+
+            .btn-danger:hover {
+                background: #c0392b;
+            }
+
+        .role-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+            .role-badge.admin {
+                background: #e8f8f5;
+                color: #2ecc71;
+            }
+
+            .role-badge.viewer {
+                background: #ebdef0;
+                color: #9b59b6;
+            }
+
+        .logo-upload-box {
+            border: 2px dashed #bdc3c7;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #fafafa;
+            transition: 0.3s;
+        }
+
+            .logo-upload-box:hover {
+                border-color: #3498db;
+                background: #f0f8ff;
+            }
+
+        /* Mail Info Box */
+        .info-box {
+            background: #eaf2f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.5;
+        }
+
+        /* --- YAN MENÜ (SIDEBAR) --- */
         .sidebar {
             position: fixed;
             top: 0;
@@ -782,149 +931,6 @@
                 display: block;
                 opacity: 1;
             }
-
-        .mgmt-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            min-height: 500px;
-        }
-
-        .mgmt-tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
-            flex-wrap: wrap;
-        }
-
-        .mgmt-tab {
-            padding: 15px 25px;
-            font-weight: bold;
-            font-size: 14px;
-            color: #7f8c8d;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-        }
-
-            .mgmt-tab.active {
-                color: #3498db;
-                border-bottom-color: #3498db;
-                background: white;
-            }
-
-        .mgmt-content {
-            padding: 30px;
-            flex: 1;
-            display: none;
-        }
-
-            .mgmt-content.active {
-                display: block;
-                animation: fadeIn 0.3s;
-            }
-
-        .mgmt-form-card {
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            flex: 1;
-            min-width: 200px;
-        }
-
-            .form-group label {
-                font-size: 12px;
-                font-weight: bold;
-                color: #7f8c8d;
-            }
-
-            .form-group input, .form-group select {
-                padding: 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 14px;
-                outline: none;
-            }
-
-        .mgmt-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-            .mgmt-table th {
-                background-color: #f1f2f6;
-                color: #2c3e50;
-                text-align: left;
-                padding: 12px;
-                font-size: 13px;
-            }
-
-            .mgmt-table td {
-                padding: 12px;
-                border-bottom: 1px solid #e0e0e0;
-                font-size: 14px;
-            }
-
-        .btn-action {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-            color: white;
-        }
-
-        .btn-primary {
-            background: #3498db;
-        }
-
-            .btn-primary:hover {
-                background: #2980b9;
-            }
-
-        .btn-danger {
-            background: #e74c3c;
-            padding: 6px 12px;
-        }
-
-            .btn-danger:hover {
-                background: #c0392b;
-            }
-
-        .logo-upload-box {
-            border: 2px dashed #bdc3c7;
-            padding: 40px;
-            text-align: center;
-            border-radius: 10px;
-            cursor: pointer;
-            background: #fafafa;
-            transition: 0.3s;
-        }
-
-            .logo-upload-box:hover {
-                border-color: #3498db;
-                background: #f0f8ff;
-            }
     </style>
 </head>
 <body>
@@ -951,7 +957,9 @@
             <nav class="normal-navbar">
                 <a href="#" class="navbar-brand">
                     <img src="/Assets/logo.png" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png';" class="nav-logo">
-                    PingWatch
+                    <span style="display:flex; align-items:baseline; gap:8px;">
+                        PingWatch <span style="font-size: 13px; font-weight: normal; color: #bdc3c7; border-left: 1px solid #7f8c8d; padding-left: 8px;">Sistem Önizleme Paneli</span>
+                    </span>
                 </a>
                 <div class="nav-links">
                     <a class="nav-link active">Anasayfa</a>
@@ -964,7 +972,6 @@
             </nav>
 
             <div class="hero">
-                <h1>Sistem Önizleme Paneli</h1>
                 <div class="stats-container">
                     <div class="stat-box">Toplam: <span id="homeTotal">0</span></div>
                     <div class="stat-box stat-active">Aktif: <span id="homeActive">0</span></div>
@@ -1060,8 +1067,18 @@
                     </div>
 
                     <div id="tab-users" class="mgmt-content active">
+
+                        <div class="controls" style="margin-bottom: 15px; padding: 10px 15px; display:flex; gap:10px; background:#f8f9fa; border:1px solid #e0e0e0; box-shadow:none; justify-content:flex-start;">
+                            <input type="text" id="userSearchFilter" placeholder="Kullanıcı İsmi Ara..." onkeyup="renderUsers()" style="flex:1; max-width:300px;">
+                            <select id="userRoleFilter" onchange="renderUsers()" style="width:150px;">
+                                <option value="All">Tüm Roller</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Viewer">Viewer</option>
+                            </select>
+                        </div>
+
                         <div class="mgmt-form-card">
-                            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="newUsername"></div>
+                            <div class="form-group"><label>Yeni Kullanıcı Adı</label><input type="text" id="newUsername"></div>
                             <div class="form-group"><label>Şifre</label><input type="password" id="newPassword"></div>
                             <div class="form-group">
                                 <label>Rol</label>
@@ -1076,12 +1093,17 @@
                     </div>
 
                     <div id="tab-emails" class="mgmt-content">
+
+                        <div class="info-box">
+                            <strong>💡 Bilgilendirme:</strong> Gmail, Office365 vb. kurumsal servisler üzerinden mail göndermek için, hesabınızın normal şifresi yerine güvenlik ayarlarınızdan oluşturacağınız tek kullanımlık <b>"Uygulama Şifresi" (App Password)</b> girmeniz gerekmektedir.
+                        </div>
+
                         <h3 style="margin-top:0;">Gönderen Sunucu (SMTP)</h3>
                         <div class="mgmt-form-card">
                             <div class="form-group"><label>Gönderen Mail</label><input type="email" id="smtpEmail"></div>
                             <div class="form-group"><label>SMTP Sunucu</label><input type="text" id="smtpServer" placeholder="smtp.office365.com"></div>
                             <div class="form-group"><label>Port</label><input type="number" id="smtpPort" value="587"></div>
-                            <div class="form-group"><label>Şifre</label><input type="password" id="smtpPass"></div>
+                            <div class="form-group"><label>Uygulama Şifresi</label><input type="password" id="smtpPass"></div>
                             <button class="btn-action btn-primary" onclick="saveMailConfig()">Kaydet</button>
                         </div>
                         <h3 style="border-bottom:2px solid #eee; padding-bottom:10px;">Alıcılar</h3>
@@ -1100,12 +1122,11 @@
                         <h3>Logo Değiştir (PNG/JPG)</h3>
                         <input type="file" id="logoInput" accept=".png, .jpg, .jpeg" style="display:none" onchange="uploadLogo()">
                         <div class="logo-upload-box" onclick="document.getElementById('logoInput').click()">
-                            <p style="font-size:18px; color:#7f8c8d; margin:0;">📁 Buraya tıklayarak yeni logo seçin</p>
+                            <p style="font-size:18px; color:#7f8c8d; margin:0;">📁 Buraya tıklayarak arka planı şeffaf yeni bir logo seçin</p>
                         </div>
                     </div>
                 </div>
             </div>
-
             <footer class="normal-footer"><p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p></footer>
         </div>
 
@@ -1115,6 +1136,7 @@
         const baseUrl = "/api/Ip";
         const adminUrl = "/api/Admin";
         let allData = [];
+        let allUsers = []; // Kullanıcı listesini bellekte tutmak için
         let pollingInterval = null;
         let currentMode = 'home';
 
@@ -1287,12 +1309,8 @@
         // --- YÖNETİM PANELİ (API İŞLEMLERİ) ---
         async function loadAdminData() {
             const uRes = await fetch(adminUrl + "/users");
-            const users = await uRes.json();
-            const tbody = document.getElementById("usersTableBody"); tbody.innerHTML = "";
-            users.forEach(u => {
-                const btn = u.username === 'admin' ? '<button class="btn-action btn-danger" disabled style="opacity:0.5">Silinemez</button>' : `<button class="btn-action btn-danger" onclick="deleteUser(${u.id})">Sil</button>`;
-                tbody.innerHTML += `<tr><td><strong>${u.username}</strong></td><td><span style="background:#e8f8f5;color:#2ecc71;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:bold;">${u.role}</span></td><td style="text-align:right;">${btn}</td></tr>`;
-            });
+            allUsers = await uRes.json();
+            renderUsers(); // Tabloyu yeni filtreleme mantığıyla çiz
 
             const mRes = await fetch(adminUrl + "/mailconfig");
             if (mRes.ok) {
@@ -1310,6 +1328,43 @@
             const rtbody = document.getElementById("recTableBody"); rtbody.innerHTML = "";
             recs.forEach(r => {
                 rtbody.innerHTML += `<tr><td><strong>${r.fullName}</strong></td><td>${r.emailAddress}</td><td style="text-align:right;"><button class="btn-action btn-danger" onclick="deleteRecipient(${r.id})">Sil</button></td></tr>`;
+            });
+        }
+
+        // Kullanıcı Tablosunu Çiz (Filtreleme Destekli ve Oturum Korumalı)
+        function renderUsers() {
+            const tbody = document.getElementById("usersTableBody");
+            tbody.innerHTML = "";
+            const search = document.getElementById("userSearchFilter").value.toLowerCase().trim();
+            const roleFilter = document.getElementById("userRoleFilter").value;
+            const currentLoggedUser = localStorage.getItem("username");
+
+            let filtered = allUsers.filter(u => u.username.toLowerCase().includes(search));
+            if (roleFilter !== "All") {
+                filtered = filtered.filter(u => u.role === roleFilter);
+            }
+
+            filtered.forEach(u => {
+                let btn = '';
+                // 1. Kök Admin Koruması
+                if (u.username === 'admin') {
+                    btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;" title="Sistem Kök Hesabı">Kilitli</button>';
+                }
+                // 2. Kendi Kendini Silme Koruması
+                else if (u.username === currentLoggedUser) {
+                    btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;" title="Şu an bu hesaptasınız">Mevcut Oturum</button>';
+                }
+                // 3. Normal Silme
+                else {
+                    btn = `<button class="btn-action btn-danger" onclick="deleteUser(${u.id})">Sil</button>`;
+                }
+
+                const roleClass = u.role.toLowerCase();
+                tbody.innerHTML += `<tr>
+                        <td><strong>${u.username}</strong></td>
+                        <td><span class="role-badge ${roleClass}">${u.role}</span></td>
+                        <td style="text-align:right;">${btn}</td>
+                    </tr>`;
             });
         }
 
@@ -1354,6 +1409,7 @@
             if (res.ok) {
                 alert("Logo güncellendi! Ekran yenileniyor...");
                 document.querySelectorAll('.app-logo-img').forEach(img => img.src = "/Assets/logo.png?v=" + new Date().getTime());
+                document.querySelectorAll('.nav-logo').forEach(img => img.src = "/Assets/logo.png?v=" + new Date().getTime());
             } else alert(await res.text());
         }
     </script>
