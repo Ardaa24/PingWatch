@@ -76,6 +76,8 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             width: 350px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
             .login-box img {
@@ -125,6 +127,24 @@
             margin-bottom: 10px;
         }
 
+        /* Şeffaf İmza (Login) */
+        .login-signature {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 10px;
+            opacity: 0.15;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+            .login-signature:hover {
+                opacity: 0.5;
+            }
+
         /* --- ANA UYGULAMA YAPISI --- */
         #main-app {
             display: none;
@@ -152,9 +172,7 @@
             box-sizing: border-box;
         }
 
-        /* ==========================================================================
-           1. ANASAYFA VE YÖNETİM MODU ORTAK STİLLERİ (KLASİK)
-           ========================================================================== */
+        /* --- ORTAK NAVBAR STİLLERİ --- */
         .normal-navbar {
             background-color: #1a252f;
             padding: 15px 30px;
@@ -213,11 +231,6 @@
                 opacity: 0.6;
             }
 
-                .nav-link.disabled:hover {
-                    background-color: transparent;
-                    color: #7f8c8d;
-                }
-
         .user-badge-home {
             background-color: #2c3e50;
             color: #ecf0f1;
@@ -246,6 +259,27 @@
                 color: white;
             }
 
+        .normal-footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 15px 0;
+            margin-top: auto;
+            font-size: 14px;
+            width: 100%;
+        }
+
+            .normal-footer a {
+                color: #3498db;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .normal-footer a:hover {
+                    text-decoration: underline;
+                }
+
+        /* --- ANASAYFA MODU ÖZEL STİLLER --- */
         .hero {
             background-color: #2c3e50;
             color: white;
@@ -283,13 +317,6 @@
             color: #e74c3c;
         }
 
-        .last-update {
-            font-size: 12px;
-            color: #bdc3c7;
-            margin-top: 5px;
-        }
-
-        /* KÜÇÜLTÜLMÜŞ, YAN YANA İNCE ARAÇ ÇUBUĞU (TOOLBAR) TASARIMI */
         .controls {
             display: flex;
             justify-content: center;
@@ -303,30 +330,24 @@
             gap: 10px;
         }
 
-        .add-group, .search-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .controls input[type="text"] {
-            padding: 8px 12px;
-            font-size: 13px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            width: 160px;
-            outline: none;
-            transition: 0.3s;
-        }
-
-            .controls input[type="text"]:focus {
-                border-color: #3498db;
+            .controls input[type="text"] {
+                padding: 8px 12px;
+                font-size: 13px;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                width: 160px;
+                outline: none;
+                transition: 0.3s;
             }
 
-        .controls .search-group input[type="text"] {
-            width: 200px;
-        }
-        /* Arama kutusu bir tık daha uzun olsun */
+                .controls input[type="text"]:focus {
+                    border-color: #3498db;
+                }
+
+            .controls .search-group input[type="text"] {
+                width: 220px;
+            }
+
         .add-btn {
             padding: 8px 15px;
             font-size: 13px;
@@ -336,7 +357,6 @@
             border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
-            white-space: nowrap;
             font-weight: bold;
         }
 
@@ -344,7 +364,6 @@
                 background-color: #2980b9;
             }
 
-        /* Klasik (Büyük) Kartlar */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -390,7 +409,14 @@
         .ip-address {
             font-size: 13px;
             color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .last-active-text {
+            font-size: 10px;
+            color: #e74c3c;
             margin-bottom: 10px;
+            font-weight: 500;
         }
 
         .status {
@@ -437,29 +463,7 @@
             border-color: #e74c3c;
         }
 
-        .normal-footer {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            text-align: center;
-            padding: 15px 0;
-            margin-top: auto;
-            font-size: 14px;
-            width: 100%;
-        }
-
-            .normal-footer a {
-                color: #3498db;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-                .normal-footer a:hover {
-                    text-decoration: underline;
-                }
-
-        /* ==========================================================================
-           2. İZLEME (MONITORING) MODU STİLLERİ
-           ========================================================================== */
+        /* --- İZLEME (MONITORING) MODU ÖZEL STİLLER --- */
         #monitor-navbar {
             background-color: #1a252f;
             padding: 10px 20px;
@@ -473,7 +477,7 @@
             gap: 10px;
         }
 
-        .hamburger-btn {
+        .top-btn {
             background: none;
             border: none;
             color: white;
@@ -481,9 +485,10 @@
             cursor: pointer;
             transition: 0.2s;
             margin-right: 15px;
+            padding: 0 5px;
         }
 
-            .hamburger-btn:hover {
+            .top-btn:hover {
                 color: #3498db;
             }
 
@@ -578,6 +583,7 @@
             .compact-card.down {
                 background-color: #fdf5f5;
                 border-color: #fadada;
+                flex-wrap: wrap;
             }
 
         .status-dot {
@@ -632,6 +638,14 @@
             font-size: 12px;
             color: #7f8c8d;
             font-family: monospace;
+        }
+
+        .compact-last-active {
+            width: 100%;
+            font-size: 9px;
+            color: #e74c3c;
+            margin-top: 5px;
+            text-align: right;
         }
 
         /* YAN MENÜ (SIDEBAR) */
@@ -721,25 +735,6 @@
                 border-left-color: transparent !important;
             }
 
-        .sidebar-footer {
-            padding: 15px 20px;
-            font-size: 12px;
-            color: #bdc3c7;
-            border-top: 1px solid #34495e;
-            text-align: center;
-            line-height: 1.5;
-        }
-
-            .sidebar-footer a {
-                color: #3498db;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-                .sidebar-footer a:hover {
-                    text-decoration: underline;
-                }
-
         .overlay {
             position: fixed;
             top: 0;
@@ -757,6 +752,178 @@
                 display: block;
                 opacity: 1;
             }
+
+        /* ==========================================================================
+           3. YÖNETİM PANELİ ÖZEL STİLLERİ (KUSURSUZ UI)
+           ========================================================================== */
+        .mgmt-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 500px;
+        }
+
+        .mgmt-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .mgmt-tab {
+            padding: 18px 30px;
+            font-weight: bold;
+            font-size: 15px;
+            color: #7f8c8d;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: 0.3s;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+            .mgmt-tab:hover {
+                color: #2c3e50;
+                background: #f1f2f6;
+            }
+
+            .mgmt-tab.active {
+                color: #3498db;
+                border-bottom-color: #3498db;
+                background: white;
+            }
+
+        .mgmt-content {
+            padding: 30px;
+            flex: 1;
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+            .mgmt-content.active {
+                display: block;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Yönetim Paneli Tabloları */
+        .mgmt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+            .mgmt-table th {
+                background-color: #f8f9fa;
+                color: #2c3e50;
+                font-weight: bold;
+                text-align: left;
+                padding: 12px 15px;
+                border-bottom: 2px solid #e0e0e0;
+                font-size: 14px;
+            }
+
+            .mgmt-table td {
+                padding: 12px 15px;
+                border-bottom: 1px solid #e0e0e0;
+                font-size: 14px;
+                color: #333;
+                vertical-align: middle;
+            }
+
+            .mgmt-table tr:hover td {
+                background-color: #fbfcfc;
+            }
+
+        /* Yönetim Formları */
+        .mgmt-form-card {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+            .form-group label {
+                font-size: 12px;
+                font-weight: bold;
+                color: #7f8c8d;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .form-group input, .form-group select {
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+                outline: none;
+                transition: 0.3s;
+            }
+
+                .form-group input:focus, .form-group select:focus {
+                    border-color: #3498db;
+                    box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+                }
+
+        /* Yönetim Butonları */
+        .btn-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: #2980b9;
+            }
+
+        .btn-danger {
+            background: transparent;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+            .btn-danger:hover {
+                background: #e74c3c;
+                color: white;
+            }
     </style>
 </head>
 <body>
@@ -773,6 +940,7 @@
             <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
             <input type="password" id="password" placeholder="Şifre">
             <button onclick="handleLogin()">Giriş Yap</button>
+            <a href="https://github.com/ardaa24" target="_blank" class="login-signature">by ardaa24</a>
         </div>
     </div>
 
@@ -782,19 +950,20 @@
             <nav class="normal-navbar">
                 <a href="#" class="navbar-brand">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo" class="nav-logo">
-                    PingWatch | Önizleme
+                    PingWatch
                 </a>
                 <div class="nav-links">
                     <a class="nav-link active">Anasayfa</a>
                     <a class="nav-link" onclick="switchMode('monitor')">Dashboard (İzleme)</a>
-                    <a class="nav-link disabled" title="Çok Yakında">Sıcaklık İzleme</a>
-                    <a class="nav-link" id="nav-admin-link" onclick="switchMode('management')"> Yönetim Paneli</a>
+                    <a class="nav-link disabled" title="Çok Yakında">🌡️ Sıcaklık İzleme 🔒</a>
+                    <a class="nav-link" id="nav-admin-link" onclick="switchMode('management')">🔒 Yönetim Paneli</a>
                     <span class="user-badge-home" id="home-user-info">User</span>
                     <button class="logout-btn-home" onclick="handleLogout()">Çıkış</button>
                 </div>
             </nav>
 
             <div class="hero">
+                <h1>Sistem Önizleme Paneli</h1>
                 <div class="stats-container">
                     <div class="stat-box">Toplam: <span id="homeTotal">0</span></div>
                     <div class="stat-box stat-active">Aktif: <span id="homeActive">0</span></div>
@@ -805,13 +974,14 @@
 
             <div class="main-content">
                 <div class="controls">
-                    <div class="add-group" id="admin-add-form">
+                    <div class="add-group" id="admin-add-form" style="display: flex; gap: 10px; align-items: center;">
                         <input type="text" id="nameInput" placeholder="Cihaz Adı (Örn: Router)" />
                         <input type="text" id="ipInput" placeholder="IP Adresi" />
                         <button class="add-btn" onclick="addIp()">Cihaz Ekle</button>
+                        <div style="width: 1px; height: 30px; background: #eee; margin: 0 10px;"></div>
                     </div>
-                    <div style="width: 1px; height: 30px; background: #eee; margin: 0 10px;" id="form-separator"></div>
-                    <div class="search-group">
+
+                    <div class="search-group" style="margin-left: auto; margin-right: auto;">
                         <input type="text" id="searchInput" placeholder="Cihaz Adı veya IP Ara..." onkeyup="renderCards()" />
                     </div>
                 </div>
@@ -825,18 +995,19 @@
 
         <div id="monitor-mode" class="mode-wrapper">
             <nav id="monitor-navbar">
-                <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+                <button id="hamburger-btn" class="top-btn" onclick="toggleSidebar()">☰</button>
+                <button id="viewer-back-btn" class="top-btn" style="display: none;" onclick="switchMode('home')" title="Önizlemeye Dön">⬅</button>
+
                 <div class="monitor-brand">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo">
-                    PingWatch İzleme Merkezi <span class="signature">by Arda</span>
+                    PingWatch İzleme <span class="signature">by Arda</span>
                 </div>
 
                 <div class="monitor-stats">
-                    <div>Toplam: <span id="monitorTotal">0</span></div>
+                    <div>Top: <span id="monitorTotal">0</span></div>
                     <div class="m-active">Aktif: <span id="monitorActive">0</span></div>
                     <div class="m-passive">Down: <span id="monitorPassive">0</span></div>
                 </div>
-
                 <div class="monitor-status-text" id="monitorLastUpdate"></div>
             </nav>
 
@@ -850,15 +1021,14 @@
                     <button class="close-btn" onclick="toggleSidebar()">✖</button>
                 </div>
                 <div class="sidebar-menu">
-                    <a href="#" onclick="switchMode('home')">🏠 Anasayfa</a>
-                    <a href="#" class="active" onclick="toggleSidebar()">🖥️ Dashboard</a>
-                    <a href="#" class="sidebar-disabled" title="Çok Yakında">🌡️ Sıcaklık İzleme</a>
+                    <a href="#" onclick="switchMode('home')">🏠 Anasayfa (Önizleme)</a>
+                    <a href="#" class="active" onclick="toggleSidebar()">🖥️ Dashboard (İzleme)</a>
+                    <a href="#" class="sidebar-disabled" title="Çok Yakında">🌡️ Sıcaklık İzleme 🔒</a>
                     <a href="#" id="side-admin-link" onclick="switchMode('management')">⚙️ Yönetim Paneli</a>
                     <a href="#" class="logout" onclick="handleLogout()">🚪 Çıkış Yap</a>
                 </div>
                 <div class="sidebar-footer">
-                    Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a><br>
-                    PingWatch © 2026
+                    Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a><br>PingWatch © 2026
                 </div>
             </div>
 
@@ -871,22 +1041,122 @@
             <nav class="normal-navbar">
                 <a href="#" class="navbar-brand" onclick="switchMode('home')">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png" alt="Logo" class="nav-logo">
-                    PingWatch 
+                    PingWatch
                 </a>
                 <div class="nav-links">
                     <a class="nav-link" onclick="switchMode('home')">Anasayfa</a>
                     <a class="nav-link" onclick="switchMode('monitor')">Dashboard (İzleme)</a>
-                    <a class="nav-link disabled" title="Çok Yakında">Sıcaklık İzleme</a>
-                    <a class="nav-link active"> Yönetim Paneli</a>
+                    <a class="nav-link disabled" title="Çok Yakında">🌡️ Sıcaklık İzleme 🔒</a>
+                    <a class="nav-link active">🔒 Yönetim Paneli</a>
                     <button class="logout-btn-home" onclick="handleLogout()">Çıkış</button>
                 </div>
             </nav>
-            <div class="main-content" style="display: flex; justify-content: center; align-items: center; text-align: center;">
-                <div>
-                    <h1 style="color: #2c3e50; font-size: 36px; margin-bottom: 10px;">Yönetim Paneli</h1>
-                    <p style="color: #7f8c8d; font-size: 18px;">Gelişmiş ayarlar ve detaylı yönetim özellikleri çok yakında burada olacak.</p>
+
+            <div class="main-content">
+                <div class="mgmt-container">
+
+                    <div class="mgmt-tabs">
+                        <button class="mgmt-tab active" onclick="switchMgmtTab('users', this)">👥 Kullanıcı Yönetimi</button>
+                        <button class="mgmt-tab" onclick="switchMgmtTab('emails', this)">📧 Bildirim & Mail Ayarları</button>
+                    </div>
+
+                    <div id="tab-users" class="mgmt-content active">
+                        <h2 style="margin-top:0; color:#2c3e50;">Sistem Kullanıcıları</h2>
+                        <div class="mgmt-form-card">
+                            <div class="form-group">
+                                <label>Kullanıcı Adı</label>
+                                <input type="text" id="newUsername" placeholder="Örn: arda.admin">
+                            </div>
+                            <div class="form-group">
+                                <label>Şifre</label>
+                                <input type="password" id="newPassword" placeholder="Şifre belirle">
+                            </div>
+                            <div class="form-group">
+                                <label>Yetki Rolü</label>
+                                <select id="newRole">
+                                    <option value="Admin">Admin (Tam Yetki)</option>
+                                    <option value="Viewer">Viewer (Sadece İzleme)</option>
+                                </select>
+                            </div>
+                            <button class="btn-action btn-primary" onclick="alert('Kullanıcı Ekleme API\'si eklenecek')">+ Kullanıcı Ekle</button>
+                        </div>
+
+                        <table class="mgmt-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kullanıcı Adı</th>
+                                    <th>Yetki Rolü</th>
+                                    <th style="text-align:right;">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><strong>admin</strong></td>
+                                    <td><span style="background:#e8f8f5; color:#2ecc71; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:bold;">Admin</span></td>
+                                    <td style="text-align:right;"><button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;">Silinemez</button></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><strong>viewer</strong></td>
+                                    <td><span style="background:#ebdef0; color:#3498db; padding:3px 8px; border-radius:12px; font-size:11px; font-weight:bold;">Viewer</span></td>
+                                    <td style="text-align:right;"><button class="btn-action btn-danger" onclick="alert('Silinecek')">Sil</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="tab-emails" class="mgmt-content">
+                        <h2 style="margin-top:0; color:#2c3e50;">Gönderen Sunucu (SMTP) Ayarları</h2>
+                        <div class="mgmt-form-card" style="background:#fdfefe; border-color:#d5dbdb;">
+                            <div class="form-group">
+                                <label>Gönderen Mail Adresi</label>
+                                <input type="email" placeholder="noreply@sisecam.com">
+                            </div>
+                            <div class="form-group">
+                                <label>SMTP Şifresi / App Password</label>
+                                <input type="password" placeholder="••••••••">
+                            </div>
+                            <button class="btn-action btn-primary" onclick="alert('Mail Ayarları Kaydedilecek')">Ayarları Kaydet</button>
+                        </div>
+
+                        <h2 style="color:#2c3e50; margin-top:40px; border-bottom:2px solid #eee; padding-bottom:10px;">Bildirim Alacak Kişiler (Alıcılar)</h2>
+                        <div class="mgmt-form-card">
+                            <div class="form-group">
+                                <label>Alıcı Adı Soyadı</label>
+                                <input type="text" placeholder="Örn: Arda IT Support">
+                            </div>
+                            <div class="form-group">
+                                <label>Alıcı Mail Adresi</label>
+                                <input type="email" placeholder="arda@sisecam.com">
+                            </div>
+                            <button class="btn-action btn-primary" onclick="alert('Alıcı Eklenecek')">+ Alıcı Ekle</button>
+                        </div>
+
+                        <table class="mgmt-table">
+                            <thead>
+                                <tr>
+                                    <th>Kişi Adı</th>
+                                    <th>Mail Adresi</th>
+                                    <th>Durum</th>
+                                    <th style="text-align:right;">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Sistem Yöneticisi</strong></td>
+                                    <td>admin@sirket.com</td>
+                                    <td><span style="color:#2ecc71; font-weight:bold; font-size:12px;">Aktif</span></td>
+                                    <td style="text-align:right;"><button class="btn-action btn-danger">Sil</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
             </div>
+
             <footer class="normal-footer">
                 <p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p>
             </footer>
@@ -945,11 +1215,18 @@
             document.getElementById("side-user-name").innerText = capitalizedUser;
             document.getElementById("side-user-role").innerText = role + " Yetkisi";
 
+            // ROL KISITLAMALARI (Mükemmeliyetçi Yaklaşım)
             if (role !== "Admin") {
+                // Anasayfada form gizlenir
                 document.getElementById("admin-add-form").style.display = "none";
-                document.getElementById("form-separator").style.display = "none";
+
+                // Menülerden Yönetim gizlenir
                 document.getElementById("nav-admin-link").style.display = "none";
                 document.getElementById("side-admin-link").style.display = "none";
+
+                // İzleme modunda Hamburger gider, Geri Dön butonu gelir
+                document.getElementById("hamburger-btn").style.display = "none";
+                document.getElementById("viewer-back-btn").style.display = "block";
             }
 
             switchMode('home');
@@ -958,6 +1235,12 @@
         }
 
         function switchMode(modeName) {
+            // Eğer Viewer biri URL'den veya konsoldan yönetime girmeye çalışırsa blokla
+            if (modeName === 'management' && localStorage.getItem("role") !== "Admin") {
+                alert("Bu alana erişim yetkiniz yok!");
+                return;
+            }
+
             currentMode = modeName;
             document.querySelectorAll('.mode-wrapper').forEach(el => el.classList.remove('active'));
             document.getElementById(`${modeName}-mode`).classList.add('active');
@@ -974,6 +1257,15 @@
             sidebar.classList.toggle('open');
             if (sidebar.classList.contains('open')) overlay.classList.add('show');
             else overlay.classList.remove('show');
+        }
+
+        // Yönetim Paneli Sekme Geçişi
+        function switchMgmtTab(tabId, btnElement) {
+            document.querySelectorAll('.mgmt-tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.mgmt-content').forEach(el => el.classList.remove('active'));
+
+            btnElement.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
         }
 
         async function loadIps() {
@@ -1002,6 +1294,13 @@
             document.getElementById("monitorLastUpdate").innerText = "Senkron: " + timeStr;
         }
 
+        // Tarih Formatlayıcı Yardımcı Fonksiyon
+        function formatLastActive(dateString) {
+            if (!dateString) return "Bilinmiyor";
+            const date = new Date(dateString);
+            return date.toLocaleDateString('tr-TR') + " " + date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+        }
+
         function renderCards() {
             if (currentMode === 'home') renderHomeCards();
             else if (currentMode === 'monitor') renderMonitorCards();
@@ -1019,11 +1318,19 @@
             filtered.forEach(ip => {
                 const stateClass = ip.isUp ? "up" : "down";
                 const deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>` : "";
+
+                // Eğer cihaz kapalıysa ve son aktif zamanı varsa göster
+                let lastActiveHtml = "";
+                if (!ip.isUp && ip.lastActiveTime) {
+                    lastActiveHtml = `<div class="last-active-text">Son Görülme: ${formatLastActive(ip.lastActiveTime)}</div>`;
+                }
+
                 container.innerHTML += `
                         <div class="card ${stateClass}">
                             <div class="status ${stateClass}">${ip.isUp ? 'ONLINE' : 'OFFLINE'}</div>
                             <div class="device-name">${ip.name || "Cihaz"}</div>
                             <div class="ip-address">${ip.address}</div>
+                            ${lastActiveHtml}
                             ${deleteBtn}
                         </div>
                     `;
@@ -1037,6 +1344,12 @@
 
             sorted.forEach(ip => {
                 const stateClass = ip.isUp ? "up" : "down";
+
+                let lastActiveHtml = "";
+                if (!ip.isUp && ip.lastActiveTime) {
+                    lastActiveHtml = `<div class="compact-last-active">Kopma: ${formatLastActive(ip.lastActiveTime)}</div>`;
+                }
+
                 container.innerHTML += `
                         <div class="compact-card ${stateClass}">
                             <div class="status-dot ${stateClass}"></div>
@@ -1044,6 +1357,7 @@
                                 <div class="compact-name">${ip.name || "Cihaz"}</div>
                                 <div class="compact-ip">${ip.address}</div>
                             </div>
+                            ${lastActiveHtml}
                         </div>
                     `;
             });
@@ -1053,15 +1367,30 @@
             if (localStorage.getItem("role") !== "Admin") return;
             const nameInput = document.getElementById("nameInput");
             const ipInput = document.getElementById("ipInput");
-            if (!ipInput.value.trim()) return alert("IP zorunludur!");
+            const newName = nameInput.value.trim();
+            const newIp = ipInput.value.trim();
+
+            if (!newIp) return alert("Lütfen bir IP adresi girin!");
+
+            // AYNI IP VEYA İSİM KONTROLÜ (DUPLICATE CHECK)
+            const isDuplicate = allData.some(ip =>
+                ip.address === newIp ||
+                (ip.name && newName && ip.name.toLowerCase() === newName.toLowerCase())
+            );
+
+            if (isDuplicate) {
+                alert("HATA: Bu IP adresi veya Cihaz İsmi sistemde zaten kayıtlı! Lütfen farklı bir cihaz ekleyin.");
+                return; // İşlemi durdur
+            }
+
             try {
                 await fetch(baseUrl, {
                     method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name: nameInput.value.trim(), address: ipInput.value.trim(), isUp: false, isActive: true })
+                    body: JSON.stringify({ name: newName, address: newIp, isUp: false, isActive: true })
                 });
                 nameInput.value = ""; ipInput.value = "";
                 loadIps();
-            } catch (e) { alert("Hata!"); }
+            } catch (e) { alert("Sunucuya eklenirken hata oluştu!"); }
         }
 
         async function deleteIp(id) {
