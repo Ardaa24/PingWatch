@@ -1,58 +1,57 @@
 ﻿using System.Net;
 using System.Net.Mail;
+using Microsoft.EntityFrameworkCore;
+using PingWatch.Data;
 
 namespace PingWatch.Services;
 
 public class EmailService
 {
-    private readonly IConfiguration _config;
+    private readonly IServiceProvider _serviceProvider;
 
-    public EmailService(IConfiguration config)
+    public EmailService(IServiceProvider serviceProvider)
     {
-        _config = config;
+        _serviceProvider = serviceProvider;
     }
 
-    public async Task SendAlertAsync(string deviceName, string ipAddress, bool isUp)
+    public async Task SendAlertAsync(string deviceName, string ipAddress, string status, DateTime time)
     {
-        var server = _config["SmtpSettings:Server"];
-        var port = int.Parse(_config["SmtpSettings:Port"]!);
-        var senderName = _config["SmtpSettings:SenderName"];
-        var senderEmail = _config["SmtpSettings:SenderEmail"];
-        var password = _config["SmtpSettings:Password"];
-        var toEmail = _config["SmtpSettings:ToEmail"];
+        using var scope = _serviceProvider.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        // Cihazın durumuna göre başlık ve mesajı ayarla
-        string statusText = isUp ? "YENİDEN AKTİF (UP) 🟢" : "DOWN 🔴";
-        string subject = $"[PingWatch Alert] {deviceName} - {statusText}";
+        var config = await db.EmailConfigs.FirstOrDefaultAsync();
+        var recipients = await db.EmailRecipients.ToListAsync();
 
-        string body = $@"Merhaba,
+        if (config == null || string.IsNullOrEmpty(config.SmtpServer) || !recipients.Any())
+            return; // Ayar veya alıcı yoksa mail atma
 
-İzlenen ağ cihazlarından birinde durum değişikliği tespit edildi.
-
-Cihaz Adı: {deviceName}
-IP Adresi: {ipAddress}
-Yeni Durum: {statusText}
-Tarih/Saat: {DateTime.Now:dd.MM.yyyy HH:mm:ss}
-
-İyi çalışmalar,
-PingWatch Otomatik Bildirim Sistemi from A";
-
-        using (var client = new SmtpClient(server, port))
+        try
         {
-            client.Credentials = new NetworkCredential(senderEmail, password);
-            client.EnableSsl = true;
+            var smtpClient = new SmtpClient(config.SmtpServer)
+            {
+                Port = config.SmtpPort,
+                Credentials = new NetworkCredential(config.SenderEmail, config.SmtpPassword),
+                EnableSsl = true,
+            };
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(senderEmail!, senderName),
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = false
+                From = new MailAddress(config.SenderEmail, "PingWatch Sistem Uyarı"),
+                Subject = $"AĞ UYARISI: {deviceName} durumu {status} oldu!",
+                Body = $"Cihaz Adı: {deviceName}\nIP Adresi: {ipAddress}\nDurum: {status}\nSaat: {time.ToString("dd.MM.yyyy HH:mm:ss")}\n\nLütfen kontrol ediniz.",
+                IsBodyHtml = false,
             };
 
-            mailMessage.To.Add(toEmail!);
+            foreach (var recipient in recipients)
+            {
+                mailMessage.To.Add(recipient.EmailAddress);
+            }
 
-            await client.SendMailAsync(mailMessage);
+            await smtpClient.SendMailAsync(mailMessage);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Mail Gönderme Hatası: {ex.Message}");
         }
     }
 }

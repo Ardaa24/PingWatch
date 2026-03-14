@@ -25,16 +25,21 @@ public class IpController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddIp(IpAddress ip)
+    public async Task<IActionResult> Post(IpAddress ip)
     {
-        Ping ping = new Ping();
-        PingReply reply = await ping.SendPingAsync(ip.Address);
+        // Çift Kayıt Engeli (Eklediğim en önemli özellik.)
+        bool isDuplicate = await _context.IpAddresses.AnyAsync(x =>
+            x.Address.ToLower() == ip.Address.ToLower() ||
+            x.Name.ToLower() == ip.Name.ToLower());
 
-        ip.IsUp = reply.Status == IPStatus.Success;
+        if (isDuplicate)
+        {
+            return BadRequest("Bu IP adresi veya Cihaz Adı zaten sistemde kayıtlı!");
+        }
 
+        ip.LastActiveTime = null; // İlk eklenişte bilinmiyor
         _context.IpAddresses.Add(ip);
         await _context.SaveChangesAsync();
-
         return Ok(ip);
     }
 
