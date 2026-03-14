@@ -271,6 +271,29 @@
                 color: white;
             }
 
+        /* --- FOOTER STANDARTLAŞTIRILDI VE HATA GİDERİLDİ --- */
+        .normal-footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 15px 20px;
+            margin-top: auto;
+            font-size: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+            .normal-footer a {
+                color: #3498db;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .normal-footer a:hover {
+                    text-decoration: underline;
+                }
+
         /* --- KÜÇÜLTÜLMÜŞ KAHRAMAN (HERO) ALANI --- */
         .hero {
             background-color: #2c3e50;
@@ -358,7 +381,7 @@
                 background-color: #2980b9;
             }
 
-        /* --- ANASAYFA KARTLARI (KAYMA/ŞİŞME SORUNU ÇÖZÜLDÜ) --- */
+        /* --- ANASAYFA KARTLARI --- */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -440,7 +463,6 @@
             box-sizing: border-box;
         }
 
-        /* Kusursuz Hover Butonu: Alan rezerve edildi, sadece opacity değişir */
         .delete-btn {
             background-color: transparent;
             color: #95a5a6;
@@ -642,7 +664,122 @@
             padding-top: 4px;
         }
 
-        /* --- YÖNETİM PANELİ VE KULLANICI ARAYÜZÜ --- */
+        /* YAN MENÜ (SIDEBAR) */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background-color: #2c3e50;
+            z-index: 10000;
+            transition: 0.3s ease-in-out;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #34495e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-user {
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .sidebar-role {
+            color: #3498db;
+            font-size: 12px;
+        }
+
+        .sidebar .close-btn {
+            background: none;
+            border: none;
+            color: #bdc3c7;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding-top: 15px;
+        }
+
+            .sidebar-menu a {
+                display: block;
+                color: #ecf0f1;
+                padding: 15px 25px;
+                text-decoration: none;
+                font-size: 15px;
+                transition: 0.2s;
+                border-left: 3px solid transparent;
+            }
+
+                .sidebar-menu a:hover, .sidebar-menu a.active {
+                    background-color: #34495e;
+                    border-left-color: #3498db;
+                }
+
+                .sidebar-menu a.logout {
+                    color: #e74c3c;
+                    margin-top: 15px;
+                }
+
+                    .sidebar-menu a.logout:hover {
+                        background-color: #e74c3c;
+                        color: white;
+                        border-left-color: #c0392b;
+                    }
+
+        .sidebar-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            font-size: 12px;
+            color: #bdc3c7;
+            border-top: 1px solid #34495e;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+            .sidebar-footer a {
+                color: #3498db;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            .overlay.show {
+                display: block;
+                opacity: 1;
+            }
+
+        /* --- YÖNETİM PANELİ --- */
         .mgmt-container {
             background: white;
             border-radius: 10px;
@@ -805,7 +942,6 @@
                 background: #f0f8ff;
             }
 
-        /* Mail Info Box */
         .info-box {
             background: #eaf2f8;
             border-left: 4px solid #3498db;
@@ -816,121 +952,6 @@
             color: #2c3e50;
             line-height: 1.5;
         }
-
-        /* --- YAN MENÜ (SIDEBAR) --- */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100vh;
-            background-color: #2c3e50;
-            z-index: 10000;
-            transition: 0.3s ease-in-out;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-        }
-
-            .sidebar.open {
-                left: 0;
-            }
-
-        .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid #34495e;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sidebar-user {
-            color: white;
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .sidebar-role {
-            color: #3498db;
-            font-size: 12px;
-        }
-
-        .sidebar .close-btn {
-            background: none;
-            border: none;
-            color: #bdc3c7;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .sidebar-menu {
-            flex: 1;
-            padding-top: 15px;
-        }
-
-            .sidebar-menu a {
-                display: block;
-                color: #ecf0f1;
-                padding: 15px 25px;
-                text-decoration: none;
-                font-size: 15px;
-                transition: 0.2s;
-                border-left: 3px solid transparent;
-            }
-
-                .sidebar-menu a:hover, .sidebar-menu a.active {
-                    background-color: #34495e;
-                    border-left-color: #3498db;
-                }
-
-                .sidebar-menu a.logout {
-                    color: #e74c3c;
-                    margin-top: 15px;
-                }
-
-                    .sidebar-menu a.logout:hover {
-                        background-color: #e74c3c;
-                        color: white;
-                        border-left-color: #c0392b;
-                    }
-
-        .sidebar-disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .sidebar-footer {
-            padding: 15px 20px;
-            font-size: 12px;
-            color: #bdc3c7;
-            border-top: 1px solid #34495e;
-            text-align: center;
-            line-height: 1.6;
-        }
-
-            .sidebar-footer a {
-                color: #3498db;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.5);
-            z-index: 9999;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-            .overlay.show {
-                display: block;
-                opacity: 1;
-            }
     </style>
 </head>
 <body>
@@ -995,7 +1016,9 @@
                 <div class="dashboard" id="home-cards"></div>
             </div>
 
-            <footer class="normal-footer"><p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p></footer>
+            <footer class="normal-footer">
+                Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026
+            </footer>
         </div>
 
         <div id="monitor-mode" class="mode-wrapper">
@@ -1046,7 +1069,9 @@
             <nav class="normal-navbar">
                 <a href="#" class="navbar-brand" onclick="switchMode('home')">
                     <img src="/Assets/logo.png" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png';" class="nav-logo">
-                    PingWatch
+                    <span style="display:flex; align-items:baseline; gap:8px;">
+                        PingWatch <span style="font-size: 13px; font-weight: normal; color: #bdc3c7; border-left: 1px solid #7f8c8d; padding-left: 8px;">Yönetim Paneli</span>
+                    </span>
                 </a>
                 <div class="nav-links">
                     <a class="nav-link" onclick="switchMode('home')">Anasayfa</a>
@@ -1093,11 +1118,9 @@
                     </div>
 
                     <div id="tab-emails" class="mgmt-content">
-
                         <div class="info-box">
                             <strong>💡 Bilgilendirme:</strong> Gmail, Office365 vb. kurumsal servisler üzerinden mail göndermek için, hesabınızın normal şifresi yerine güvenlik ayarlarınızdan oluşturacağınız tek kullanımlık <b>"Uygulama Şifresi" (App Password)</b> girmeniz gerekmektedir.
                         </div>
-
                         <h3 style="margin-top:0;">Gönderen Sunucu (SMTP)</h3>
                         <div class="mgmt-form-card">
                             <div class="form-group"><label>Gönderen Mail</label><input type="email" id="smtpEmail"></div>
@@ -1127,7 +1150,9 @@
                     </div>
                 </div>
             </div>
-            <footer class="normal-footer"><p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p></footer>
+            <footer class="normal-footer">
+                Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026
+            </footer>
         </div>
 
     </div>
@@ -1136,7 +1161,7 @@
         const baseUrl = "/api/Ip";
         const adminUrl = "/api/Admin";
         let allData = [];
-        let allUsers = []; // Kullanıcı listesini bellekte tutmak için
+        let allUsers = [];
         let pollingInterval = null;
         let currentMode = 'home';
 
@@ -1306,11 +1331,11 @@
             if (localStorage.getItem("role") === "Admin" && confirm("Emin misiniz?")) { await fetch(baseUrl + "/" + id, { method: "DELETE" }); loadIps(); }
         }
 
-        // --- YÖNETİM PANELİ (API İŞLEMLERİ) ---
+        // --- YÖNETİM PANELİ API ---
         async function loadAdminData() {
             const uRes = await fetch(adminUrl + "/users");
             allUsers = await uRes.json();
-            renderUsers(); // Tabloyu yeni filtreleme mantığıyla çiz
+            renderUsers();
 
             const mRes = await fetch(adminUrl + "/mailconfig");
             if (mRes.ok) {
@@ -1331,7 +1356,6 @@
             });
         }
 
-        // Kullanıcı Tablosunu Çiz (Filtreleme Destekli ve Oturum Korumalı)
         function renderUsers() {
             const tbody = document.getElementById("usersTableBody");
             tbody.innerHTML = "";
@@ -1340,24 +1364,13 @@
             const currentLoggedUser = localStorage.getItem("username");
 
             let filtered = allUsers.filter(u => u.username.toLowerCase().includes(search));
-            if (roleFilter !== "All") {
-                filtered = filtered.filter(u => u.role === roleFilter);
-            }
+            if (roleFilter !== "All") filtered = filtered.filter(u => u.role === roleFilter);
 
             filtered.forEach(u => {
                 let btn = '';
-                // 1. Kök Admin Koruması
-                if (u.username === 'admin') {
-                    btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;" title="Sistem Kök Hesabı">Kilitli</button>';
-                }
-                // 2. Kendi Kendini Silme Koruması
-                else if (u.username === currentLoggedUser) {
-                    btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;" title="Şu an bu hesaptasınız">Mevcut Oturum</button>';
-                }
-                // 3. Normal Silme
-                else {
-                    btn = `<button class="btn-action btn-danger" onclick="deleteUser(${u.id})">Sil</button>`;
-                }
+                if (u.username === 'admin') btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;" title="Sistem Kök Hesabı">Kilitli</button>';
+                else if (u.username === currentLoggedUser) btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;" title="Şu an bu hesaptasınız">Oturum</button>';
+                else btn = `<button class="btn-action btn-danger" onclick="deleteUser(${u.id})">Sil</button>`;
 
                 const roleClass = u.role.toLowerCase();
                 tbody.innerHTML += `<tr>
@@ -1408,8 +1421,9 @@
             const res = await fetch(adminUrl + "/logo", { method: "POST", body: formData });
             if (res.ok) {
                 alert("Logo güncellendi! Ekran yenileniyor...");
-                document.querySelectorAll('.app-logo-img').forEach(img => img.src = "/Assets/logo.png?v=" + new Date().getTime());
-                document.querySelectorAll('.nav-logo').forEach(img => img.src = "/Assets/logo.png?v=" + new Date().getTime());
+                const ts = new Date().getTime();
+                document.querySelectorAll('.app-logo-img').forEach(img => img.src = "/Assets/logo.png?v=" + ts);
+                document.querySelectorAll('.nav-logo').forEach(img => img.src = "/Assets/logo.png?v=" + ts);
             } else alert(await res.text());
         }
     </script>
