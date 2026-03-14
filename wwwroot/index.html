@@ -183,7 +183,7 @@
             box-sizing: border-box;
         }
 
-        /* --- ORTAK NAVBAR --- */
+        /* --- ORTAK NAVBAR (STICKY / SABİT ÖZELLİĞİ EKLENDİ) --- */
         .normal-navbar {
             background-color: #1a252f;
             padding: 15px 30px;
@@ -191,6 +191,9 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 998;
         }
 
         .navbar-brand {
@@ -271,7 +274,7 @@
                 color: white;
             }
 
-        /* --- FOOTER STANDARTLAŞTIRILDI VE HATA GİDERİLDİ --- */
+        /* --- FOOTER STANDARTLAŞTIRILDI --- */
         .normal-footer {
             background-color: #2c3e50;
             color: #ecf0f1;
@@ -1016,9 +1019,7 @@
                 <div class="dashboard" id="home-cards"></div>
             </div>
 
-            <footer class="normal-footer">
-                Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026
-            </footer>
+            <footer class="normal-footer"><p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p></footer>
         </div>
 
         <div id="monitor-mode" class="mode-wrapper">
