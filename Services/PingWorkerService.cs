@@ -1,4 +1,5 @@
 using System.Net.NetworkInformation;
+using Microsoft.EntityFrameworkCore;
 using PingWatch.Data;
 
 namespace PingWatch.Services;
@@ -20,53 +21,66 @@ public class PingWorkerService : BackgroundService
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 var emailService = scope.ServiceProvider.GetRequiredService<EmailService>();
-                var ips = dbContext.IpAddresses.Where(ip => ip.IsActive).ToList();
 
-                foreach (var ip in ips)
+                var ips = await dbContext.IpAddresses.Where(ip => ip.IsActive).ToListAsync(stoppingToken);
+
+                // Tüm IP'lere aynı anda ping atılır. Gecikme sıfıra iner.
+                var pingTasks = ips.Select(async ip =>
                 {
+                    bool isCurrentlyUp = false;
                     try
                     {
                         using var ping = new Ping();
                         var reply = await ping.SendPingAsync(ip.Address, 1500); // 1.5 sn timeout
-
-                        bool isCurrentlyUp = reply.Status == IPStatus.Success;
-                        bool wasUpBefore = ip.IsUp;
-
-                        // Durum değişti mi Kontrolü (Mail Atma Tetikleyicisi)
-                        if (wasUpBefore && !isCurrentlyUp)
-                        {
-                            // CİHAZ ÇÖKTÜ!
-                            await emailService.SendAlertAsync(ip.Name, ip.Address, "DOWN (ÇÖKTÜ)", DateTime.Now);
-                        }
-                        else if (!wasUpBefore && isCurrentlyUp)
-                        {
-                            // CİHAZ GERİ GELDİ!
-                            await emailService.SendAlertAsync(ip.Name, ip.Address, "UP (YENİDEN AKTİF)", DateTime.Now);
-                        }
-
-                        ip.IsUp = isCurrentlyUp;
-
-                        // SON GÖRÜLME MANTIĞI FİX: Sadece cihaz açıksa saati güncelle, çöktüyse son anı koru!
-                        if (isCurrentlyUp)
-                        {
-                            ip.LastActiveTime = DateTime.Now;
-                        }
-
-                        dbContext.IpAddresses.Update(ip);
+                        isCurrentlyUp = reply.Status == IPStatus.Success;
                     }
                     catch
                     {
-                        if (ip.IsUp) // Cihaz az önce çöktüyse mail at
-                        {
-                            await emailService.SendAlertAsync(ip.Name, ip.Address, "DOWN (ULAŞILAMIYOR)", DateTime.Now);
-                        }
+                        isCurrentlyUp = false;
+                    }
+                    return new { Ip = ip, IsCurrentlyUp = isCurrentlyUp };
+                });
+
+                // Tüm paralel işlemlerin bitmesini bekle 
+                var results = await Task.WhenAll(pingTasks);
+
+                bool dbChanged = false;
+
+                foreach (var result in results)
+                {
+                    var ip = result.Ip;
+                    bool isCurrentlyUp = result.IsCurrentlyUp;
+                    bool wasUpBefore = ip.IsUp;
+
+                    if (wasUpBefore && !isCurrentlyUp) // Çöktü
+                    {
+                        await emailService.SendAlertAsync(ip.Name, ip.Address, "DOWN (ÇÖKTÜ)", DateTime.Now);
                         ip.IsUp = false;
-                        dbContext.IpAddresses.Update(ip);
+                        dbChanged = true;
+                    }
+                    else if (!wasUpBefore && isCurrentlyUp) // Geri Geldi
+                    {
+                        await emailService.SendAlertAsync(ip.Name, ip.Address, "UP (YENİDEN AKTİF)", DateTime.Now);
+                        ip.IsUp = true;
+                        ip.LastActiveTime = DateTime.Now;
+                        dbChanged = true;
+                    }
+                    else if (isCurrentlyUp) // Açık Kalmaya Devam Ediyor
+                    {
+                        ip.LastActiveTime = DateTime.Now;
+                        dbChanged = true;
                     }
                 }
-                await dbContext.SaveChangesAsync();
+
+                if (dbChanged)
+                {
+                    dbContext.IpAddresses.UpdateRange(results.Select(r => r.Ip));
+                    await dbContext.SaveChangesAsync(stoppingToken);
+                }
             }
-            await Task.Delay(15000, stoppingToken); // 15 saniyede bir tara
+
+            // Bekleme süreci artık IP'lere ping atarken geçen süreye bağlı olarak 10 saniyeye kadar azalabilir. Ortalama 1.5-2 saniye sürer.
+            await Task.Delay(10000, stoppingToken);
         }
     }
 }
