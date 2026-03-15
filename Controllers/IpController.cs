@@ -72,17 +72,34 @@ public class IpController : ControllerBase
 
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateIp(int id, IpAddress updatedIp)
+    public async Task<IActionResult> Put(int id, [FromBody] IpAddress updatedIp)
     {
-        var ip = await _context.IpAddresses.FindAsync(id);
-        if (ip == null)
-            return NotFound();
+        var existing = await _context.IpAddresses.FindAsync(id);
+        if (existing == null) return NotFound("Cihaz bulunamadı.");
 
-        ip.Address = updatedIp.Address;
-        ip.IsActive = updatedIp.IsActive;
+        // Çakışma Kontrolü: Kendi ID'si hariç başka bir cihaz bu isim/IP'yi kullanıyor mu?
+        bool isDuplicate = await _context.IpAddresses.AnyAsync(x =>
+            x.Id != id &&
+            (x.Address.ToLower() == updatedIp.Address.ToLower() ||
+             x.Name.ToLower() == updatedIp.Name.ToLower()));
 
+        if (isDuplicate)
+        {
+            return BadRequest("Bu IP adresi veya Cihaz Adı başka bir cihazda kullanılıyor!");
+        }
+
+        // Eğer IP adresi değiştirildiyse, durumu sıfırla ki Ping servisi yeniden tarasın
+        if (existing.Address != updatedIp.Address)
+        {
+            existing.IsUp = false;
+            existing.LastActiveTime = null;
+        }
+
+        existing.Name = updatedIp.Name;
+        existing.Address = updatedIp.Address;
+
+        _context.IpAddresses.Update(existing);
         await _context.SaveChangesAsync();
-
-        return Ok(ip);
+        return Ok(existing);
     }
 }
