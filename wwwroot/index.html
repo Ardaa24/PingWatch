@@ -183,7 +183,7 @@
             box-sizing: border-box;
         }
 
-        /* --- ORTAK NAVBAR (STICKY / SABİT ÖZELLİĞİ EKLENDİ) --- */
+        /* --- ORTAK NAVBAR --- */
         .normal-navbar {
             background-color: #1a252f;
             padding: 15px 30px;
@@ -274,7 +274,7 @@
                 color: white;
             }
 
-        /* --- FOOTER STANDARTLAŞTIRILDI --- */
+        /* --- FOOTER --- */
         .normal-footer {
             background-color: #2c3e50;
             color: #ecf0f1;
@@ -297,7 +297,7 @@
                     text-decoration: underline;
                 }
 
-        /* --- KÜÇÜLTÜLMÜŞ KAHRAMAN (HERO) ALANI --- */
+        /* --- HERO İSTATİSTİKLER --- */
         .hero {
             background-color: #2c3e50;
             color: white;
@@ -466,31 +466,57 @@
             box-sizing: border-box;
         }
 
-        .delete-btn {
-            background-color: transparent;
-            color: #95a5a6;
-            border: 1px solid #bdc3c7;
-            padding: 5px 12px;
-            font-size: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 15px;
+        /* DÜZENLE VE SİL BUTONLARI (YAN YANA) */
+        .card-actions {
+            display: flex;
+            gap: 5px;
             width: 100%;
+            margin-top: 15px;
             opacity: 0;
             pointer-events: none;
             transition: 0.3s;
         }
 
-        .card:hover .delete-btn {
+        .card:hover .card-actions {
             opacity: 1;
             pointer-events: auto;
         }
 
-        .delete-btn:hover {
-            background-color: #e74c3c;
-            color: white;
-            border-color: #e74c3c;
+        .edit-btn {
+            background: transparent;
+            color: #3498db;
+            border: 1px solid #3498db;
+            padding: 5px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.3s;
+            font-weight: bold;
         }
+
+            .edit-btn:hover {
+                background: #3498db;
+                color: white;
+            }
+
+        .delete-btn {
+            background-color: transparent;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 5px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+            .delete-btn:hover {
+                background-color: #e74c3c;
+                color: white;
+            }
 
         /* --- İZLEME (MONITORING) MODU --- */
         #monitor-navbar {
@@ -667,7 +693,7 @@
             padding-top: 4px;
         }
 
-        /* YAN MENÜ (SIDEBAR) */
+        /* --- YAN MENÜ (SIDEBAR) --- */
         .sidebar {
             position: fixed;
             top: 0;
@@ -764,22 +790,111 @@
                 font-weight: bold;
             }
 
-        .overlay {
+        /* --- DÜZENLEME MODALI (POPUP) --- */
+        .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0,0,0,0.5);
-            z-index: 9999;
+            background: rgba(0,0,0,0.6);
+            z-index: 10005;
             display: none;
+            justify-content: center;
+            align-items: center;
             opacity: 0;
             transition: opacity 0.3s;
         }
 
-            .overlay.show {
-                display: block;
+            .modal-overlay.show {
+                display: flex;
                 opacity: 1;
+            }
+
+        .modal-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .modal-box h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .modal-box .form-group {
+            margin-bottom: 15px;
+        }
+
+            .modal-box .form-group label {
+                display: block;
+                font-size: 12px;
+                font-weight: bold;
+                color: #7f8c8d;
+                margin-bottom: 5px;
+            }
+
+            .modal-box .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-sizing: border-box;
+                outline: none;
+            }
+
+                .modal-box .form-group input:focus {
+                    border-color: #3498db;
+                }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-cancel {
+            background: #ecf0f1;
+            color: #7f8c8d;
+        }
+
+            .btn-cancel:hover {
+                background: #bdc3c7;
+                color: white;
+            }
+
+        .btn-save {
+            background: #2ecc71;
+            color: white;
+        }
+
+            .btn-save:hover {
+                background: #27ae60;
             }
 
         /* --- YÖNETİM PANELİ --- */
@@ -945,6 +1060,7 @@
                 background: #f0f8ff;
             }
 
+        /* Detaylı Mail Info Box (Açılır Kapanır) */
         .info-box {
             background: #eaf2f8;
             border-left: 4px solid #3498db;
@@ -953,8 +1069,32 @@
             margin-bottom: 20px;
             font-size: 13px;
             color: #2c3e50;
-            line-height: 1.5;
+            line-height: 1.6;
         }
+
+            .info-box details {
+                margin-top: 10px;
+                background: white;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #d6eaf8;
+                cursor: pointer;
+            }
+
+            .info-box summary {
+                font-weight: bold;
+                color: #2980b9;
+                outline: none;
+            }
+
+            .info-box ol {
+                margin: 10px 0 0 0;
+                padding-left: 20px;
+            }
+
+            .info-box li {
+                margin-bottom: 5px;
+            }
     </style>
 </head>
 <body>
@@ -972,6 +1112,25 @@
             <input type="password" id="password" placeholder="Şifre">
             <button onclick="handleLogin()">Giriş Yap</button>
             <a href="https://github.com/ardaa24" target="_blank" class="login-signature">by ardaa24</a>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-box">
+            <h3>Cihazı Düzenle</h3>
+            <input type="hidden" id="editIpId">
+            <div class="form-group">
+                <label>Cihaz Adı</label>
+                <input type="text" id="editNameInput">
+            </div>
+            <div class="form-group">
+                <label>IP Adresi</label>
+                <input type="text" id="editAddressInput">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn btn-cancel" onclick="closeEditModal()">İptal</button>
+                <button class="modal-btn btn-save" onclick="saveEdit()">Kaydet</button>
+            </div>
         </div>
     </div>
 
@@ -1119,18 +1278,44 @@
                     </div>
 
                     <div id="tab-emails" class="mgmt-content">
+
                         <div class="info-box">
-                            <strong>💡 Bilgilendirme:</strong> Gmail, Office365 vb. kurumsal servisler üzerinden mail göndermek için, hesabınızın normal şifresi yerine güvenlik ayarlarınızdan oluşturacağınız tek kullanımlık <b>"Uygulama Şifresi" (App Password)</b> girmeniz gerekmektedir.
+                            <strong>💡 Bilgilendirme: Bildirim Mailleri Nasıl Ayarlanır?</strong><br>
+                            Güvenlik nedeniyle kişisel mail şifrenizi buraya girmemelisiniz. Sistemlerin otomatik mail atabilmesi için tek kullanımlık bir <b>"Uygulama Şifresi" (App Password)</b> oluşturmalısınız.
+
+                            <details>
+                                <summary>📌 Gmail (Google) İçin Uygulama Şifresi Nasıl Alınır?</summary>
+                                <ol>
+                                    <li>Google Hesabınıza giriş yapın.</li>
+                                    <li>Soldaki menüden <b>Güvenlik</b> sekmesine tıklayın.</li>
+                                    <li>"Google'da oturum açma" bölümünde <b>2 Adımlı Doğrulama'nın açık</b> olduğundan emin olun.</li>
+                                    <li>Arama çubuğuna "Uygulama şifreleri" yazın.</li>
+                                    <li>Uygulama seçin kısmına "PingWatch" yazıp <b>Oluştur</b>'a basın.</li>
+                                    <li>Ekranda çıkan 16 haneli şifreyi kopyalayıp aşağıdaki "Uygulama Şifresi" kutusuna yapıştırın. (SMTP Sunucu: <i>smtp.gmail.com</i>, Port: <i>587</i>)</li>
+                                </ol>
+                            </details>
+
+                            <details>
+                                <summary>📌 Outlook / Office365 İçin Uygulama Şifresi Nasıl Alınır?</summary>
+                                <ol>
+                                    <li>Microsoft Hesabınızın Güvenlik ayarlarına gidin.</li>
+                                    <li>"Gelişmiş güvenlik seçenekleri"ni açın.</li>
+                                    <li><b>İki adımlı doğrulamayı</b> aktif hale getirin.</li>
+                                    <li>Biraz aşağı kaydırıp "Uygulama şifreleri" başlığı altından <b>Yeni bir uygulama şifresi oluştur</b>'a tıklayın.</li>
+                                    <li>Ekrana gelen şifreyi aşağıdaki alana yapıştırın. (SMTP Sunucu: <i>smtp.office365.com</i>, Port: <i>587</i>)</li>
+                                </ol>
+                            </details>
                         </div>
+
                         <h3 style="margin-top:0;">Gönderen Sunucu (SMTP)</h3>
                         <div class="mgmt-form-card">
-                            <div class="form-group"><label>Gönderen Mail</label><input type="email" id="smtpEmail"></div>
-                            <div class="form-group"><label>SMTP Sunucu</label><input type="text" id="smtpServer" placeholder="smtp.office365.com"></div>
+                            <div class="form-group"><label>Gönderen Mail</label><input type="email" id="smtpEmail" placeholder="ornek@gmail.com"></div>
+                            <div class="form-group"><label>SMTP Sunucu</label><input type="text" id="smtpServer" placeholder="smtp.gmail.com"></div>
                             <div class="form-group"><label>Port</label><input type="number" id="smtpPort" value="587"></div>
-                            <div class="form-group"><label>Uygulama Şifresi</label><input type="password" id="smtpPass"></div>
+                            <div class="form-group"><label>Uygulama Şifresi</label><input type="password" id="smtpPass" placeholder="16 haneli kod"></div>
                             <button class="btn-action btn-primary" onclick="saveMailConfig()">Kaydet</button>
                         </div>
-                        <h3 style="border-bottom:2px solid #eee; padding-bottom:10px;">Alıcılar</h3>
+                        <h3 style="border-bottom:2px solid #eee; padding-bottom:10px;">Alıcılar (Bildirim Gidecek Kişiler)</h3>
                         <div class="mgmt-form-card">
                             <div class="form-group"><label>Ad Soyad</label><input type="text" id="recName"></div>
                             <div class="form-group"><label>Mail Adresi</label><input type="email" id="recEmail"></div>
@@ -1217,7 +1402,8 @@
 
             switchMode('home');
             loadIps();
-            if (!pollingInterval) pollingInterval = setInterval(loadIps, 15000);
+            // Backend daha hızlı çalıştığı için Frontend senkronizasyonunu 10 saniyeye indirdik.
+            if (!pollingInterval) pollingInterval = setInterval(loadIps, 10000);
         }
 
         function switchMode(modeName) {
@@ -1289,7 +1475,14 @@
 
                 f.forEach(ip => {
                     const cClass = ip.isUp ? "up" : "down";
-                    const btn = isAdmin ? `<button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>` : "";
+
+                    // Şık DÜZENLE ve SİL butonları birleşik yapısı
+                    const actionBtns = isAdmin ? `
+                            <div class="card-actions">
+                                <button class="edit-btn" onclick="openEditModal(${ip.id}, '${ip.name}', '${ip.address}')">Düzenle</button>
+                                <button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>
+                            </div>
+                        ` : "";
 
                     let timeHtml = "";
                     if (!ip.isUp && ip.lastActiveTime) {
@@ -1297,7 +1490,13 @@
                         if (fTime) timeHtml = `<div class="last-active-text">Son Görülme: ${fTime}</div>`;
                     }
 
-                    container.innerHTML += `<div class="card ${cClass}"><div class="status ${cClass}">${ip.isUp ? 'ONLINE' : 'OFFLINE'}</div><div class="device-name">${ip.name || ""}</div><div class="ip-address">${ip.address}</div>${timeHtml}${btn}</div>`;
+                    container.innerHTML += `<div class="card ${cClass}">
+                            <div class="status ${cClass}">${ip.isUp ? 'ONLINE' : 'OFFLINE'}</div>
+                            <div class="device-name">${ip.name || ""}</div>
+                            <div class="ip-address">${ip.address}</div>
+                            ${timeHtml}
+                            ${actionBtns}
+                        </div>`;
                 });
             } else if (currentMode === 'monitor') {
                 const container = document.getElementById("monitor-cards"); container.innerHTML = "";
@@ -1329,7 +1528,48 @@
         }
 
         async function deleteIp(id) {
-            if (localStorage.getItem("role") === "Admin" && confirm("Emin misiniz?")) { await fetch(baseUrl + "/" + id, { method: "DELETE" }); loadIps(); }
+            if (localStorage.getItem("role") === "Admin" && confirm("Bu cihazı sistemden tamamen kaldırmak istediğinize emin misiniz?")) {
+                await fetch(baseUrl + "/" + id, { method: "DELETE" });
+                loadIps();
+            }
+        }
+
+        // --- CİHAZ DÜZENLEME İŞLEMLERİ (MODAL) ---
+        function openEditModal(id, name, address) {
+            document.getElementById("editIpId").value = id;
+            document.getElementById("editNameInput").value = name;
+            document.getElementById("editAddressInput").value = address;
+            document.getElementById("editModal").classList.add("show");
+        }
+
+        function closeEditModal() {
+            document.getElementById("editModal").classList.remove("show");
+        }
+
+        async function saveEdit() {
+            const id = document.getElementById("editIpId").value;
+            const name = document.getElementById("editNameInput").value.trim();
+            const address = document.getElementById("editAddressInput").value.trim();
+
+            if (!address) return alert("IP Adresi boş olamaz!");
+
+            try {
+                const response = await fetch(baseUrl + "/" + id, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: parseInt(id), name: name, address: address })
+                });
+
+                if (response.ok) {
+                    closeEditModal();
+                    loadIps();
+                } else {
+                    const errorText = await response.text();
+                    alert("HATA: " + errorText);
+                }
+            } catch (e) {
+                alert("Sunucuya bağlanılamadı!");
+            }
         }
 
         // --- YÖNETİM PANELİ API ---
