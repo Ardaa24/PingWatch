@@ -69,6 +69,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .login-box {
@@ -76,10 +78,12 @@
             padding: 40px;
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 350px;
+            width: 100%;
+            max-width: 350px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            box-sizing: border-box;
         }
 
         .app-logo-img {
@@ -199,6 +203,22 @@
             z-index: 998;
         }
 
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .mobile-hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+            padding: 0;
+        }
+
         .navbar-brand {
             color: white;
             font-size: 18px;
@@ -312,6 +332,7 @@
         .stats-container {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 15px;
             margin-bottom: 5px;
         }
@@ -352,23 +373,30 @@
             gap: 10px;
         }
 
-            .controls input[type="text"], .controls select {
-                padding: 8px 12px;
-                font-size: 13px;
-                border: 2px solid #ddd;
-                border-radius: 5px;
-                width: 160px;
-                outline: none;
-                transition: 0.3s;
+        .add-group, .search-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .controls input[type="text"], .controls select {
+            padding: 8px 12px;
+            font-size: 13px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 160px;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
+
+            .controls input[type="text"]:focus, .controls select:focus {
+                border-color: #3498db;
             }
 
-                .controls input[type="text"]:focus, .controls select:focus {
-                    border-color: #3498db;
-                }
-
-            .controls .search-group input[type="text"] {
-                width: 220px;
-            }
+        .controls .search-group input[type="text"] {
+            width: 220px;
+        }
 
         .add-btn {
             padding: 8px 15px;
@@ -380,6 +408,7 @@
             cursor: pointer;
             transition: 0.3s;
             font-weight: bold;
+            white-space: nowrap;
         }
 
             .add-btn:hover {
@@ -519,7 +548,7 @@
             }
 
         /* ==========================================================================
-           2. İZLEME (MONITORING) MODU - OPMANAGER STYLE NOC VIEW
+           2. İZLEME (MONITORING) MODU - 
            ========================================================================== */
         #monitor-navbar {
             background-color: #1a252f;
@@ -568,35 +597,51 @@
             opacity: 0.8;
         }
 
-        .monitor-status-text {
-            color: #bdc3c7;
-            font-size: 12px;
+        .monitor-stats {
+            display: flex;
+            gap: 15px;
             margin-left: auto;
-            font-weight: bold;
-            background: rgba(0,0,0,0.2);
-            padding: 5px 12px;
-            border-radius: 15px;
+            background: rgba(0,0,0,0.15);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #bdc3c7;
+            border: 1px solid #2c3e50;
         }
 
-        /* OpManager Tarzı Dashboard Grid Düzeni */
+            .monitor-stats span {
+                font-weight: bold;
+                color: white;
+            }
+
+        .m-active {
+            color: #2ecc71;
+        }
+
+            .m-active span {
+                color: #2ecc71;
+            }
+
+        .m-passive {
+            color: #e74c3c;
+        }
+
+            .m-passive span {
+                color: #e74c3c;
+            }
+
         .op-layout {
             display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 25px;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
             align-items: start;
-        }
-
-        @media (max-width: 900px) {
-            .op-layout {
-                grid-template-columns: 1fr;
-            }
         }
 
         .op-widget {
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            padding: 25px;
+            padding: 20px;
             border: 1px solid #eaecee;
         }
 
@@ -607,14 +652,11 @@
             border-bottom: 2px solid #f4f7f6;
             padding-bottom: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
-        /* Pasta Grafiği Konteyneri */
         .chart-container {
             position: relative;
             height: 220px;
@@ -657,137 +699,174 @@
             color: #34495e;
         }
 
-        /* Cihaz Matrisi (Isı Haritası / Heatmap) */
+        /* Son Senkronizasyon (Widget İçine Taşındı) */
+        .chart-sync-text {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #eee;
+            color: #95a5a6;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* KUSURSUZ HEATMAP KART MİMARİSİ*/
         .heatmap-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 12px;
             align-content: flex-start;
         }
 
-        .matrix-node {
-            width: 38px;
-            height: 38px;
-            border-radius: 6px;
+        /* 45x45 Hayalet Yuva  */
+        .matrix-cell {
+            width: 45px;
+            height: 45px;
             position: relative;
-            cursor: crosshair;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Renkli Kutu */
+        .matrix-node {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            z-index: 1;
         }
 
             .matrix-node.up {
                 background-color: #2ecc71;
-                box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+                color: white;
+                box-shadow: 0 2px 5px rgba(46,204,113,0.3);
             }
 
             .matrix-node.down {
                 background-color: #e74c3c;
-                box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
-                animation: node-pulse 2s infinite;
+                color: white;
+                box-shadow: 0 2px 5px rgba(231,76,60,0.3);
+                animation: pulse-shadow 2s infinite;
             }
 
-        @keyframes node-pulse {
+        @keyframes pulse-shadow {
             0% {
-                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
             }
 
-            50% {
-                opacity: 0.5;
+            70% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
             }
 
             100% {
-                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
             }
         }
 
-        /* Matris Büyüme & Tooltip Animasyonu */
         .matrix-node:hover {
-            transform: scale(1.2);
+            transform: scale(1.1);
             z-index: 100;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        .node-tooltip {
+        .mn-icon {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Aşağı Açılan Şık Tooltip */
+        .mn-dropdown {
             position: absolute;
-            bottom: 130%;
+            top: 120%;
             left: 50%;
             transform: translateX(-50%);
             background: #1a252f;
             color: white;
-            padding: 12px;
+            padding: 12px 15px;
             border-radius: 8px;
-            font-size: 12px;
-            width: max-content;
-            min-width: 160px;
+            min-width: 140px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             opacity: 0;
             visibility: hidden;
-            transition: 0.2s;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
             pointer-events: none;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 101;
+            border: 1px solid #34495e;
         }
 
-            .node-tooltip::after {
-                content: '';
-                position: absolute;
-                top: 100%;
-                left: 50%;
-                margin-left: -6px;
-                border-width: 6px;
-                border-style: solid;
-                border-color: #1a252f transparent transparent transparent;
-            }
-
-        .matrix-node:hover .node-tooltip {
+        .matrix-node:hover .mn-dropdown {
             opacity: 1;
             visibility: visible;
-            bottom: 140%;
+            top: 130%;
         }
 
-        .tt-name {
+        /* Tooltip Ok İşareti */
+        .mn-dropdown::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent #1a252f transparent;
+        }
+
+        .mn-d-name {
+            font-size: 14px;
             font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 5px;
             color: #3498db;
+            margin-bottom: 5px;
+            text-align: center;
             border-bottom: 1px solid #34495e;
             padding-bottom: 5px;
+            width: 100%;
         }
 
-        .tt-ip {
+        .mn-d-ip {
+            font-size: 12px;
             font-family: monospace;
             color: #ecf0f1;
             margin-bottom: 8px;
-            font-size: 13px;
         }
 
-        .tt-status {
+        .mn-d-status {
+            font-size: 10px;
             font-weight: bold;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 12px;
-            display: inline-block;
-            font-size: 11px;
             letter-spacing: 0.5px;
         }
 
-            .tt-status.up {
-                background: rgba(46, 204, 113, 0.2);
+            .mn-d-status.up {
+                background: rgba(46,204,113,0.2);
                 color: #2ecc71;
             }
 
-            .tt-status.down {
-                background: rgba(231, 76, 60, 0.2);
+            .mn-d-status.down {
+                background: rgba(231,76,60,0.2);
                 color: #e74c3c;
                 margin-bottom: 5px;
             }
 
-        .tt-last {
-            font-size: 10px;
+        .mn-d-last {
+            font-size: 9px;
             color: #bdc3c7;
-            background: #2c3e50;
+            background: rgba(0,0,0,0.3);
             padding: 4px;
             border-radius: 4px;
             margin-top: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
         }
-
 
         /* --- YAN MENÜ (SIDEBAR) --- */
         .sidebar {
@@ -904,7 +983,7 @@
                 opacity: 1;
             }
 
-        /* --- DÜZENLEME MODALI --- */
+        /* --- DÜZENLEME MOD --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -929,9 +1008,11 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            width: 350px;
+            width: 90%;
+            max-width: 350px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             animation: slideDown 0.3s;
+            box-sizing: border-box;
         }
 
         @keyframes slideDown {
@@ -953,6 +1034,8 @@
 
         .modal-box .form-group {
             margin-bottom: 15px;
+            width: 100%;
+            display: block;
         }
 
             .modal-box .form-group label {
@@ -1091,12 +1174,20 @@
                 border-radius: 5px;
                 font-size: 14px;
                 outline: none;
+                box-sizing: border-box;
             }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
 
         .mgmt-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+            min-width: 500px;
         }
 
             .mgmt-table th {
@@ -1205,9 +1296,83 @@
                 padding-left: 20px;
             }
 
-            .info-box li {
-                margin-bottom: 5px;
+        /* ==========================================================================
+           %100 RESPONSIVE
+           ========================================================================== */
+        @media (max-width: 768px) {
+            /* Navbar Düzeni */
+            .nav-links {
+                display: none !important;
             }
+
+            .mobile-hamburger {
+                display: block !important;
+            }
+
+            .normal-navbar {
+                padding: 15px 20px;
+            }
+
+            .hide-mobile {
+                display: none !important;
+            }
+
+            /* Kontrol ve Arama Alanları */
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 15px;
+            }
+
+            .add-group, .search-group {
+                flex-direction: column;
+                width: 100%;
+                margin-bottom: 5px;
+                gap: 10px;
+            }
+
+            .controls input[type="text"], .controls select, .add-btn {
+                width: 100% !important;
+            }
+
+            #form-separator {
+                display: none;
+            }
+
+            /* Yönetim Paneli Formları */
+            .mgmt-form-card {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 15px;
+            }
+
+            .form-group {
+                width: 100%;
+            }
+
+            .btn-action {
+                width: 100%;
+                margin-top: 5px;
+            }
+
+            .hero h1 {
+                font-size: 18px;
+            }
+
+            /* İzleme Paneli (Monitor) Mobil Düzeni */
+            .op-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .op-widget {
+                padding: 15px;
+            }
+
+            .monitor-stats {
+                display: none;
+            }
+            
+        }
     </style>
 </head>
 <body>
@@ -1245,12 +1410,15 @@
 
         <div id="home-mode" class="mode-wrapper">
             <nav class="normal-navbar">
-                <a href="#" class="navbar-brand">
-                    <img src="/Assets/logo.png" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png';" class="nav-logo">
-                    <span style="display:flex; align-items:baseline; gap:8px;">
-                        PingWatch <span style="font-size: 13px; font-weight: normal; color: #bdc3c7; border-left: 1px solid #7f8c8d; padding-left: 8px;">Sistem Önizleme Paneli</span>
-                    </span>
-                </a>
+                <div class="nav-left">
+                    <button class="mobile-hamburger" onclick="toggleSidebar()">☰</button>
+                    <a href="#" class="navbar-brand">
+                        <img src="/Assets/logo.png" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png';" class="nav-logo">
+                        <span style="display:flex; align-items:baseline; gap:8px;">
+                            PingWatch <span style="font-size: 13px; font-weight: normal; color: #bdc3c7; border-left: 1px solid #7f8c8d; padding-left: 8px;" class="hide-mobile">Sistem Önizleme Paneli</span>
+                        </span>
+                    </a>
+                </div>
                 <div class="nav-links">
                     <a class="nav-link active">Anasayfa</a>
                     <a class="nav-link" onclick="switchMode('monitor')">Dashboard</a>
@@ -1267,18 +1435,17 @@
                     <div class="stat-box stat-active">Aktif: <span id="homeActive">0</span></div>
                     <div class="stat-box stat-passive">Down: <span id="homePassive">0</span></div>
                 </div>
-                <div class="last-update" id="homeLastUpdate">Son Güncelleme: Bekleniyor...</div>
             </div>
 
             <div class="main-content">
                 <div class="controls">
-                    <div class="add-group" id="admin-add-form" style="display: flex; gap: 10px;">
+                    <div class="add-group" id="admin-add-form">
                         <input type="text" id="nameInput" placeholder="Cihaz Adı" />
                         <input type="text" id="ipInput" placeholder="IP Adresi" />
                         <button class="add-btn" onclick="addIp()">Cihaz Ekle</button>
-                        <div style="width: 1px; height: 30px; background: #eee; margin: 0 10px;"></div>
+                        <div id="form-separator" style="width: 1px; height: 30px; background: #eee; margin: 0 10px;"></div>
                     </div>
-                    <div class="search-group" style="margin-left: auto; margin-right: auto;">
+                    <div class="search-group">
                         <input type="text" id="searchInput" placeholder="Cihaz Adı veya IP Ara..." onkeyup="renderCards()" />
                     </div>
                 </div>
@@ -1295,10 +1462,8 @@
 
                 <div class="monitor-brand">
                     <img src="/Assets/logo.png" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png';" class="nav-logo">
-                    İzleme Merkezi <span class="signature">by ardaa24</span>
+                    İzleme Merkezi
                 </div>
-
-                <div class="monitor-status-text" id="monitorLastUpdate">Senkron: Bekleniyor...</div>
             </nav>
 
             <div class="overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -1324,7 +1489,7 @@
                 <div class="op-layout">
 
                     <div class="op-widget">
-                        <h3 class="op-widget-title">Sistem Sağlık Oranı <span>📈</span></h3>
+                        <h3 class="op-widget-title">Sistem Sağlık Oranı</h3>
                         <div class="chart-container">
                             <canvas id="statusChart"></canvas>
                         </div>
@@ -1333,10 +1498,11 @@
                             <div class="chart-stat-item"><div class="chart-stat-val c-val-up" id="chartUp">0</div><div class="chart-stat-label">Aktif</div></div>
                             <div class="chart-stat-item"><div class="chart-stat-val c-val-down" id="chartDown">0</div><div class="chart-stat-label">Pasif</div></div>
                         </div>
+                        <div class="chart-sync-text" id="monitorLastUpdate">Son Senkronizasyon: Bekleniyor...</div>
                     </div>
 
                     <div class="op-widget">
-                        <h3 class="op-widget-title">Cihaz Matrisi (NOC View) <span>🎛️</span></h3>
+                        <h3 class="op-widget-title">Cihaz Matrisi</h3>
                         <div class="heatmap-grid" id="monitor-heatmap">
                         </div>
                     </div>
@@ -1348,12 +1514,15 @@
 
         <div id="management-mode" class="mode-wrapper">
             <nav class="normal-navbar">
-                <a href="#" class="navbar-brand" onclick="switchMode('home')">
-                    <img src="/Assets/logo.png" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png';" class="nav-logo">
-                    <span style="display:flex; align-items:baseline; gap:8px;">
-                        PingWatch <span style="font-size: 13px; font-weight: normal; color: #bdc3c7; border-left: 1px solid #7f8c8d; padding-left: 8px;">Yönetim Paneli</span>
-                    </span>
-                </a>
+                <div class="nav-left">
+                    <button class="mobile-hamburger" onclick="toggleSidebar()">☰</button>
+                    <a href="#" class="navbar-brand" onclick="switchMode('home')">
+                        <img src="/Assets/logo.png" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/7/74/%C5%9Ei%C5%9Fecam.png';" class="nav-logo">
+                        <span style="display:flex; align-items:baseline; gap:8px;">
+                            PingWatch <span style="font-size: 13px; font-weight: normal; color: #bdc3c7; border-left: 1px solid #7f8c8d; padding-left: 8px;" class="hide-mobile">Yönetim Paneli</span>
+                        </span>
+                    </a>
+                </div>
                 <div class="nav-links">
                     <a class="nav-link" onclick="switchMode('home')">Anasayfa</a>
                     <a class="nav-link" onclick="switchMode('monitor')">Dashboard</a>
@@ -1373,9 +1542,13 @@
                     </div>
 
                     <div id="tab-users" class="mgmt-content active">
-                        <div class="controls" style="margin-bottom: 15px; padding: 10px 15px; display:flex; gap:10px; background:#f8f9fa; border:1px solid #e0e0e0; box-shadow:none; justify-content:flex-start;">
-                            <input type="text" id="userSearchFilter" placeholder="Kullanıcı İsmi Ara..." onkeyup="renderUsers()" style="flex:1; max-width:300px;">
-                            <select id="userRoleFilter" onchange="renderUsers()" style="width:150px;"><option value="All">Tüm Roller</option><option value="Admin">Admin</option><option value="Viewer">Viewer</option></select>
+                        <div class="controls" style="margin-bottom: 15px; background:#f8f9fa; border:1px solid #e0e0e0; box-shadow:none;">
+                            <input type="text" id="userSearchFilter" placeholder="Kullanıcı İsmi Ara..." onkeyup="renderUsers()">
+                            <select id="userRoleFilter" onchange="renderUsers()">
+                                <option value="All">Tüm Roller</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Viewer">Viewer</option>
+                            </select>
                         </div>
                         <div class="mgmt-form-card">
                             <div class="form-group"><label>Yeni Kullanıcı Adı</label><input type="text" id="newUsername"></div>
@@ -1383,15 +1556,16 @@
                             <div class="form-group"><label>Rol</label><select id="newRole"><option value="Admin">Admin</option><option value="Viewer">Viewer</option></select></div>
                             <button class="btn-action btn-primary" onclick="addUser()">Ekle</button>
                         </div>
-                        <table class="mgmt-table"><thead><tr><th>Kullanıcı</th><th>Rol</th><th style="text-align:right;">İşlem</th></tr></thead><tbody id="usersTableBody"></tbody></table>
+                        <div class="table-responsive">
+                            <table class="mgmt-table"><thead><tr><th>Kullanıcı</th><th>Rol</th><th style="text-align:right;">İşlem</th></tr></thead><tbody id="usersTableBody"></tbody></table>
+                        </div>
                     </div>
 
                     <div id="tab-emails" class="mgmt-content">
                         <div class="info-box">
                             <strong>💡 Bilgilendirme: Bildirim Mailleri Nasıl Ayarlanır?</strong><br>
-                            Güvenlik nedeniyle kişisel mail şifrenizi buraya girmemelisiniz. Sistemlerin otomatik mail atabilmesi için tek kullanımlık bir <b>"Uygulama Şifresi" (App Password)</b> oluşturmalısınız.
-                            <details><summary>📌 Gmail (Google) İçin Uygulama Şifresi Nasıl Alınır?</summary><ol><li>Google Hesabınıza giriş yapın.</li><li>Soldaki menüden <b>Güvenlik</b> sekmesine tıklayın.</li><li>"Google'da oturum açma" bölümünde <b>2 Adımlı Doğrulama'nın açık</b> olduğundan emin olun.</li><li>Arama çubuğuna "Uygulama şifreleri" yazın.</li><li>Uygulama seçin kısmına "PingWatch" yazıp <b>Oluştur</b>'a basın.</li><li>Ekranda çıkan 16 haneli şifreyi kopyalayıp aşağıdaki "Uygulama Şifresi" kutusuna yapıştırın. (SMTP Sunucu: <i>smtp.gmail.com</i>, Port: <i>587</i>)</li></ol></details>
-                            <details><summary>📌 Outlook / Office365 İçin Uygulama Şifresi Nasıl Alınır?</summary><ol><li>Microsoft Hesabınızın Güvenlik ayarlarına gidin.</li><li>"Gelişmiş güvenlik seçenekleri"ni açın.</li><li><b>İki adımlı doğrulamayı</b> aktif hale getirin.</li><li>Biraz aşağı kaydırıp "Uygulama şifreleri" başlığı altından <b>Yeni bir uygulama şifresi oluştur</b>'a tıklayın.</li><li>Ekrana gelen şifreyi aşağıdaki alana yapıştırın. (SMTP Sunucu: <i>smtp.office365.com</i>, Port: <i>587</i>)</li></ol></details>
+                            Güvenlik nedeniyle kişisel mail şifrenizi buraya girmemelisiniz. Otomatik mail için <b>"Uygulama Şifresi" (App Password)</b> oluşturmalısınız.
+                            <details><summary>📌 Gmail (Google) İçin Nasıl Alınır?</summary><ol><li>Google Hesabınıza girin.</li><li>Güvenlik > 2 Adımlı Doğrulama açık olsun.</li><li>Arama: "Uygulama şifreleri"</li><li>Oluştur'a basıp çıkan 16 haneli şifreyi girin. (Sunucu: <i>smtp.gmail.com</i>, Port: <i>587</i>)</li></ol></details>
                         </div>
                         <h3 style="margin-top:0;">Gönderen Sunucu (SMTP)</h3>
                         <div class="mgmt-form-card">
@@ -1407,17 +1581,19 @@
                             <div class="form-group"><label>Mail Adresi</label><input type="email" id="recEmail"></div>
                             <button class="btn-action btn-primary" onclick="addRecipient()">Alıcı Ekle</button>
                         </div>
-                        <table class="mgmt-table"><thead><tr><th>Kişi</th><th>Mail</th><th style="text-align:right;">Sil</th></tr></thead><tbody id="recTableBody"></tbody></table>
+                        <div class="table-responsive">
+                            <table class="mgmt-table"><thead><tr><th>Kişi</th><th>Mail</th><th style="text-align:right;">Sil</th></tr></thead><tbody id="recTableBody"></tbody></table>
+                        </div>
                     </div>
 
                     <div id="tab-system" class="mgmt-content">
                         <h3>Logo Değiştir (PNG/JPG)</h3>
                         <input type="file" id="logoInput" accept=".png, .jpg, .jpeg" style="display:none" onchange="uploadLogo()">
-                        <div class="logo-upload-box" onclick="document.getElementById('logoInput').click()"><p style="font-size:18px; color:#7f8c8d; margin:0;">📁 Buraya tıklayarak arka planı şeffaf yeni bir logo seçin</p></div>
+                        <div class="logo-upload-box" onclick="document.getElementById('logoInput').click()"><p style="font-size:18px; color:#7f8c8d; margin:0;">📁 Tıklayarak arka planı şeffaf yeni bir logo seçin</p></div>
                     </div>
                 </div>
             </div>
-            <footer class="normal-footer"><p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p></footer>
+            <footer class="normal-footer">Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</footer>
         </div>
 
     </div>
@@ -1429,7 +1605,7 @@
         let allUsers = [];
         let pollingInterval = null;
         let currentMode = 'home';
-        let statusChartInstance = null; // Pasta grafiği objesi
+        let statusChartInstance = null;
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -1477,7 +1653,7 @@
 
             switchMode('home');
             loadIps();
-            if (!pollingInterval) pollingInterval = setInterval(loadIps, 10000); // Hızlandırıldı
+            if (!pollingInterval) pollingInterval = setInterval(loadIps, 10000);
         }
 
         function switchMode(modeName) {
@@ -1533,15 +1709,17 @@
             document.getElementById("homeTotal").innerText = total;
             document.getElementById("homeActive").innerText = active;
             document.getElementById("homePassive").innerText = passive;
-            document.getElementById("homeLastUpdate").innerText = "Son Güncelleme: " + timeStr;
+
+            if (document.getElementById("homeLastUpdate")) {
+                document.getElementById("homeLastUpdate").innerText = "Son Güncelleme: " + timeStr;
+            }
 
             document.getElementById("chartTot").innerText = total;
             document.getElementById("chartUp").innerText = active;
             document.getElementById("chartDown").innerText = passive;
-            document.getElementById("monitorLastUpdate").innerText = "Senkron: " + timeStr;
+            document.getElementById("monitorLastUpdate").innerText = "Son Senkronizasyon: " + timeStr;
         }
 
-        // --- PASTA GRAFİĞİ (CHART.JS) YÖNETİMİ ---
         function initOrUpdateChart() {
             const active = allData.filter(ip => ip.isUp).length;
             const passive = allData.length - active;
@@ -1553,24 +1731,8 @@
                 const ctx = document.getElementById('statusChart').getContext('2d');
                 statusChartInstance = new Chart(ctx, {
                     type: 'doughnut',
-                    data: {
-                        labels: ['Aktif (UP)', 'Pasif (DOWN)'],
-                        datasets: [{
-                            data: [active, passive],
-                            backgroundColor: ['#2ecc71', '#e74c3c'],
-                            borderWidth: 0,
-                            hoverOffset: 5
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '75%',
-                        plugins: {
-                            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, font: { family: "'Segoe UI', sans-serif" } } },
-                            tooltip: { callbacks: { label: function (context) { return ' ' + context.label + ': ' + context.raw + ' Cihaz'; } } }
-                        }
-                    }
+                    data: { labels: ['Aktif', 'Pasif'], datasets: [{ data: [active, passive], backgroundColor: ['#2ecc71', '#e74c3c'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { family: "'Segoe UI', sans-serif" } } } } }
                 });
             }
         }
@@ -1585,47 +1747,36 @@
 
                 f.forEach(ip => {
                     const cClass = ip.isUp ? "up" : "down";
-                    const actionBtns = isAdmin ? `
-                            <div class="card-actions">
-                                <button class="edit-btn" onclick="openEditModal(${ip.id}, '${ip.name}', '${ip.address}')">Düzenle</button>
-                                <button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button>
-                            </div>
-                        ` : "";
-
+                    const actionBtns = isAdmin ? `<div class="card-actions"><button class="edit-btn" onclick="openEditModal(${ip.id}, '${ip.name}', '${ip.address}')">Düzenle</button><button class="delete-btn" onclick="deleteIp(${ip.id})">Sil</button></div>` : "";
                     let timeHtml = "";
                     if (!ip.isUp && ip.lastActiveTime) {
                         const fTime = formatTime(ip.lastActiveTime);
                         if (fTime) timeHtml = `<div class="last-active-text">Son Görülme: ${fTime}</div>`;
                     }
-
-                    container.innerHTML += `<div class="card ${cClass}">
-                            <div class="status ${cClass}">${ip.isUp ? 'ONLINE' : 'OFFLINE'}</div>
-                            <div class="device-name">${ip.name || ""}</div>
-                            <div class="ip-address">${ip.address}</div>
-                            ${timeHtml}
-                            ${actionBtns}
-                        </div>`;
+                    container.innerHTML += `<div class="card ${cClass}"><div class="status ${cClass}">${ip.isUp ? 'ONLINE' : 'OFFLINE'}</div><div class="device-name">${ip.name || ""}</div><div class="ip-address">${ip.address}</div>${timeHtml}${actionBtns}</div>`;
                 });
             } else if (currentMode === 'monitor') {
                 const container = document.getElementById("monitor-heatmap"); container.innerHTML = "";
                 let f = [...allData].sort((a, b) => a.isUp === b.isUp ? 0 : a.isUp ? 1 : -1);
                 f.forEach(ip => {
                     const cClass = ip.isUp ? "up" : "down";
-
                     let timeHtml = "";
                     if (!ip.isUp && ip.lastActiveTime) {
                         const fTime = formatTime(ip.lastActiveTime);
-                        if (fTime) timeHtml = `<div class="tt-last">Kopma: ${fTime}</div>`;
+                        if (fTime) timeHtml = `<div class="mn-d-last">Kopma: ${fTime}</div>`;
                     }
 
-                    // KARE MATRİS VE TOOLTİP
+                    // AŞAĞIYA AÇILAN  TOOLTIP
                     container.innerHTML += `
-                        <div class="matrix-node ${cClass}">
-                            <div class="node-tooltip">
-                                <div class="tt-name">${ip.name || "Bilinmiyor"}</div>
-                                <div class="tt-ip">${ip.address}</div>
-                                <div class="tt-status ${cClass}">${ip.isUp ? 'ONLINE' : 'OFFLINE'}</div>
-                                ${timeHtml}
+                        <div class="matrix-cell">
+                            <div class="matrix-node ${cClass}">
+                                <div class="mn-icon">${ip.isUp ? '✓' : '✖'}</div>
+                                <div class="mn-dropdown">
+                                    <div class="mn-d-name">${ip.name || "Cihaz"}</div>
+                                    <div class="mn-d-ip">${ip.address}</div>
+                                    <div class="mn-d-status ${cClass}">${ip.isUp ? 'AKTİF' : 'PASİF'}</div>
+                                    ${timeHtml}
+                                </div>
                             </div>
                         </div>`;
                 });
@@ -1637,121 +1788,73 @@
             const n = document.getElementById("nameInput").value.trim();
             const a = document.getElementById("ipInput").value.trim();
             if (!a) return alert("IP zorunlu!");
-            if (allData.some(i => i.address.toLowerCase() === a.toLowerCase() || (i.name && n && i.name.toLowerCase() === n.toLowerCase()))) {
-                return alert("HATA: Bu IP veya İsim sistemde zaten var!");
-            }
+            if (allData.some(i => i.address.toLowerCase() === a.toLowerCase() || (i.name && n && i.name.toLowerCase() === n.toLowerCase()))) return alert("HATA: Bu IP veya İsim var!");
             await fetch(baseUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: n, address: a, isUp: false, isActive: true }) });
             document.getElementById("nameInput").value = ""; document.getElementById("ipInput").value = ""; loadIps();
         }
 
-        async function deleteIp(id) {
-            if (localStorage.getItem("role") === "Admin" && confirm("Emin misiniz?")) { await fetch(baseUrl + "/" + id, { method: "DELETE" }); loadIps(); }
-        }
+        async function deleteIp(id) { if (localStorage.getItem("role") === "Admin" && confirm("Kaldırmak istediğinize emin misiniz?")) { await fetch(baseUrl + "/" + id, { method: "DELETE" }); loadIps(); } }
 
-        function openEditModal(id, name, address) {
-            document.getElementById("editIpId").value = id;
-            document.getElementById("editNameInput").value = name;
-            document.getElementById("editAddressInput").value = address;
-            document.getElementById("editModal").classList.add("show");
-        }
+        function openEditModal(id, name, address) { document.getElementById("editIpId").value = id; document.getElementById("editNameInput").value = name; document.getElementById("editAddressInput").value = address; document.getElementById("editModal").classList.add("show"); }
         function closeEditModal() { document.getElementById("editModal").classList.remove("show"); }
 
         async function saveEdit() {
-            const id = document.getElementById("editIpId").value;
-            const name = document.getElementById("editNameInput").value.trim();
-            const address = document.getElementById("editAddressInput").value.trim();
+            const id = document.getElementById("editIpId").value; const name = document.getElementById("editNameInput").value.trim(); const address = document.getElementById("editAddressInput").value.trim();
             if (!address) return alert("IP Adresi boş olamaz!");
             try {
-                const response = await fetch(baseUrl + "/" + id, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: parseInt(id), name: name, address: address }) });
-                if (response.ok) { closeEditModal(); loadIps(); } else { alert("HATA: " + await response.text()); }
-            } catch (e) { alert("Sunucuya bağlanılamadı!"); }
+                const res = await fetch(baseUrl + "/" + id, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: parseInt(id), name: name, address: address }) });
+                if (res.ok) { closeEditModal(); loadIps(); } else alert("HATA: " + await res.text());
+            } catch (e) { alert("Sunucu hatası!"); }
         }
 
         // --- YÖNETİM PANELİ API ---
         async function loadAdminData() {
-            const uRes = await fetch(adminUrl + "/users");
-            allUsers = await uRes.json();
-            renderUsers();
-
+            const uRes = await fetch(adminUrl + "/users"); allUsers = await uRes.json(); renderUsers();
             const mRes = await fetch(adminUrl + "/mailconfig");
-            if (mRes.ok) {
-                const cfg = await mRes.json();
-                if (cfg) {
-                    document.getElementById("smtpEmail").value = cfg.senderEmail || "";
-                    document.getElementById("smtpServer").value = cfg.smtpServer || "";
-                    document.getElementById("smtpPort").value = cfg.smtpPort || 587;
-                    document.getElementById("smtpPass").value = cfg.smtpPassword || "";
-                }
-            }
-
-            const rRes = await fetch(adminUrl + "/recipients");
-            const recs = await rRes.json();
-            const rtbody = document.getElementById("recTableBody"); rtbody.innerHTML = "";
-            recs.forEach(r => {
-                rtbody.innerHTML += `<tr><td><strong>${r.fullName}</strong></td><td>${r.emailAddress}</td><td style="text-align:right;"><button class="btn-action btn-danger" onclick="deleteRecipient(${r.id})">Sil</button></td></tr>`;
-            });
+            if (mRes.ok) { const cfg = await mRes.json(); if (cfg) { document.getElementById("smtpEmail").value = cfg.senderEmail || ""; document.getElementById("smtpServer").value = cfg.smtpServer || ""; document.getElementById("smtpPort").value = cfg.smtpPort || 587; document.getElementById("smtpPass").value = cfg.smtpPassword || ""; } }
+            const rRes = await fetch(adminUrl + "/recipients"); const recs = await rRes.json(); const rtbody = document.getElementById("recTableBody"); rtbody.innerHTML = "";
+            recs.forEach(r => { rtbody.innerHTML += `<tr><td><strong>${r.fullName}</strong></td><td>${r.emailAddress}</td><td style="text-align:right;"><button class="btn-action btn-danger" onclick="deleteRecipient(${r.id})">Sil</button></td></tr>`; });
         }
 
         function renderUsers() {
-            const tbody = document.getElementById("usersTableBody");
-            tbody.innerHTML = "";
-            const search = document.getElementById("userSearchFilter").value.toLowerCase().trim();
-            const roleFilter = document.getElementById("userRoleFilter").value;
-            const currentLoggedUser = localStorage.getItem("username");
-
+            const tbody = document.getElementById("usersTableBody"); tbody.innerHTML = "";
+            const search = document.getElementById("userSearchFilter").value.toLowerCase().trim(); const roleFilter = document.getElementById("userRoleFilter").value; const cUser = localStorage.getItem("username");
             let filtered = allUsers.filter(u => u.username.toLowerCase().includes(search));
             if (roleFilter !== "All") filtered = filtered.filter(u => u.role === roleFilter);
-
             filtered.forEach(u => {
                 let btn = '';
-                if (u.username === 'admin') btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;" title="Sistem Kök Hesabı">Kilitli</button>';
-                else if (u.username === currentLoggedUser) btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5; cursor:not-allowed;" title="Şu an bu hesaptasınız">Oturum</button>';
+                if (u.username === 'admin') btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5;">Kilitli</button>';
+                else if (u.username === cUser) btn = '<button class="btn-action btn-danger" disabled style="opacity:0.5;">Oturum</button>';
                 else btn = `<button class="btn-action btn-danger" onclick="deleteUser(${u.id})">Sil</button>`;
-
-                const roleClass = u.role.toLowerCase();
-                tbody.innerHTML += `<tr><td><strong>${u.username}</strong></td><td><span class="role-badge ${roleClass}">${u.role}</span></td><td style="text-align:right;">${btn}</td></tr>`;
+                tbody.innerHTML += `<tr><td><strong>${u.username}</strong></td><td><span class="role-badge ${u.role.toLowerCase()}">${u.role}</span></td><td style="text-align:right;">${btn}</td></tr>`;
             });
         }
 
         async function addUser() {
-            const u = document.getElementById("newUsername").value.trim();
-            const p = document.getElementById("newPassword").value;
-            const r = document.getElementById("newRole").value;
+            const u = document.getElementById("newUsername").value.trim(); const p = document.getElementById("newPassword").value; const r = document.getElementById("newRole").value;
             if (!u || !p) return alert("Bilgileri doldurun!");
             const res = await fetch(adminUrl + "/users", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: u, passwordHash: p, role: r }) });
-            if (!res.ok) alert(await res.text());
-            else { document.getElementById("newUsername").value = ""; document.getElementById("newPassword").value = ""; loadAdminData(); }
+            if (!res.ok) alert(await res.text()); else { document.getElementById("newUsername").value = ""; document.getElementById("newPassword").value = ""; loadAdminData(); }
         }
 
         async function deleteUser(id) { if (confirm("Kullanıcı silinsin mi?")) { await fetch(adminUrl + "/users/" + id, { method: "DELETE" }); loadAdminData(); } }
-
         async function saveMailConfig() {
             const cfg = { senderEmail: document.getElementById("smtpEmail").value.trim(), smtpServer: document.getElementById("smtpServer").value.trim(), smtpPort: parseInt(document.getElementById("smtpPort").value), smtpPassword: document.getElementById("smtpPass").value };
-            await fetch(adminUrl + "/mailconfig", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cfg) });
-            alert("Ayarlar Kaydedildi!");
+            await fetch(adminUrl + "/mailconfig", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cfg) }); alert("Ayarlar Kaydedildi!");
         }
-
         async function addRecipient() {
-            const n = document.getElementById("recName").value.trim();
-            const e = document.getElementById("recEmail").value.trim();
+            const n = document.getElementById("recName").value.trim(); const e = document.getElementById("recEmail").value.trim();
             if (!n || !e) return alert("Bilgileri girin");
             await fetch(adminUrl + "/recipients", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fullName: n, emailAddress: e }) });
             document.getElementById("recName").value = ""; document.getElementById("recEmail").value = ""; loadAdminData();
         }
-
         async function deleteRecipient(id) { if (confirm("Alıcı silinsin mi?")) { await fetch(adminUrl + "/recipients/" + id, { method: "DELETE" }); loadAdminData(); } }
 
         async function uploadLogo() {
-            const file = document.getElementById("logoInput").files[0];
-            if (!file) return;
+            const file = document.getElementById("logoInput").files[0]; if (!file) return;
             const formData = new FormData(); formData.append("file", file);
             const res = await fetch(adminUrl + "/logo", { method: "POST", body: formData });
-            if (res.ok) {
-                alert("Logo güncellendi! Ekran yenileniyor...");
-                const ts = new Date().getTime();
-                document.querySelectorAll('.app-logo-img').forEach(img => img.src = "/Assets/logo.png?v=" + ts);
-                document.querySelectorAll('.nav-logo').forEach(img => img.src = "/Assets/logo.png?v=" + ts);
-            } else alert(await res.text());
+            if (res.ok) { alert("Logo güncellendi!"); const ts = new Date().getTime(); document.querySelectorAll('.app-logo-img').forEach(img => img.src = "/Assets/logo.png?v=" + ts); document.querySelectorAll('.nav-logo').forEach(img => img.src = "/Assets/logo.png?v=" + ts); } else alert(await res.text());
         }
     </script>
 </body>
