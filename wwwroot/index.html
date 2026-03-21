@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PingWatch | Kurumsal İzleme Sistemi</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         /* --- GENEL AYARLAR --- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f4f7f6;
             margin: 0;
             padding: 0;
             color: #333;
@@ -177,7 +180,7 @@
         .main-content {
             flex: 1;
             padding: 25px 20px;
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             width: 100%;
             box-sizing: border-box;
@@ -297,7 +300,7 @@
                     text-decoration: underline;
                 }
 
-        /* --- HERO İSTATİSTİKLER --- */
+        /* --- ANASAYFA MODU --- */
         .hero {
             background-color: #2c3e50;
             color: white;
@@ -336,7 +339,6 @@
             margin-top: 5px;
         }
 
-        /* --- ARAÇ ÇUBUĞU --- */
         .controls {
             display: flex;
             justify-content: center;
@@ -384,7 +386,6 @@
                 background-color: #2980b9;
             }
 
-        /* --- ANASAYFA KARTLARI --- */
         .dashboard {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -466,7 +467,6 @@
             box-sizing: border-box;
         }
 
-        /* DÜZENLE VE SİL BUTONLARI (YAN YANA) */
         .card-actions {
             display: flex;
             gap: 5px;
@@ -518,7 +518,9 @@
                 color: white;
             }
 
-        /* --- İZLEME (MONITORING) MODU --- */
+        /* ==========================================================================
+           2. İZLEME (MONITORING) MODU - OPMANAGER STYLE NOC VIEW
+           ========================================================================== */
         #monitor-navbar {
             background-color: #1a252f;
             padding: 10px 20px;
@@ -566,132 +568,226 @@
             opacity: 0.8;
         }
 
-        .monitor-stats {
-            display: flex;
-            gap: 15px;
-            margin-left: auto;
-            background: rgba(0,0,0,0.15);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #bdc3c7;
-            border: 1px solid #2c3e50;
-        }
-
-            .monitor-stats span {
-                font-weight: bold;
-                color: white;
-            }
-
-        .m-active {
-            color: #2ecc71;
-        }
-
-            .m-active span {
-                color: #2ecc71;
-            }
-
-        .m-passive {
-            color: #e74c3c;
-        }
-
-            .m-passive span {
-                color: #e74c3c;
-            }
-
         .monitor-status-text {
             color: #bdc3c7;
             font-size: 12px;
-            margin-left: 15px;
+            margin-left: auto;
             font-weight: bold;
+            background: rgba(0,0,0,0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
         }
 
-        .compact-grid {
+        /* OpManager Tarzı Dashboard Grid Düzeni */
+        .op-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-            gap: 10px;
-            padding-bottom: 30px;
-            align-items: stretch;
+            grid-template-columns: 320px 1fr;
+            gap: 25px;
+            align-items: start;
         }
 
-        .compact-card {
+        @media (max-width: 900px) {
+            .op-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .op-widget {
             background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 12px 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            transition: 0.2s;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            padding: 25px;
+            border: 1px solid #eaecee;
         }
 
-            .compact-card:hover {
-                border-color: #bdc3c7;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
-
-            .compact-card.down {
-                background-color: #fdf5f5;
-                border-color: #fadada;
-            }
-
-        .compact-header {
-            display: flex;
-            align-items: center;
-            width: 100%;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-
-            .status-dot.up {
-                background-color: #2ecc71;
-                box-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
-            }
-
-            .status-dot.down {
-                background-color: #e74c3c;
-                box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
-                animation: blink 1.5s infinite;
-            }
-
-        .compact-info {
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .compact-name {
-            font-weight: bold;
-            font-size: 14px;
+        .op-widget-title {
+            margin: 0 0 20px 0;
+            font-size: 15px;
             color: #2c3e50;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 2px;
+            border-bottom: 2px solid #f4f7f6;
+            padding-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .compact-ip {
-            font-size: 12px;
-            color: #7f8c8d;
-            font-family: monospace;
-        }
-
-        .compact-last-active {
+        /* Pasta Grafiği Konteyneri */
+        .chart-container {
+            position: relative;
+            height: 220px;
             width: 100%;
-            font-size: 10px;
-            color: #e74c3c;
-            margin-top: 6px;
-            text-align: left;
-            border-top: 1px dashed #fadada;
-            padding-top: 4px;
+            margin-bottom: 20px;
         }
+
+        .chart-stats-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .chart-stat-item {
+            text-align: center;
+        }
+
+        .chart-stat-val {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .chart-stat-label {
+            font-size: 11px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+
+        .c-val-up {
+            color: #2ecc71;
+        }
+
+        .c-val-down {
+            color: #e74c3c;
+        }
+
+        .c-val-tot {
+            color: #34495e;
+        }
+
+        /* Cihaz Matrisi (Isı Haritası / Heatmap) */
+        .heatmap-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-content: flex-start;
+        }
+
+        .matrix-node {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            position: relative;
+            cursor: crosshair;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+            .matrix-node.up {
+                background-color: #2ecc71;
+                box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+            }
+
+            .matrix-node.down {
+                background-color: #e74c3c;
+                box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+                animation: node-pulse 2s infinite;
+            }
+
+        @keyframes node-pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Matris Büyüme & Tooltip Animasyonu */
+        .matrix-node:hover {
+            transform: scale(1.2);
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .node-tooltip {
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a252f;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            width: max-content;
+            min-width: 160px;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            pointer-events: none;
+            text-align: center;
+        }
+
+            .node-tooltip::after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -6px;
+                border-width: 6px;
+                border-style: solid;
+                border-color: #1a252f transparent transparent transparent;
+            }
+
+        .matrix-node:hover .node-tooltip {
+            opacity: 1;
+            visibility: visible;
+            bottom: 140%;
+        }
+
+        .tt-name {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 5px;
+            color: #3498db;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 5px;
+        }
+
+        .tt-ip {
+            font-family: monospace;
+            color: #ecf0f1;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .tt-status {
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+            .tt-status.up {
+                background: rgba(46, 204, 113, 0.2);
+                color: #2ecc71;
+            }
+
+            .tt-status.down {
+                background: rgba(231, 76, 60, 0.2);
+                color: #e74c3c;
+                margin-bottom: 5px;
+            }
+
+        .tt-last {
+            font-size: 10px;
+            color: #bdc3c7;
+            background: #2c3e50;
+            padding: 4px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
 
         /* --- YAN MENÜ (SIDEBAR) --- */
         .sidebar {
@@ -790,7 +886,25 @@
                 font-weight: bold;
             }
 
-        /* --- DÜZENLEME MODALI (POPUP) --- */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            .overlay.show {
+                display: block;
+                opacity: 1;
+            }
+
+        /* --- DÜZENLEME MODALI --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -1060,7 +1174,6 @@
                 background: #f0f8ff;
             }
 
-        /* Detaylı Mail Info Box (Açılır Kapanır) */
         .info-box {
             background: #eaf2f8;
             border-left: 4px solid #3498db;
@@ -1119,14 +1232,8 @@
         <div class="modal-box">
             <h3>Cihazı Düzenle</h3>
             <input type="hidden" id="editIpId">
-            <div class="form-group">
-                <label>Cihaz Adı</label>
-                <input type="text" id="editNameInput">
-            </div>
-            <div class="form-group">
-                <label>IP Adresi</label>
-                <input type="text" id="editAddressInput">
-            </div>
+            <div class="form-group"><label>Cihaz Adı</label><input type="text" id="editNameInput"></div>
+            <div class="form-group"><label>IP Adresi</label><input type="text" id="editAddressInput"></div>
             <div class="modal-buttons">
                 <button class="modal-btn btn-cancel" onclick="closeEditModal()">İptal</button>
                 <button class="modal-btn btn-save" onclick="saveEdit()">Kaydet</button>
@@ -1191,11 +1298,6 @@
                     İzleme Merkezi <span class="signature">by ardaa24</span>
                 </div>
 
-                <div class="monitor-stats">
-                    <div>Top: <span id="monitorTotal">0</span></div>
-                    <div class="m-active">Up: <span id="monitorActive">0</span></div>
-                    <div class="m-passive">Down: <span id="monitorPassive">0</span></div>
-                </div>
                 <div class="monitor-status-text" id="monitorLastUpdate">Senkron: Bekleniyor...</div>
             </nav>
 
@@ -1215,14 +1317,33 @@
                     <a href="#" id="side-admin-link" onclick="switchMode('management')">⚙️ Yönetim Paneli</a>
                     <a href="#" class="logout" onclick="handleLogout()">🚪 Çıkış</a>
                 </div>
-                <div class="sidebar-footer">
-                    Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a><br>PingWatch © 2026
-                </div>
+                <div class="sidebar-footer">Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a><br>PingWatch © 2026</div>
             </div>
 
-            <div class="main-content" style="padding-top: 30px;">
-                <div class="compact-grid" id="monitor-cards"></div>
+            <div class="main-content" style="max-width: 1400px;">
+                <div class="op-layout">
+
+                    <div class="op-widget">
+                        <h3 class="op-widget-title">Sistem Sağlık Oranı <span>📈</span></h3>
+                        <div class="chart-container">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                        <div class="chart-stats-summary">
+                            <div class="chart-stat-item"><div class="chart-stat-val c-val-tot" id="chartTot">0</div><div class="chart-stat-label">Toplam</div></div>
+                            <div class="chart-stat-item"><div class="chart-stat-val c-val-up" id="chartUp">0</div><div class="chart-stat-label">Aktif</div></div>
+                            <div class="chart-stat-item"><div class="chart-stat-val c-val-down" id="chartDown">0</div><div class="chart-stat-label">Pasif</div></div>
+                        </div>
+                    </div>
+
+                    <div class="op-widget">
+                        <h3 class="op-widget-title">Cihaz Matrisi (NOC View) <span>🎛️</span></h3>
+                        <div class="heatmap-grid" id="monitor-heatmap">
+                        </div>
+                    </div>
+
+                </div>
             </div>
+            <footer class="normal-footer"><p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p></footer>
         </div>
 
         <div id="management-mode" class="mode-wrapper">
@@ -1252,61 +1373,26 @@
                     </div>
 
                     <div id="tab-users" class="mgmt-content active">
-
                         <div class="controls" style="margin-bottom: 15px; padding: 10px 15px; display:flex; gap:10px; background:#f8f9fa; border:1px solid #e0e0e0; box-shadow:none; justify-content:flex-start;">
                             <input type="text" id="userSearchFilter" placeholder="Kullanıcı İsmi Ara..." onkeyup="renderUsers()" style="flex:1; max-width:300px;">
-                            <select id="userRoleFilter" onchange="renderUsers()" style="width:150px;">
-                                <option value="All">Tüm Roller</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Viewer">Viewer</option>
-                            </select>
+                            <select id="userRoleFilter" onchange="renderUsers()" style="width:150px;"><option value="All">Tüm Roller</option><option value="Admin">Admin</option><option value="Viewer">Viewer</option></select>
                         </div>
-
                         <div class="mgmt-form-card">
                             <div class="form-group"><label>Yeni Kullanıcı Adı</label><input type="text" id="newUsername"></div>
                             <div class="form-group"><label>Şifre</label><input type="password" id="newPassword"></div>
-                            <div class="form-group">
-                                <label>Rol</label>
-                                <select id="newRole"><option value="Admin">Admin</option><option value="Viewer">Viewer</option></select>
-                            </div>
+                            <div class="form-group"><label>Rol</label><select id="newRole"><option value="Admin">Admin</option><option value="Viewer">Viewer</option></select></div>
                             <button class="btn-action btn-primary" onclick="addUser()">Ekle</button>
                         </div>
-                        <table class="mgmt-table">
-                            <thead><tr><th>Kullanıcı</th><th>Rol</th><th style="text-align:right;">İşlem</th></tr></thead>
-                            <tbody id="usersTableBody"></tbody>
-                        </table>
+                        <table class="mgmt-table"><thead><tr><th>Kullanıcı</th><th>Rol</th><th style="text-align:right;">İşlem</th></tr></thead><tbody id="usersTableBody"></tbody></table>
                     </div>
 
                     <div id="tab-emails" class="mgmt-content">
-
                         <div class="info-box">
                             <strong>💡 Bilgilendirme: Bildirim Mailleri Nasıl Ayarlanır?</strong><br>
                             Güvenlik nedeniyle kişisel mail şifrenizi buraya girmemelisiniz. Sistemlerin otomatik mail atabilmesi için tek kullanımlık bir <b>"Uygulama Şifresi" (App Password)</b> oluşturmalısınız.
-
-                            <details>
-                                <summary>📌 Gmail (Google) İçin Uygulama Şifresi Nasıl Alınır?</summary>
-                                <ol>
-                                    <li>Google Hesabınıza giriş yapın.</li>
-                                    <li>Soldaki menüden <b>Güvenlik</b> sekmesine tıklayın.</li>
-                                    <li>"Google'da oturum açma" bölümünde <b>2 Adımlı Doğrulama'nın açık</b> olduğundan emin olun.</li>
-                                    <li>Arama çubuğuna "Uygulama şifreleri" yazın.</li>
-                                    <li>Uygulama seçin kısmına "PingWatch" yazıp <b>Oluştur</b>'a basın.</li>
-                                    <li>Ekranda çıkan 16 haneli şifreyi kopyalayıp aşağıdaki "Uygulama Şifresi" kutusuna yapıştırın. (SMTP Sunucu: <i>smtp.gmail.com</i>, Port: <i>587</i>)</li>
-                                </ol>
-                            </details>
-
-                            <details>
-                                <summary>📌 Outlook / Office365 İçin Uygulama Şifresi Nasıl Alınır?</summary>
-                                <ol>
-                                    <li>Microsoft Hesabınızın Güvenlik ayarlarına gidin.</li>
-                                    <li>"Gelişmiş güvenlik seçenekleri"ni açın.</li>
-                                    <li><b>İki adımlı doğrulamayı</b> aktif hale getirin.</li>
-                                    <li>Biraz aşağı kaydırıp "Uygulama şifreleri" başlığı altından <b>Yeni bir uygulama şifresi oluştur</b>'a tıklayın.</li>
-                                    <li>Ekrana gelen şifreyi aşağıdaki alana yapıştırın. (SMTP Sunucu: <i>smtp.office365.com</i>, Port: <i>587</i>)</li>
-                                </ol>
-                            </details>
+                            <details><summary>📌 Gmail (Google) İçin Uygulama Şifresi Nasıl Alınır?</summary><ol><li>Google Hesabınıza giriş yapın.</li><li>Soldaki menüden <b>Güvenlik</b> sekmesine tıklayın.</li><li>"Google'da oturum açma" bölümünde <b>2 Adımlı Doğrulama'nın açık</b> olduğundan emin olun.</li><li>Arama çubuğuna "Uygulama şifreleri" yazın.</li><li>Uygulama seçin kısmına "PingWatch" yazıp <b>Oluştur</b>'a basın.</li><li>Ekranda çıkan 16 haneli şifreyi kopyalayıp aşağıdaki "Uygulama Şifresi" kutusuna yapıştırın. (SMTP Sunucu: <i>smtp.gmail.com</i>, Port: <i>587</i>)</li></ol></details>
+                            <details><summary>📌 Outlook / Office365 İçin Uygulama Şifresi Nasıl Alınır?</summary><ol><li>Microsoft Hesabınızın Güvenlik ayarlarına gidin.</li><li>"Gelişmiş güvenlik seçenekleri"ni açın.</li><li><b>İki adımlı doğrulamayı</b> aktif hale getirin.</li><li>Biraz aşağı kaydırıp "Uygulama şifreleri" başlığı altından <b>Yeni bir uygulama şifresi oluştur</b>'a tıklayın.</li><li>Ekrana gelen şifreyi aşağıdaki alana yapıştırın. (SMTP Sunucu: <i>smtp.office365.com</i>, Port: <i>587</i>)</li></ol></details>
                         </div>
-
                         <h3 style="margin-top:0;">Gönderen Sunucu (SMTP)</h3>
                         <div class="mgmt-form-card">
                             <div class="form-group"><label>Gönderen Mail</label><input type="email" id="smtpEmail" placeholder="ornek@gmail.com"></div>
@@ -1315,30 +1401,23 @@
                             <div class="form-group"><label>Uygulama Şifresi</label><input type="password" id="smtpPass" placeholder="16 haneli kod"></div>
                             <button class="btn-action btn-primary" onclick="saveMailConfig()">Kaydet</button>
                         </div>
-                        <h3 style="border-bottom:2px solid #eee; padding-bottom:10px;">Alıcılar (Bildirim Gidecek Kişiler)</h3>
+                        <h3 style="border-bottom:2px solid #eee; padding-bottom:10px;">Alıcılar</h3>
                         <div class="mgmt-form-card">
                             <div class="form-group"><label>Ad Soyad</label><input type="text" id="recName"></div>
                             <div class="form-group"><label>Mail Adresi</label><input type="email" id="recEmail"></div>
                             <button class="btn-action btn-primary" onclick="addRecipient()">Alıcı Ekle</button>
                         </div>
-                        <table class="mgmt-table">
-                            <thead><tr><th>Kişi</th><th>Mail</th><th style="text-align:right;">Sil</th></tr></thead>
-                            <tbody id="recTableBody"></tbody>
-                        </table>
+                        <table class="mgmt-table"><thead><tr><th>Kişi</th><th>Mail</th><th style="text-align:right;">Sil</th></tr></thead><tbody id="recTableBody"></tbody></table>
                     </div>
 
                     <div id="tab-system" class="mgmt-content">
                         <h3>Logo Değiştir (PNG/JPG)</h3>
                         <input type="file" id="logoInput" accept=".png, .jpg, .jpeg" style="display:none" onchange="uploadLogo()">
-                        <div class="logo-upload-box" onclick="document.getElementById('logoInput').click()">
-                            <p style="font-size:18px; color:#7f8c8d; margin:0;">📁 Buraya tıklayarak arka planı şeffaf yeni bir logo seçin</p>
-                        </div>
+                        <div class="logo-upload-box" onclick="document.getElementById('logoInput').click()"><p style="font-size:18px; color:#7f8c8d; margin:0;">📁 Buraya tıklayarak arka planı şeffaf yeni bir logo seçin</p></div>
                     </div>
                 </div>
             </div>
-            <footer class="normal-footer">
-                Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026
-            </footer>
+            <footer class="normal-footer"><p>Geliştiren: <a href="https://github.com/ardaa24" target="_blank">ardaa24</a> | PingWatch © 2026</p></footer>
         </div>
 
     </div>
@@ -1350,6 +1429,7 @@
         let allUsers = [];
         let pollingInterval = null;
         let currentMode = 'home';
+        let statusChartInstance = null; // Pasta grafiği objesi
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -1363,15 +1443,10 @@
             const user = document.getElementById("username").value;
             const pass = document.getElementById("password").value;
             try {
-                const response = await fetch("/api/auth/login", {
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ username: user, password: pass })
-                });
+                const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: user, password: pass }) });
                 if (response.ok) {
                     const data = await response.json();
-                    localStorage.setItem("isLoggedIn", "true");
-                    localStorage.setItem("username", data.username);
-                    localStorage.setItem("role", data.role);
+                    localStorage.setItem("isLoggedIn", "true"); localStorage.setItem("username", data.username); localStorage.setItem("role", data.role);
                     startApp();
                 } else document.getElementById("login-error").style.display = "block";
             } catch (e) { alert("Sunucu hatası!"); }
@@ -1402,8 +1477,7 @@
 
             switchMode('home');
             loadIps();
-            // Backend daha hızlı çalıştığı için Frontend senkronizasyonunu 10 saniyeye indirdik.
-            if (!pollingInterval) pollingInterval = setInterval(loadIps, 10000);
+            if (!pollingInterval) pollingInterval = setInterval(loadIps, 10000); // Hızlandırıldı
         }
 
         function switchMode(modeName) {
@@ -1415,6 +1489,7 @@
 
             renderCards();
             if (modeName === 'management') { loadAdminData(); }
+            if (modeName === 'monitor') { initOrUpdateChart(); }
         }
 
         function toggleSidebar() {
@@ -1445,6 +1520,7 @@
                 const response = await fetch(baseUrl, { cache: "no-store" });
                 allData = await response.json();
                 updateStats(); renderCards();
+                if (currentMode === 'monitor') initOrUpdateChart();
             } catch (e) { }
         }
 
@@ -1459,10 +1535,44 @@
             document.getElementById("homePassive").innerText = passive;
             document.getElementById("homeLastUpdate").innerText = "Son Güncelleme: " + timeStr;
 
-            document.getElementById("monitorTotal").innerText = total;
-            document.getElementById("monitorActive").innerText = active;
-            document.getElementById("monitorPassive").innerText = passive;
+            document.getElementById("chartTot").innerText = total;
+            document.getElementById("chartUp").innerText = active;
+            document.getElementById("chartDown").innerText = passive;
             document.getElementById("monitorLastUpdate").innerText = "Senkron: " + timeStr;
+        }
+
+        // --- PASTA GRAFİĞİ (CHART.JS) YÖNETİMİ ---
+        function initOrUpdateChart() {
+            const active = allData.filter(ip => ip.isUp).length;
+            const passive = allData.length - active;
+
+            if (statusChartInstance) {
+                statusChartInstance.data.datasets[0].data = [active, passive];
+                statusChartInstance.update();
+            } else {
+                const ctx = document.getElementById('statusChart').getContext('2d');
+                statusChartInstance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Aktif (UP)', 'Pasif (DOWN)'],
+                        datasets: [{
+                            data: [active, passive],
+                            backgroundColor: ['#2ecc71', '#e74c3c'],
+                            borderWidth: 0,
+                            hoverOffset: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '75%',
+                        plugins: {
+                            legend: { position: 'bottom', labels: { usePointStyle: true, padding: 15, font: { family: "'Segoe UI', sans-serif" } } },
+                            tooltip: { callbacks: { label: function (context) { return ' ' + context.label + ': ' + context.raw + ' Cihaz'; } } }
+                        }
+                    }
+                });
+            }
         }
 
         function renderCards() {
@@ -1475,8 +1585,6 @@
 
                 f.forEach(ip => {
                     const cClass = ip.isUp ? "up" : "down";
-
-                    // Şık DÜZENLE ve SİL butonları birleşik yapısı
                     const actionBtns = isAdmin ? `
                             <div class="card-actions">
                                 <button class="edit-btn" onclick="openEditModal(${ip.id}, '${ip.name}', '${ip.address}')">Düzenle</button>
@@ -1499,16 +1607,27 @@
                         </div>`;
                 });
             } else if (currentMode === 'monitor') {
-                const container = document.getElementById("monitor-cards"); container.innerHTML = "";
+                const container = document.getElementById("monitor-heatmap"); container.innerHTML = "";
                 let f = [...allData].sort((a, b) => a.isUp === b.isUp ? 0 : a.isUp ? 1 : -1);
                 f.forEach(ip => {
                     const cClass = ip.isUp ? "up" : "down";
+
                     let timeHtml = "";
                     if (!ip.isUp && ip.lastActiveTime) {
                         const fTime = formatTime(ip.lastActiveTime);
-                        if (fTime) timeHtml = `<div class="compact-last-active">Kopma: ${fTime}</div>`;
+                        if (fTime) timeHtml = `<div class="tt-last">Kopma: ${fTime}</div>`;
                     }
-                    container.innerHTML += `<div class="compact-card ${cClass}"><div class="compact-header"><div class="status-dot ${cClass}"></div><div class="compact-info"><div class="compact-name">${ip.name || ""}</div><div class="compact-ip">${ip.address}</div></div></div>${timeHtml}</div>`;
+
+                    // KARE MATRİS VE TOOLTİP
+                    container.innerHTML += `
+                        <div class="matrix-node ${cClass}">
+                            <div class="node-tooltip">
+                                <div class="tt-name">${ip.name || "Bilinmiyor"}</div>
+                                <div class="tt-ip">${ip.address}</div>
+                                <div class="tt-status ${cClass}">${ip.isUp ? 'ONLINE' : 'OFFLINE'}</div>
+                                ${timeHtml}
+                            </div>
+                        </div>`;
                 });
             }
         }
@@ -1518,58 +1637,34 @@
             const n = document.getElementById("nameInput").value.trim();
             const a = document.getElementById("ipInput").value.trim();
             if (!a) return alert("IP zorunlu!");
-
             if (allData.some(i => i.address.toLowerCase() === a.toLowerCase() || (i.name && n && i.name.toLowerCase() === n.toLowerCase()))) {
                 return alert("HATA: Bu IP veya İsim sistemde zaten var!");
             }
-
             await fetch(baseUrl, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: n, address: a, isUp: false, isActive: true }) });
             document.getElementById("nameInput").value = ""; document.getElementById("ipInput").value = ""; loadIps();
         }
 
         async function deleteIp(id) {
-            if (localStorage.getItem("role") === "Admin" && confirm("Bu cihazı sistemden tamamen kaldırmak istediğinize emin misiniz?")) {
-                await fetch(baseUrl + "/" + id, { method: "DELETE" });
-                loadIps();
-            }
+            if (localStorage.getItem("role") === "Admin" && confirm("Emin misiniz?")) { await fetch(baseUrl + "/" + id, { method: "DELETE" }); loadIps(); }
         }
 
-        // --- CİHAZ DÜZENLEME İŞLEMLERİ (MODAL) ---
         function openEditModal(id, name, address) {
             document.getElementById("editIpId").value = id;
             document.getElementById("editNameInput").value = name;
             document.getElementById("editAddressInput").value = address;
             document.getElementById("editModal").classList.add("show");
         }
-
-        function closeEditModal() {
-            document.getElementById("editModal").classList.remove("show");
-        }
+        function closeEditModal() { document.getElementById("editModal").classList.remove("show"); }
 
         async function saveEdit() {
             const id = document.getElementById("editIpId").value;
             const name = document.getElementById("editNameInput").value.trim();
             const address = document.getElementById("editAddressInput").value.trim();
-
             if (!address) return alert("IP Adresi boş olamaz!");
-
             try {
-                const response = await fetch(baseUrl + "/" + id, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id: parseInt(id), name: name, address: address })
-                });
-
-                if (response.ok) {
-                    closeEditModal();
-                    loadIps();
-                } else {
-                    const errorText = await response.text();
-                    alert("HATA: " + errorText);
-                }
-            } catch (e) {
-                alert("Sunucuya bağlanılamadı!");
-            }
+                const response = await fetch(baseUrl + "/" + id, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: parseInt(id), name: name, address: address }) });
+                if (response.ok) { closeEditModal(); loadIps(); } else { alert("HATA: " + await response.text()); }
+            } catch (e) { alert("Sunucuya bağlanılamadı!"); }
         }
 
         // --- YÖNETİM PANELİ API ---
@@ -1614,11 +1709,7 @@
                 else btn = `<button class="btn-action btn-danger" onclick="deleteUser(${u.id})">Sil</button>`;
 
                 const roleClass = u.role.toLowerCase();
-                tbody.innerHTML += `<tr>
-                        <td><strong>${u.username}</strong></td>
-                        <td><span class="role-badge ${roleClass}">${u.role}</span></td>
-                        <td style="text-align:right;">${btn}</td>
-                    </tr>`;
+                tbody.innerHTML += `<tr><td><strong>${u.username}</strong></td><td><span class="role-badge ${roleClass}">${u.role}</span></td><td style="text-align:right;">${btn}</td></tr>`;
             });
         }
 
@@ -1635,12 +1726,7 @@
         async function deleteUser(id) { if (confirm("Kullanıcı silinsin mi?")) { await fetch(adminUrl + "/users/" + id, { method: "DELETE" }); loadAdminData(); } }
 
         async function saveMailConfig() {
-            const cfg = {
-                senderEmail: document.getElementById("smtpEmail").value.trim(),
-                smtpServer: document.getElementById("smtpServer").value.trim(),
-                smtpPort: parseInt(document.getElementById("smtpPort").value),
-                smtpPassword: document.getElementById("smtpPass").value
-            };
+            const cfg = { senderEmail: document.getElementById("smtpEmail").value.trim(), smtpServer: document.getElementById("smtpServer").value.trim(), smtpPort: parseInt(document.getElementById("smtpPort").value), smtpPassword: document.getElementById("smtpPass").value };
             await fetch(adminUrl + "/mailconfig", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cfg) });
             alert("Ayarlar Kaydedildi!");
         }
