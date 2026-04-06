@@ -28,3 +28,11 @@ Bu proje, endüstriyel bir tesiste sistem izleme süreçlerini dijitalleştirmek
 
 ## 👨‍💻 Geliştirici
 Arda Can Süren
+
+---
+
+<img width="1859" height="931" alt="image" src="https://github.com/user-attachments/assets/d9dae567-c9eb-4cc7-a6d3-7067cce4c2d8" />
+<img width="1854" height="921" alt="image" src="https://github.com/user-attachments/assets/d2fb8dc7-b782-44e9-9250-fe4d0e31f4db" />
+<img width="1854" height="915" alt="image" src="https://github.com/user-attachments/assets/acc91f9d-643d-45d1-8cd1-b981094e2f14" />
+
+
