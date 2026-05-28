@@ -4,154 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PingWatch | Ağ İzleme Sistemi</title>
-    <meta name="description" content="PingWatch — Kurumsal ağ cihazlarını gerçek zamanlı olarak izleyin. IP ping takibi, e-posta uyarıları ve dashboard.">
+    <meta name="description" content="PingWatch — Kurumsal ağ cihazlarını gerçek zamanlı olarak izleyin.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* ─── TASARIM SİSTEMİ ────────────────────────────────── */
+        /* ─── KURUMSAL TASARIM SİSTEMİ (AÇIK TEMA) ─────────────────── */
         :root {
-            --bg-primary:    #0f1117;
-            --bg-secondary:  #1a1d27;
-            --bg-card:       #1e2130;
-            --bg-hover:      #252840;
-            --accent:        #4f8ef7;
-            --accent-hover:  #3a7be0;
-            --success:       #22c55e;
-            --danger:        #ef4444;
-            --warning:       #f59e0b;
-            --text-primary:  #f1f5f9;
-            --text-secondary:#94a3b8;
+            --bg-body:       #f8fafc;
+            --bg-surface:    #ffffff;
+            --bg-surface-hover: #f1f5f9;
+            --bg-sidebar:    #0f172a; /* Sidebar koyu lacivert (kurumsal admin stili) */
+            --sidebar-text:  #94a3b8;
+            --sidebar-hover: #1e293b;
+            --sidebar-active:#ffffff;
+            --accent:        #2563eb; /* Kurumsal Mavi */
+            --accent-hover:  #1d4ed8;
+            --accent-light:  #dbeafe;
+            --success:       #16a34a;
+            --success-light: #dcfce7;
+            --danger:        #dc2626;
+            --danger-light:  #fee2e2;
+            --warning:       #d97706;
+            --text-main:     #0f172a;
+            --text-secondary:#475569;
             --text-muted:    #64748b;
-            --border:        #2d3148;
-            --border-light:  #3d4166;
-            --radius-sm:     6px;
-            --radius-md:     10px;
-            --radius-lg:     16px;
-            --shadow-sm:     0 1px 3px rgba(0,0,0,.3);
-            --shadow-md:     0 4px 16px rgba(0,0,0,.4);
-            --shadow-lg:     0 8px 32px rgba(0,0,0,.5);
-            --transition:    all .2s ease;
+            --border:        #e2e8f0;
+            --radius-sm:     4px;
+            --radius-md:     8px;
+            --shadow-sm:     0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md:     0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition:    all 0.2s ease-in-out;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            background: var(--bg-body);
+            color: var(--text-main);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden; /* Prevent body scroll, layout handles scrolling */
         }
 
         /* ─── LOADING ──────────────────────────────────────────── */
         #loading-screen {
             position: fixed;
             inset: 0;
-            background: var(--bg-primary);
+            background: var(--bg-surface);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10001;
             transition: opacity .5s ease, visibility .5s ease;
-            gap: 20px;
+            gap: 16px;
         }
 
         .loading-brand {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
+            color: var(--text-main);
         }
 
         .loading-brand span { color: var(--accent); }
 
-        .loading-bar {
-            width: 200px;
-            height: 3px;
-            background: var(--border);
-            border-radius: 99px;
-            overflow: hidden;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .loading-bar-fill {
-            height: 100%;
-            width: 40%;
-            background: var(--accent);
-            border-radius: 99px;
-            animation: loadingSlide 1.2s ease-in-out infinite;
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        @keyframes loadingSlide {
-            0% { transform: translateX(-100%); }
-            50% { transform: translateX(150%); }
-            100% { transform: translateX(350%); }
-        }
-
-        /* ─── LOGIN ────────────────────────────────────────────── */
+        /* ─── LOGIN SCREEN (SPLIT DESIGN) ──────────────────────── */
         #login-container {
             position: fixed;
             inset: 0;
-            background: var(--bg-primary);
+            background: var(--bg-surface);
             z-index: 10000;
+            display: flex;
+        }
+
+        .login-left {
+            flex: 1;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Endüstriyel desen overlay */
+        .login-left::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.3;
+        }
+
+        .login-left-content { position: relative; z-index: 2; max-width: 500px; }
+        .login-left-content h1 { font-size: 48px; font-weight: 700; margin-bottom: 16px; letter-spacing: -1px; }
+        .login-left-content p { font-size: 18px; color: #cbd5e1; line-height: 1.6; }
+
+        .login-right {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px;
+            background: var(--bg-body);
         }
 
         .login-box {
-            background: var(--bg-secondary);
+            background: var(--bg-surface);
             border: 1px solid var(--border);
-            padding: 48px 40px;
-            border-radius: var(--radius-lg);
+            padding: 48px;
+            border-radius: var(--radius-md);
             width: 100%;
-            max-width: 380px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
+            max-width: 420px;
+            box-shadow: var(--shadow-md);
         }
 
-        .login-logo {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
+        .login-logo { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
         .login-logo span { color: var(--accent); }
-
-        .login-subtitle {
-            color: var(--text-muted);
-            font-size: 13px;
-            margin-bottom: 32px;
-        }
+        .login-subtitle { color: var(--text-secondary); font-size: 14px; margin-bottom: 32px; }
 
         .login-box input {
             width: 100%;
             padding: 12px 16px;
-            margin: 6px 0;
-            background: var(--bg-card);
+            margin-bottom: 16px;
+            background: var(--bg-surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            color: var(--text-primary);
+            color: var(--text-main);
             font-size: 14px;
             font-family: 'Inter', sans-serif;
             outline: none;
             transition: var(--transition);
         }
 
-        .login-box input:focus { border-color: var(--accent); }
-        .login-box input::placeholder { color: var(--text-muted); }
+        .login-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
 
         .login-btn {
             width: 100%;
-            padding: 13px;
+            padding: 12px;
             background: var(--accent);
             color: white;
             border: none;
@@ -159,1007 +168,633 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            margin-top: 12px;
+            margin-top: 8px;
             transition: var(--transition);
         }
 
         .login-btn:hover { background: var(--accent-hover); }
-        .login-btn:active { transform: scale(0.98); }
+        .login-btn:active { transform: translateY(1px); }
 
         #login-error {
             color: var(--danger);
             display: none;
             font-size: 13px;
             font-weight: 500;
-            margin-bottom: 10px;
-            background: rgba(239,68,68,.1);
-            padding: 8px 12px;
-            border-radius: var(--radius-sm);
-            border: 1px solid rgba(239,68,68,.3);
-        }
-
-        /* ─── MAIN APP ─────────────────────────────────────────── */
-        #main-app { display: none; flex-direction: column; flex: 1; }
-
-        .mode-wrapper { display: none; flex-direction: column; flex: 1; }
-        .mode-wrapper.active { display: flex; animation: fadeIn .25s ease; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ─── NAVBAR ───────────────────────────────────────────── */
-        .navbar {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 60px;
-            position: sticky;
-            top: 0;
-            z-index: 900;
-            gap: 16px;
-        }
-
-        .nav-brand {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-            text-decoration: none;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-brand span { color: var(--accent); }
-
-        .nav-badge {
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 400;
-            border-left: 1px solid var(--border-light);
-            padding-left: 10px;
-            margin-left: 4px;
-        }
-
-        .nav-links { display: flex; gap: 4px; align-items: center; }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 6px 14px;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .nav-link.active { background: rgba(79,142,247,.15); color: var(--accent); }
-        .nav-link:hover:not(.disabled):not(.active) { background: var(--bg-hover); color: var(--text-primary); }
-        .nav-link.disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .user-badge {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 6px 14px;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .logout-btn {
-            background: transparent;
-            color: var(--danger);
-            border: 1px solid rgba(239,68,68,.4);
-            padding: 6px 14px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            transition: var(--transition);
-        }
-
-        .logout-btn:hover { background: var(--danger); color: white; border-color: var(--danger); }
-
-        .mobile-hamburger {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 22px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        /* ─── HERO STATS ───────────────────────────────────────── */
-        .hero {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 24px;
-        }
-
-        .stats-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .stat-pill {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            border-radius: 99px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .stat-pill .dot {
-            width: 8px; height: 8px;
-            border-radius: 50%;
-        }
-
-        .dot-total { background: var(--text-muted); }
-        .dot-up    { background: var(--success); box-shadow: 0 0 6px var(--success); }
-        .dot-down  { background: var(--danger);  box-shadow: 0 0 6px var(--danger); }
-
-        /* ─── CONTENT AREA ─────────────────────────────────────── */
-        .main-content {
-            flex: 1;
-            padding: 24px;
-            max-width: 1280px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        /* ─── CONTROLS ─────────────────────────────────────────── */
-        .controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-            background: var(--bg-secondary);
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border);
-        }
-
-        .controls input[type="text"] {
-            padding: 8px 14px;
-            font-size: 13px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            outline: none;
-            transition: var(--transition);
-            min-width: 160px;
-        }
-
-        .controls input[type="text"]:focus { border-color: var(--accent); }
-        .controls input[type="text"]::placeholder { color: var(--text-muted); }
-
-        .btn-add {
-            padding: 8px 18px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            font-family: 'Inter', sans-serif;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .btn-add:hover { background: var(--accent-hover); }
-
-        .separator { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
-
-        /* ─── DEVICE CARDS ─────────────────────────────────────── */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 14px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 18px 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            transition: var(--transition);
-            border-top: 3px solid transparent;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 60%, rgba(255,255,255,.02));
-            pointer-events: none;
-        }
-
-        .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-light); }
-        .card.up   { border-top-color: var(--success); }
-        .card.down { border-top-color: var(--danger);  }
-
-        .status-badge {
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            padding: 3px 10px;
-            border-radius: 99px;
-            margin-bottom: 10px;
-        }
-
-        .status-badge.up   { background: rgba(34,197,94,.15);  color: var(--success); }
-        .status-badge.down { background: rgba(239,68,68,.15);  color: var(--danger);  }
-
-        .device-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            word-break: break-word;
-        }
-
-        .ip-addr {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-family: monospace;
-            margin-bottom: 8px;
-        }
-
-        .last-seen {
-            font-size: 11px;
-            color: var(--danger);
-            background: rgba(239,68,68,.08);
-            border: 1px dashed rgba(239,68,68,.3);
-            padding: 3px 8px;
-            border-radius: var(--radius-sm);
-            width: 100%;
-            margin-bottom: 4px;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 6px;
-            width: 100%;
-            margin-top: 12px;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .card:hover .card-actions { opacity: 1; }
-
-        .btn-edit, .btn-del {
-            flex: 1;
-            padding: 5px;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: 'Inter', sans-serif;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-edit {
-            background: transparent;
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-
-        .btn-edit:hover { background: var(--accent); color: white; }
-
-        .btn-del {
-            background: transparent;
-            color: var(--danger);
-            border: 1px solid var(--danger);
-        }
-
-        .btn-del:hover { background: var(--danger); color: white; }
-
-        /* ─── MONITOR MODE ─────────────────────────────────────── */
-        .op-layout {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-
-        .widget {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 24px;
-        }
-
-        .widget-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .chart-container { position: relative; height: 220px; }
-
-        .chart-stats {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .chart-stat { text-align: center; }
-        .chart-stat-val { font-size: 22px; font-weight: 700; }
-        .chart-stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
-        .val-up { color: var(--success); }
-        .val-down { color: var(--danger); }
-        .val-tot { color: var(--text-secondary); }
-
-        .sync-text {
-            text-align: center;
-            margin-top: 14px;
-            font-size: 11px;
-            color: var(--text-muted);
-            border-top: 1px dashed var(--border);
-            padding-top: 12px;
-        }
-
-        .heatmap-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-
-        .matrix-cell { width: 48px; height: 48px; position: relative; }
-
-        .matrix-node {
-            position: absolute;
-            inset: 0;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 700;
-            font-size: 18px;
-            z-index: 1;
-        }
-
-        .matrix-node.up   { background: var(--success); color: white; box-shadow: 0 2px 8px rgba(34,197,94,.25); }
-        .matrix-node.down { background: var(--danger);  color: white; box-shadow: 0 2px 8px rgba(239,68,68,.25); animation: pulse-ring 2s infinite; }
-
-        @keyframes pulse-ring {
-            0%   { box-shadow: 0 0 0 0 rgba(239,68,68,.5); }
-            70%  { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
-            100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
-        }
-
-        .matrix-node:hover { transform: scale(1.12); z-index: 100; }
-
-        .mn-tooltip {
-            position: absolute;
-            top: 115%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-primary);
-            border: 1px solid var(--border-light);
-            color: var(--text-primary);
+            margin-bottom: 16px;
+            background: var(--danger-light);
             padding: 10px 14px;
             border-radius: var(--radius-sm);
-            min-width: 150px;
-            box-shadow: var(--shadow-lg);
-            opacity: 0;
-            visibility: hidden;
-            transition: all .15s ease;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            z-index: 200;
+            border: 1px solid rgba(220, 38, 38, 0.2);
         }
 
-        .mn-tooltip::before {
-            content: '';
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 5px solid transparent;
-            border-bottom-color: var(--border-light);
+        @media (max-width: 900px) {
+            .login-left { display: none; }
         }
 
-        .matrix-node:hover .mn-tooltip { opacity: 1; visibility: visible; top: 125%; }
+        /* ─── APP LAYOUT ───────────────────────────────────────── */
+        #main-app { display: none; height: 100vh; width: 100%; }
 
-        .tt-name  { font-size: 13px; font-weight: 600; color: var(--accent); }
-        .tt-ip    { font-size: 11px; font-family: monospace; color: var(--text-secondary); }
-        .tt-status { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; letter-spacing: 0.5px; }
-        .tt-status.up   { background: rgba(34,197,94,.15);  color: var(--success); }
-        .tt-status.down { background: rgba(239,68,68,.15);  color: var(--danger); }
-        .tt-last { font-size: 9px; color: var(--text-muted); }
-
-        /* ─── SIDEBAR ──────────────────────────────────────────── */
+        /* Sidebar */
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 300px;
-            height: 100vh;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border);
-            z-index: 9999;
-            transition: left .3s ease;
+            width: 260px;
+            background: var(--bg-sidebar);
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            border-right: 1px solid #1e293b;
         }
-
-        .sidebar.open { left: 0; }
 
         .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sidebar-user { font-weight: 600; font-size: 16px; }
-        .sidebar-role { font-size: 12px; color: var(--accent); margin-top: 2px; }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .sidebar-menu { flex: 1; padding-top: 12px; }
-
-        .sidebar-menu a {
+            padding: 20px 24px;
             display: flex;
             align-items: center;
             gap: 10px;
-            color: var(--text-secondary);
-            padding: 14px 24px;
+            border-bottom: 1px solid #1e293b;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .sidebar-header span { color: var(--accent); }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .menu-label {
+            padding: 0 24px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: var(--sidebar-text);
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
             transition: var(--transition);
             border-left: 3px solid transparent;
+            cursor: pointer;
         }
 
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background: var(--bg-hover);
-            color: var(--text-primary);
+        .menu-item:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-active);
+        }
+
+        .menu-item.active {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-active);
             border-left-color: var(--accent);
         }
 
-        .sidebar-menu a.logout { color: var(--danger); margin-top: 8px; }
-        .sidebar-menu a.logout:hover { background: rgba(239,68,68,.1); border-left-color: var(--danger); }
-        .sidebar-disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
-
-        .sidebar-footer {
-            padding: 16px 24px;
-            font-size: 11px;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border);
-            text-align: center;
+        .menu-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.6);
-            z-index: 9998;
-            display: none;
-            backdrop-filter: blur(2px);
+        /* Main Wrapper */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
         }
 
-        .overlay.show { display: block; animation: fadeIn .2s; }
-
-        /* ─── MODAL ────────────────────────────────────────────── */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.7);
-            z-index: 10005;
-            display: none;
-            justify-content: center;
+        /* Topbar */
+        .topbar {
+            height: 64px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
             align-items: center;
-            backdrop-filter: blur(4px);
+            justify-content: space-between;
+            padding: 0 24px;
         }
 
-        .modal-overlay.show { display: flex; animation: fadeIn .2s; }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .topbar-right { display: flex; align-items: center; gap: 16px; }
 
-        .modal-box {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 28px;
-            border-radius: var(--radius-md);
-            width: 90%;
-            max-width: 400px;
-            box-shadow: var(--shadow-lg);
-            animation: slideDown .25s ease;
+        .hamburger {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            display: none; /* Only show on mobile */
         }
 
-        @keyframes slideDown {
-            from { transform: translateY(-16px); opacity: 0; }
-            to   { transform: translateY(0);     opacity: 1; }
-        }
-
-        .modal-box h3 {
+        .page-title {
             font-size: 16px;
             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 20px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
         }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-group input, .form-group select {
-            width: 100%;
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info { text-align: right; }
+        .user-name { font-size: 13px; font-weight: 600; color: var(--text-main); }
+        .user-role { font-size: 11px; color: var(--text-muted); }
+
+        .logout-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--danger);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover { background: var(--danger-light); }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background: var(--bg-body);
+        }
+
+        .mode-wrapper { display: none; animation: fadeIn 0.3s ease; }
+        .mode-wrapper.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ─── COMMON UI COMPONENTS ─────────────────────────────── */
+        .card-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .panel-header {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
+        .stat-value { font-size: 28px; font-weight: 700; margin-top: 8px; color: var(--text-main); }
+        .stat-card.up .stat-value { color: var(--success); }
+        .stat-card.down .stat-value { color: var(--danger); }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .input-group { display: flex; flex: 1; min-width: 200px; gap: 8px; }
+        
+        input[type="text"], input[type="password"], input[type="number"], input[type="email"], select {
             padding: 10px 14px;
-            background: var(--bg-card);
+            background: var(--bg-surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            font-size: 14px;
+            color: var(--text-main);
+            font-size: 13px;
             font-family: 'Inter', sans-serif;
             outline: none;
             transition: var(--transition);
         }
 
-        .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
-        .form-group select option { background: var(--bg-secondary); }
-        .form-group input::placeholder { color: var(--text-muted); }
+        input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
 
-        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
-        .modal-btn { flex: 1; padding: 10px; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer; transition: var(--transition); }
-        .btn-cancel { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border); }
-        .btn-cancel:hover { background: var(--bg-hover); }
-        .btn-save { background: var(--success); color: white; }
-        .btn-save:hover { background: #16a34a; }
-
-        /* ─── MANAGEMENT PANEL ─────────────────────────────────── */
-        .mgmt-container {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            min-height: 500px;
-        }
-
-        .mgmt-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg-card);
-        }
-
-        .mgmt-tab {
-            padding: 16px 24px;
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--text-muted);
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            border-bottom: 3px solid transparent;
-            background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
+            font-weight: 500;
+            font-size: 13px;
             font-family: 'Inter', sans-serif;
             transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .mgmt-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--bg-secondary); }
-        .mgmt-tab:hover:not(.active) { color: var(--text-secondary); }
-
-        .mgmt-content { padding: 28px; display: none; }
-        .mgmt-content.active { display: block; animation: fadeIn .25s; }
-
-        .mgmt-form-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 14px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .mgmt-form-card .form-group { flex: 1; min-width: 180px; margin-bottom: 0; }
-
-        .table-responsive { overflow-x: auto; }
-
-        .mgmt-table { width: 100%; border-collapse: collapse; min-width: 480px; margin-top: 12px; }
-        .mgmt-table th { background: var(--bg-card); color: var(--text-muted); text-align: left; padding: 12px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
-        .mgmt-table td { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--text-secondary); }
-        .mgmt-table tr:last-child td { border-bottom: none; }
-        .mgmt-table tr:hover td { background: var(--bg-hover); }
-
-        .btn-action { padding: 7px 16px; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-size: 12px; font-family: 'Inter', sans-serif; transition: var(--transition); }
         .btn-primary { background: var(--accent); color: white; }
         .btn-primary:hover { background: var(--accent-hover); }
-        .btn-danger  { background: transparent; color: var(--danger); border: 1px solid rgba(239,68,68,.4); }
-        .btn-danger:hover  { background: var(--danger); color: white; }
+        .btn-danger { background: var(--bg-surface); color: var(--danger); border: 1px solid var(--border); }
+        .btn-danger:hover { background: var(--danger-light); border-color: var(--danger); }
+        .btn-outline { background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-outline:hover { background: var(--bg-surface-hover); }
 
-        .role-badge { padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
-        .role-badge.admin  { background: rgba(79,142,247,.15); color: var(--accent); }
-        .role-badge.viewer { background: rgba(168,85,247,.15); color: #a855f7; }
+        /* ─── DEVICE CARDS (HOME) ──────────────────────────────── */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
 
-        .logo-upload-box {
-            border: 2px dashed var(--border-light);
-            padding: 48px;
-            text-align: center;
+        .device-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            cursor: pointer;
-            background: var(--bg-card);
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--border);
+            display: flex;
+            flex-direction: column;
             transition: var(--transition);
-            color: var(--text-muted);
-            font-size: 15px;
         }
 
-        .logo-upload-box:hover { border-color: var(--accent); background: rgba(79,142,247,.05); color: var(--accent); }
+        .device-card:hover { box-shadow: var(--shadow-md); }
+        .device-card.up { border-left-color: var(--success); }
+        .device-card.down { border-left-color: var(--danger); }
 
-        .info-box {
-            background: rgba(79,142,247,.08);
-            border-left: 3px solid var(--accent);
-            padding: 14px 16px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 20px;
-            font-size: 13px;
+        .device-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .device-info h4 { font-size: 14px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; word-break: break-all; }
+        .device-info p { font-size: 12px; color: var(--text-secondary); font-family: monospace; }
+        
+        .status-pill {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 99px;
+            background: var(--border);
             color: var(--text-secondary);
-            line-height: 1.6;
         }
+        .device-card.up .status-pill { background: var(--success-light); color: var(--success); }
+        .device-card.down .status-pill { background: var(--danger-light); color: var(--danger); }
 
-        .info-box details { margin-top: 10px; background: var(--bg-card); padding: 10px; border-radius: var(--radius-sm); border: 1px solid var(--border); cursor: pointer; }
-        .info-box summary { font-weight: 600; color: var(--accent); outline: none; }
-        .info-box ol { margin: 10px 0 0 0; padding-left: 18px; color: var(--text-secondary); }
-
-        /* ─── FOOTER ───────────────────────────────────────────── */
-        footer {
-            background: var(--bg-secondary);
-            border-top: 1px solid var(--border);
-            text-align: center;
-            padding: 14px 20px;
-            font-size: 12px;
-            color: var(--text-muted);
+        .device-footer {
             margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        footer a { color: var(--accent); text-decoration: none; font-weight: 500; }
+        .last-seen-text { font-size: 11px; color: var(--text-muted); }
+        .device-actions { display: flex; gap: 8px; opacity: 0; transition: opacity 0.2s; }
+        .device-card:hover .device-actions { opacity: 1; }
+
+        .action-icon {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .action-icon:hover { color: var(--accent); }
+        .action-icon.del:hover { color: var(--danger); }
+
+        /* ─── DASHBOARD MATRIS ─────────────────────────────────── */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .heatmap { display: flex; flex-wrap: wrap; gap: 8px; }
+        .node {
+            width: 32px; height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 600; color: white;
+            cursor: pointer; position: relative;
+        }
+        .node.up { background: var(--success); }
+        .node.down { background: var(--danger); }
+
+        /* ─── YÖNETİM (TABLES) ─────────────────────────────────── */
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { padding: 12px 16px; background: var(--bg-surface-hover); font-size: 12px; font-weight: 600; color: var(--text-secondary); border-bottom: 2px solid var(--border); }
+        td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--border); color: var(--text-main); }
+        tr:hover td { background: var(--bg-body); }
+
+        .badge { padding: 4px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; background: var(--bg-surface-hover); color: var(--text-secondary); }
+        .badge.admin { background: var(--accent-light); color: var(--accent); }
+
+        .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+        .tab-btn {
+            padding: 12px 20px; background: none; border: none; font-size: 13px; font-weight: 600;
+            color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+        }
+        .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ─── MODAL ────────────────────────────────────────────── */
+        .modal-bg {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(2px);
+            display: none; justify-content: center; align-items: center; z-index: 10005;
+        }
+        .modal-bg.show { display: flex; animation: fadeIn 0.2s; }
+        .modal { background: var(--bg-surface); padding: 24px; border-radius: var(--radius-md); width: 100%; max-width: 400px; box-shadow: var(--shadow-lg); }
+        .modal h3 { margin-bottom: 16px; font-size: 16px; }
+        .form-row { margin-bottom: 16px; }
+        .form-row label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
 
         /* ─── TOAST ────────────────────────────────────────────── */
         .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
-
         .toast {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 12px 18px;
-            border-radius: var(--radius-sm);
-            font-size: 13px;
-            font-weight: 500;
-            box-shadow: var(--shadow-md);
-            animation: slideIn .25s ease;
-            max-width: 320px;
-            border-left: 3px solid var(--accent);
+            background: var(--text-main); color: white; padding: 12px 20px; border-radius: var(--radius-sm);
+            font-size: 13px; font-weight: 500; box-shadow: var(--shadow-md); animation: slideIn .25s ease;
         }
-
-        .toast.success { border-left-color: var(--success); }
-        .toast.error   { border-left-color: var(--danger); }
-
-        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
         /* ─── RESPONSIVE ───────────────────────────────────────── */
         @media (max-width: 768px) {
-            .nav-links { display: none !important; }
-            .nav-badge { display: none; }
-            .mobile-hamburger { display: block !important; }
-            .op-layout { grid-template-columns: 1fr; }
-            .controls { flex-direction: column; align-items: stretch; }
-            .controls input[type="text"] { width: 100%; }
-            .btn-add { width: 100%; }
-            .mgmt-form-card { flex-direction: column; }
-            .mgmt-form-card .form-group { width: 100%; }
-            .hide-mobile { display: none !important; }
+            .sidebar { position: fixed; transform: translateX(-100%); height: 100%; }
+            .sidebar.open { transform: translateX(0); }
+            .hamburger { display: block; }
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .input-group { flex-direction: column; }
+            .device-actions { opacity: 1; } /* Always show actions on mobile */
         }
     </style>
 </head>
 <body>
 
     <div id="loading-screen">
+        <div class="spinner"></div>
         <div class="loading-brand">Ping<span>Watch</span></div>
-        <div class="loading-bar"><div class="loading-bar-fill"></div></div>
     </div>
 
     <!-- Edit Modal -->
-    <div class="modal-overlay" id="editModal">
-        <div class="modal-box">
+    <div class="modal-bg" id="editModal">
+        <div class="modal">
             <h3>Cihazı Düzenle</h3>
             <input type="hidden" id="editDeviceId">
-            <div class="form-group"><label>Cihaz Adı</label><input type="text" id="editNameInput" placeholder="Cihaz adı"></div>
-            <div class="form-group"><label>IP Adresi</label><input type="text" id="editAddressInput" placeholder="192.168.1.1"></div>
-            <div class="modal-buttons">
-                <button class="modal-btn btn-cancel" onclick="closeEditModal()">İptal</button>
-                <button class="modal-btn btn-save" onclick="saveEdit()">Kaydet</button>
+            <div class="form-row"><label>Cihaz Adı</label><input type="text" id="editNameInput"></div>
+            <div class="form-row"><label>IP Adresi</label><input type="text" id="editAddressInput"></div>
+            <div style="display:flex;gap:8px;margin-top:24px;">
+                <button class="btn btn-outline" style="flex:1" onclick="closeEditModal()">İptal</button>
+                <button class="btn btn-primary" style="flex:1" onclick="saveEdit()">Kaydet</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Container -->
+    <!-- Toast -->
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Login -->
     <div id="login-container">
-        <div class="login-box">
-            <div class="login-logo">Ping<span>Watch</span></div>
-            <p class="login-subtitle">Ağ İzleme Sistemine Giriş</p>
-            <div id="login-error">Hatalı kullanıcı adı veya şifre!</div>
-            <input type="text" id="username" placeholder="Kullanıcı adı" autocomplete="off">
-            <input type="password" id="password" placeholder="Şifre" onkeydown="if(event.key==='Enter') handleLogin()">
-            <button class="login-btn" onclick="handleLogin()" id="login-btn">Giriş Yap</button>
+        <div class="login-left">
+            <div class="login-left-content">
+                <h1>Ağ Altyapı İzleme Sistemi</h1>
+                <p>PingWatch ile kurumsal ağ cihazlarınızı gerçek zamanlı olarak izleyin, kesintileri anında tespit edin ve e-posta uyarıları alın.</p>
+            </div>
+        </div>
+        <div class="login-right">
+            <div class="login-box">
+                <div class="login-logo">Ping<span>Watch</span></div>
+                <p class="login-subtitle">Lütfen kurumsal kimlik bilgilerinizle giriş yapın.</p>
+                <div id="login-error">Hatalı kullanıcı adı veya şifre!</div>
+                <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
+                <input type="password" id="password" placeholder="Şifre" onkeydown="if(event.key==='Enter') handleLogin()">
+                <button class="login-btn" onclick="handleLogin()" id="login-btn">Sisteme Giriş Yap</button>
+            </div>
         </div>
     </div>
 
     <!-- Main App -->
     <div id="main-app">
-
-        <!-- HOME MODE -->
-        <div id="home-mode" class="mode-wrapper">
-            <nav class="navbar">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <button class="mobile-hamburger" onclick="toggleSidebar()">☰</button>
-                    <a href="#" class="nav-brand">Ping<span>Watch</span><span class="nav-badge hide-mobile">Sistem Paneli</span></a>
-                </div>
-                <div class="nav-links">
-                    <button class="nav-link active">Anasayfa</button>
-                    <button class="nav-link" onclick="switchMode('monitor')">Dashboard</button>
-                    <button class="nav-link disabled" title="Çok Yakında">🌡️ Sıcaklık İzleme 🔒</button>
-                    <button class="nav-link" id="nav-admin-link" onclick="switchMode('management')">⚙️ Yönetim</button>
-                    <span class="user-badge" id="home-user-info">—</span>
-                    <button class="logout-btn" onclick="handleLogout()">Çıkış</button>
-                </div>
-            </nav>
-
-            <div class="hero">
-                <div class="stats-row">
-                    <div class="stat-pill"><span class="dot dot-total"></span>Toplam: <strong id="homeTotal">0</strong></div>
-                    <div class="stat-pill"><span class="dot dot-up"></span>Online: <strong id="homeActive">0</strong></div>
-                    <div class="stat-pill"><span class="dot dot-down"></span>Offline: <strong id="homePassive">0</strong></div>
-                </div>
+        
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                Ping<span>Watch</span>
             </div>
-
-            <div class="main-content">
-                <div class="controls">
-                    <div id="admin-add-form" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-                        <input type="text" id="nameInput" placeholder="Cihaz Adı">
-                        <input type="text" id="ipInput" placeholder="IP Adresi">
-                        <button class="btn-add" onclick="addDevice()">+ Cihaz Ekle</button>
-                        <div class="separator hide-mobile"></div>
-                    </div>
-                    <input type="text" id="searchInput" placeholder="🔍 Cihaz adı veya IP ara..." onkeyup="renderCards()" style="flex:1;min-width:200px;">
-                </div>
-                <div class="dashboard" id="home-cards"></div>
+            <div class="sidebar-menu">
+                <div class="menu-label">İzleme</div>
+                <a class="menu-item active" onclick="switchMode('home', this)">🏠 Cihaz Yönetimi</a>
+                <a class="menu-item" onclick="switchMode('monitor', this)">📊 Dashboard Matris</a>
+                <a class="menu-item disabled">🌡️ Çevre İzleme (Yakında)</a>
+                
+                <div class="menu-label admin-only">Sistem</div>
+                <a class="menu-item admin-only" onclick="switchMode('management', this)">⚙️ Yönetim Paneli</a>
             </div>
+        </aside>
 
-            <footer><p>PingWatch © 2026 | <a href="https://github.com/ardaa24" target="_blank">ardaa24</a></p></footer>
-        </div>
-
-        <!-- MONITOR MODE -->
-        <div id="monitor-mode" class="mode-wrapper">
-            <nav class="navbar">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <button id="hamburger-btn" class="mobile-hamburger" onclick="toggleSidebar()">☰</button>
-                    <button id="viewer-back-btn" class="nav-link" style="display:none;" onclick="switchMode('home')">← Geri</button>
-                    <a href="#" class="nav-brand">Ping<span>Watch</span><span class="nav-badge hide-mobile">İzleme Merkezi</span></a>
+        <!-- Main Content Wrapper -->
+        <div class="main-wrapper">
+            
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                    <div class="page-title" id="pageTitle">Cihaz Yönetimi</div>
                 </div>
-            </nav>
-
-            <div class="overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-            <div class="sidebar" id="sidebar">
-                <div class="sidebar-header">
-                    <div>
-                        <div class="sidebar-user" id="side-user-name">—</div>
-                        <div class="sidebar-role" id="side-user-role">—</div>
-                    </div>
-                    <button class="close-btn" onclick="toggleSidebar()">✕</button>
-                </div>
-                <div class="sidebar-menu">
-                    <a href="#" onclick="switchMode('home')">🏠 Anasayfa</a>
-                    <a href="#" class="active" onclick="toggleSidebar()">🖥️ Dashboard</a>
-                    <a href="#" class="sidebar-disabled">🌡️ Sıcaklık 🔒</a>
-                    <a href="#" id="side-admin-link" onclick="switchMode('management')">⚙️ Yönetim Paneli</a>
-                    <a href="#" class="logout" onclick="handleLogout()">🚪 Çıkış</a>
-                </div>
-                <div class="sidebar-footer">PingWatch © 2026 | <a href="https://github.com/ardaa24" target="_blank">ardaa24</a></div>
-            </div>
-
-            <div class="main-content" style="max-width:1400px;">
-                <div class="op-layout">
-                    <div class="widget">
-                        <h3 class="widget-title">Sistem Sağlık Oranı</h3>
-                        <div class="chart-container"><canvas id="statusChart"></canvas></div>
-                        <div class="chart-stats">
-                            <div class="chart-stat"><div class="chart-stat-val val-tot" id="chartTot">0</div><div class="chart-stat-label">Toplam</div></div>
-                            <div class="chart-stat"><div class="chart-stat-val val-up" id="chartUp">0</div><div class="chart-stat-label">Online</div></div>
-                            <div class="chart-stat"><div class="chart-stat-val val-down" id="chartDown">0</div><div class="chart-stat-label">Offline</div></div>
+                <div class="topbar-right">
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <div class="user-name" id="top-user-name">Kullanıcı</div>
+                            <div class="user-role" id="top-user-role">Rol</div>
                         </div>
-                        <div class="sync-text" id="monitorLastUpdate">Son Senkronizasyon: Bekleniyor...</div>
-                    </div>
-                    <div class="widget">
-                        <h3 class="widget-title">Cihaz Matrisi</h3>
-                        <div class="heatmap-grid" id="monitor-heatmap"></div>
+                        <button class="logout-btn" onclick="handleLogout()">Çıkış Yap</button>
                     </div>
                 </div>
-            </div>
-            <footer><p>PingWatch © 2026 | <a href="https://github.com/ardaa24" target="_blank">ardaa24</a></p></footer>
-        </div>
+            </header>
 
-        <!-- MANAGEMENT MODE -->
-        <div id="management-mode" class="mode-wrapper">
-            <nav class="navbar">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <button class="mobile-hamburger" onclick="toggleSidebar()">☰</button>
-                    <a href="#" class="nav-brand" onclick="switchMode('home')">Ping<span>Watch</span><span class="nav-badge hide-mobile">Yönetim Paneli</span></a>
-                </div>
-                <div class="nav-links">
-                    <button class="nav-link" onclick="switchMode('home')">Anasayfa</button>
-                    <button class="nav-link" onclick="switchMode('monitor')">Dashboard</button>
-                    <button class="nav-link active">⚙️ Yönetim</button>
-                    <span class="user-badge" id="mgmt-user-info">—</span>
-                    <button class="logout-btn" onclick="handleLogout()">Çıkış</button>
-                </div>
-            </nav>
-            <div class="main-content">
-                <div class="mgmt-container">
-                    <div class="mgmt-tabs">
-                        <button class="mgmt-tab active" onclick="switchMgmtTab('users', this)">👥 Kullanıcılar</button>
-                        <button class="mgmt-tab" onclick="switchMgmtTab('emails', this)">📧 Mail Ayarları</button>
-                        <button class="mgmt-tab" onclick="switchMgmtTab('system', this)">⚙️ Görünüm</button>
-                    </div>
+            <!-- Content Area -->
+            <main class="content-area">
 
-                    <!-- USERS TAB -->
-                    <div id="tab-users" class="mgmt-content active">
-                        <div class="controls" style="margin-bottom:16px;">
-                            <input type="text" id="userSearchFilter" placeholder="Kullanıcı ara..." onkeyup="renderUsers()">
-                            <select id="userRoleFilter" onchange="renderUsers()" style="padding:8px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:'Inter',sans-serif;outline:none;">
-                                <option value="All">Tüm Roller</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Viewer">Viewer</option>
-                            </select>
+                <!-- HOME MODE -->
+                <div id="home-mode" class="mode-wrapper active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Toplam Cihaz</div>
+                            <div class="stat-value" id="homeTotal">0</div>
                         </div>
-                        <div class="mgmt-form-card">
-                            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="newUsername" placeholder="kullaniciadi"></div>
-                            <div class="form-group"><label>Şifre</label><input type="password" id="newPassword" placeholder="Min 6 karakter"></div>
-                            <div class="form-group"><label>Rol</label>
-                                <select id="newRole" style="padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:'Inter',sans-serif;outline:none;width:100%;">
+                        <div class="stat-card up">
+                            <div class="stat-label">Online (Aktif)</div>
+                            <div class="stat-value" id="homeActive">0</div>
+                        </div>
+                        <div class="stat-card down">
+                            <div class="stat-label">Offline (Bağlantı Yok)</div>
+                            <div class="stat-value" id="homePassive">0</div>
+                        </div>
+                    </div>
+
+                    <div class="card-panel">
+                        <div class="toolbar">
+                            <div class="input-group">
+                                <input type="text" id="searchInput" placeholder="Cihaz adı veya IP ara..." onkeyup="renderCards()" style="flex:1">
+                            </div>
+                            <div class="input-group admin-only" style="flex:2">
+                                <input type="text" id="nameInput" placeholder="Yeni Cihaz Adı">
+                                <input type="text" id="ipInput" placeholder="IP Adresi">
+                                <button class="btn btn-primary" onclick="addDevice()">Ekle</button>
+                            </div>
+                        </div>
+
+                        <div class="device-grid" id="home-cards"></div>
+                    </div>
+                </div>
+
+                <!-- MONITOR MODE -->
+                <div id="monitor-mode" class="mode-wrapper">
+                    <div class="dashboard-layout">
+                        <div class="card-panel">
+                            <div class="panel-header">Sistem Sağlık Oranı</div>
+                            <div style="height:200px;position:relative"><canvas id="statusChart"></canvas></div>
+                            <div style="text-align:center;margin-top:16px;font-size:12px;color:var(--text-muted)" id="monitorLastUpdate">
+                                Son Senkronizasyon: Bekleniyor...
+                            </div>
+                        </div>
+                        <div class="card-panel">
+                            <div class="panel-header">Ağ Topolojisi Matrisi</div>
+                            <div class="heatmap" id="monitor-heatmap"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MANAGEMENT MODE -->
+                <div id="management-mode" class="mode-wrapper">
+                    <div class="card-panel">
+                        <div class="tabs">
+                            <button class="tab-btn active" onclick="switchMgmtTab('users', this)">Kullanıcı Yönetimi</button>
+                            <button class="tab-btn" onclick="switchMgmtTab('emails', this)">E-Posta Uyarı Ayarları</button>
+                        </div>
+
+                        <!-- Users Tab -->
+                        <div id="tab-users" class="tab-content active">
+                            <div class="toolbar">
+                                <input type="text" id="userSearchFilter" placeholder="Kullanıcı ara..." onkeyup="renderUsers()" style="width:200px">
+                                <select id="userRoleFilter" onchange="renderUsers()">
+                                    <option value="All">Tüm Roller</option>
                                     <option value="Admin">Admin</option>
                                     <option value="Viewer">Viewer</option>
                                 </select>
                             </div>
-                            <button class="btn-action btn-primary" onclick="addUser()">Ekle</button>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="mgmt-table">
-                                <thead><tr><th>Kullanıcı</th><th>Rol</th><th style="text-align:right;">İşlem</th></tr></thead>
-                                <tbody id="usersTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- EMAILS TAB -->
-                    <div id="tab-emails" class="mgmt-content">
-                        <div class="info-box">
-                            <strong>💡 Bilgilendirme: Otomatik Mail için Uygulama Şifresi Kullanın</strong><br>
-                            Güvenlik için kişisel mail şifrenizi girmeyin. Google Hesabı → Güvenlik → Uygulama Şifreleri → 16 haneli kodu kullanın.
-                            <details><summary>📌 Gmail Kurulum Adımları</summary><ol><li>Google hesabınıza giriş yapın.</li><li>Güvenlik → 2 Adımlı Doğrulama aktif edin.</li><li>"Uygulama şifreleri" arayın ve oluşturun.</li><li>16 haneli şifreyi buraya girin. (Sunucu: smtp.gmail.com, Port: 587)</li></ol></details>
-                        </div>
-                        <h3 style="margin-bottom:16px;font-size:15px;">Gönderen Sunucu (SMTP)</h3>
-                        <div class="mgmt-form-card" style="flex-direction:column;">
-                            <div style="display:flex;gap:14px;flex-wrap:wrap;width:100%;">
-                                <div class="form-group" style="flex:1;min-width:200px;"><label>Gönderen Mail</label><input type="email" id="smtpEmail" placeholder="ornek@gmail.com"></div>
-                                <div class="form-group" style="flex:1;min-width:200px;"><label>SMTP Sunucu</label><input type="text" id="smtpServer" placeholder="smtp.gmail.com"></div>
-                                <div class="form-group" style="flex:0;min-width:100px;"><label>Port</label><input type="number" id="smtpPort" value="587"></div>
-                                <div class="form-group" style="flex:1;min-width:200px;"><label>Uygulama Şifresi</label><input type="password" id="smtpPass" placeholder="16 haneli kod"></div>
+                            
+                            <div style="background:var(--bg-surface-hover);padding:16px;border-radius:var(--radius-sm);margin-bottom:16px;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+                                <div style="flex:1"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">Yeni Kullanıcı Adı</label><input type="text" id="newUsername" style="width:100%"></div>
+                                <div style="flex:1"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">Şifre</label><input type="password" id="newPassword" style="width:100%"></div>
+                                <div style="flex:1"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">Rol</label>
+                                    <select id="newRole" style="width:100%"><option value="Admin">Admin</option><option value="Viewer">Viewer</option></select>
+                                </div>
+                                <button class="btn btn-primary" onclick="addUser()">Kullanıcı Oluştur</button>
                             </div>
-                            <button class="btn-action btn-primary" onclick="saveMailConfig()">Kaydet</button>
-                        </div>
-                        <h3 style="margin:20px 0 14px;font-size:15px;padding-bottom:12px;border-bottom:1px solid var(--border);">Alıcılar</h3>
-                        <div class="mgmt-form-card">
-                            <div class="form-group"><label>Ad Soyad</label><input type="text" id="recName"></div>
-                            <div class="form-group"><label>Mail Adresi</label><input type="email" id="recEmail"></div>
-                            <button class="btn-action btn-primary" onclick="addRecipient()">Ekle</button>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="mgmt-table">
-                                <thead><tr><th>Kişi</th><th>Mail</th><th style="text-align:right;">Sil</th></tr></thead>
-                                <tbody id="recTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
 
-                    <!-- SYSTEM TAB -->
-                    <div id="tab-system" class="mgmt-content">
-                        <h3 style="margin-bottom:16px;font-size:15px;">Logo Değiştir (PNG/JPG)</h3>
-                        <input type="file" id="logoInput" accept=".png,.jpg,.jpeg" style="display:none" onchange="uploadLogo()">
-                        <div class="logo-upload-box" onclick="document.getElementById('logoInput').click()">
-                            📁 Tıklayarak logo seçin (arka planı şeffaf PNG önerilir)
+                            <div class="table-wrap">
+                                <table>
+                                    <thead><tr><th>Kullanıcı Adı</th><th>Yetki Rolü</th><th style="text-align:right">İşlem</th></tr></thead>
+                                    <tbody id="usersTableBody"></tbody>
+                                </table>
+                            </div>
                         </div>
+
+                        <!-- Emails Tab -->
+                        <div id="tab-emails" class="tab-content">
+                            <div style="background:var(--accent-light);border-left:4px solid var(--accent);padding:12px 16px;border-radius:4px;margin-bottom:20px;font-size:13px;color:var(--text-main);">
+                                <strong>Bilgi:</strong> Güvenlik nedeniyle SMTP şifresi olarak "Uygulama Şifresi" kullanmanız tavsiye edilir.
+                            </div>
+                            
+                            <div class="panel-header">SMTP Sunucu Ayarları</div>
+                            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;">
+                                <div style="flex:1;min-width:200px"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">Gönderici E-Posta</label><input type="email" id="smtpEmail" style="width:100%"></div>
+                                <div style="flex:1;min-width:200px"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">SMTP Sunucu Adresi</label><input type="text" id="smtpServer" style="width:100%"></div>
+                                <div style="flex:0;min-width:100px"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">Port</label><input type="number" id="smtpPort" style="width:100%"></div>
+                                <div style="flex:1;min-width:200px"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">Şifre / Uygulama Şifresi</label><input type="password" id="smtpPass" style="width:100%"></div>
+                            </div>
+                            <button class="btn btn-primary" onclick="saveMailConfig()" style="margin-bottom:32px;">Sunucu Ayarlarını Kaydet</button>
+
+                            <div class="panel-header">Uyarı Alıcı Listesi</div>
+                            <div style="background:var(--bg-surface-hover);padding:16px;border-radius:var(--radius-sm);margin-bottom:16px;display:flex;gap:12px;align-items:flex-end;">
+                                <div style="flex:1"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">Ad Soyad</label><input type="text" id="recName" style="width:100%"></div>
+                                <div style="flex:1"><label style="font-size:12px;font-weight:600;margin-bottom:4px;display:block">E-Posta Adresi</label><input type="email" id="recEmail" style="width:100%"></div>
+                                <button class="btn btn-primary" onclick="addRecipient()">Alıcı Ekle</button>
+                            </div>
+                            
+                            <div class="table-wrap">
+                                <table>
+                                    <thead><tr><th>Alıcı Adı</th><th>E-Posta Adresi</th><th style="text-align:right">İşlem</th></tr></thead>
+                                    <tbody id="recTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-            <footer><p>PingWatch © 2026 | <a href="https://github.com/ardaa24" target="_blank">ardaa24</a></p></footer>
-        </div>
 
+            </main>
+        </div>
     </div>
 
     <script>
         /* ── SABITLER ─────────────────────────────────────────── */
-        const API = {
-            devices: '/api/devices',
-            auth:    '/api/auth',
-            admin:   '/api/admin'
-        };
+        const API = { devices: '/api/devices', auth: '/api/auth', admin: '/api/admin' };
 
         /* ── DURUM ───────────────────────────────────────────── */
-        let allData      = [];
-        let allUsers     = [];
-        let pollTimer    = null;
-        let currentMode  = 'home';
+        let allData = [];
+        let allUsers = [];
+        let pollTimer = null;
         let chartInstance = null;
 
         /* ── JWT YÖNETİMİ ────────────────────────────────────── */
         const auth = {
             setToken(token, username, role, expiresAt) {
-                localStorage.setItem('pw_token',     token);
-                localStorage.setItem('pw_username',  username);
-                localStorage.setItem('pw_role',      role);
-                localStorage.setItem('pw_expires',   expiresAt);
+                localStorage.setItem('pw_token', token);
+                localStorage.setItem('pw_username', username);
+                localStorage.setItem('pw_role', role);
+                localStorage.setItem('pw_expires', expiresAt);
             },
-            getToken()    { return localStorage.getItem('pw_token'); },
+            getToken() { return localStorage.getItem('pw_token'); },
             getUsername() { return localStorage.getItem('pw_username'); },
-            getRole()     { return localStorage.getItem('pw_role'); },
-            isAdmin()     { return this.getRole() === 'Admin'; },
+            getRole() { return localStorage.getItem('pw_role'); },
+            isAdmin() { return this.getRole() === 'Admin'; },
             isExpired() {
                 const exp = localStorage.getItem('pw_expires');
-                if (!exp) return true;
-                return new Date(exp) <= new Date();
+                return !exp || new Date(exp) <= new Date();
             },
-            isLoggedIn()  { return !!this.getToken() && !this.isExpired(); },
-            clear()       { localStorage.removeItem('pw_token'); localStorage.removeItem('pw_username'); localStorage.removeItem('pw_role'); localStorage.removeItem('pw_expires'); }
+            isLoggedIn() { return !!this.getToken() && !this.isExpired(); },
+            clear() { localStorage.clear(); }
         };
 
-        /* Tüm fetch çağrıları için merkezi API yardımcısı */
+        /* ── API YARDIMCI ────────────────────────────────────── */
         async function apiFetch(url, options = {}) {
             const token = auth.getToken();
             const headers = {
@@ -1167,29 +802,19 @@
                 ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
                 ...(options.headers || {})
             };
-
-            // FormData için Content-Type kaldır (browser otomatik ekler)
-            if (options.body instanceof FormData) delete headers['Content-Type'];
-
             const response = await fetch(url, { ...options, headers });
-
-            if (response.status === 401) {
-                auth.clear();
-                location.reload();
-                return null;
-            }
-
+            if (response.status === 401) { auth.clear(); location.reload(); return null; }
             return response;
         }
 
-        /* ── TOAST BİLDİRİM ──────────────────────────────────── */
+        /* ── TOAST ───────────────────────────────────────────── */
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.textContent = message;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3500);
+            setTimeout(() => toast.remove(), 3000);
         }
 
         /* ── UYGULAMA BAŞLANGIÇ ──────────────────────────────── */
@@ -1199,8 +824,7 @@
                 ls.style.opacity = '0';
                 ls.style.visibility = 'hidden';
                 setTimeout(() => ls.style.display = 'none', 500);
-            }, 1000);
-
+            }, 500);
             if (auth.isLoggedIn()) startApp();
         });
 
@@ -1208,11 +832,11 @@
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const errEl = document.getElementById('login-error');
-            const btn   = document.getElementById('login-btn');
+            const btn = document.getElementById('login-btn');
 
-            if (!username || !password) { errEl.style.display = 'block'; errEl.textContent = 'Kullanıcı adı ve şifre zorunludur.'; return; }
+            if (!username || !password) { errEl.style.display = 'block'; errEl.textContent = 'Bilgileri eksiksiz girin.'; return; }
 
-            btn.textContent = 'Giriş yapılıyor...';
+            btn.textContent = 'Bekleyiniz...';
             btn.disabled = true;
             errEl.style.display = 'none';
 
@@ -1222,7 +846,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-
                 const json = await res.json();
 
                 if (res.ok && json.success) {
@@ -1231,13 +854,13 @@
                     startApp();
                 } else {
                     errEl.style.display = 'block';
-                    errEl.textContent = json.error || 'Hatalı kullanıcı adı veya şifre!';
+                    errEl.textContent = json.error || 'Hatalı giriş!';
                 }
             } catch (e) {
                 errEl.style.display = 'block';
-                errEl.textContent = 'Sunucu bağlantısı kurulamadı.';
+                errEl.textContent = 'Bağlantı kurulamadı.';
             } finally {
-                btn.textContent = 'Giriş Yap';
+                btn.textContent = 'Sisteme Giriş Yap';
                 btn.disabled = false;
             }
         }
@@ -1252,163 +875,138 @@
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-app').style.display = 'flex';
 
-            const username = auth.getUsername() || '';
-            const role     = auth.getRole() || '';
-            const displayName = username.charAt(0).toUpperCase() + username.slice(1);
+            const uname = auth.getUsername() || '';
+            document.getElementById('top-user-name').textContent = uname.charAt(0).toUpperCase() + uname.slice(1);
+            document.getElementById('top-user-role').textContent = auth.getRole();
 
-            document.getElementById('home-user-info').textContent  = `${displayName} (${role})`;
-            document.getElementById('mgmt-user-info').textContent  = `${displayName} (${role})`;
-            document.getElementById('side-user-name').textContent  = displayName;
-            document.getElementById('side-user-role').textContent  = role;
-
+            // Admin değilse admin alanlarını gizle
             if (!auth.isAdmin()) {
-                document.getElementById('admin-add-form').style.display  = 'none';
-                document.getElementById('nav-admin-link').style.display  = 'none';
-                document.getElementById('side-admin-link').style.display = 'none';
-                document.getElementById('hamburger-btn').style.display   = 'none';
-                document.getElementById('viewer-back-btn').style.display = 'block';
-                switchMode('monitor');
-            } else {
-                switchMode('home');
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
             }
 
             loadDevices();
             if (!pollTimer) pollTimer = setInterval(loadDevices, 10000);
         }
 
-        /* ── MOD DEĞİŞTİRME ──────────────────────────────────── */
-        function switchMode(mode) {
-            if (mode === 'management' && !auth.isAdmin()) { showToast('Yetkisiz erişim!', 'error'); return; }
-            currentMode = mode;
+        /* ── ARAYÜZ YÖNETİMİ ─────────────────────────────────── */
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function switchMode(mode, menuEl) {
+            if (mode === 'management' && !auth.isAdmin()) { showToast('Yetkisiz!', 'error'); return; }
+            
+            // Menü aktivasyonu
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            if (menuEl) menuEl.classList.add('active');
+
+            // Başlık
+            const titles = { 'home': 'Cihaz Yönetimi', 'monitor': 'Dashboard Matris', 'management': 'Yönetim Paneli' };
+            document.getElementById('pageTitle').textContent = titles[mode];
+
+            // İçerik aktivasyonu
             document.querySelectorAll('.mode-wrapper').forEach(el => el.classList.remove('active'));
             document.getElementById(`${mode}-mode`).classList.add('active');
-            if (document.getElementById('sidebar')?.classList.contains('open')) toggleSidebar();
+            
+            // Mobilde sidebar'ı kapat
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
 
             renderCards();
             if (mode === 'management') loadAdminData();
-            if (mode === 'monitor')    initOrUpdateChart();
-        }
-
-        function toggleSidebar() {
-            const sidebar  = document.getElementById('sidebar');
-            const overlay  = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList[sidebar.classList.contains('open') ? 'add' : 'remove']('show');
+            if (mode === 'monitor') initOrUpdateChart();
         }
 
         function switchMgmtTab(tabId, btn) {
-            document.querySelectorAll('.mgmt-tab').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.mgmt-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
             document.getElementById('tab-' + tabId).classList.add('active');
         }
 
-        /* ── VERİ FORMATLAMA ─────────────────────────────────── */
         function formatTime(dateStr) {
             if (!dateStr) return null;
-            const dStr = dateStr.endsWith('Z') ? dateStr : dateStr + 'Z';
-            const d    = new Date(dStr);
+            const d = new Date(dateStr.endsWith('Z') ? dateStr : dateStr + 'Z');
             if (isNaN(d)) return null;
             return d.toLocaleDateString('tr-TR') + ' ' + d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
         }
 
-        /* ── CİHAZ YÜKLEMESİ ────────────────────────────────── */
+        /* ── VERİ & RENDER ───────────────────────────────────── */
         async function loadDevices() {
             try {
                 const res = await apiFetch(API.devices, { cache: 'no-store' });
                 if (!res) return;
                 allData = await res.json();
-                updateStats();
+                
+                const total = allData.length;
+                const active = allData.filter(d => d.isUp).length;
+                
+                document.getElementById('homeTotal').textContent = total;
+                document.getElementById('homeActive').textContent = active;
+                document.getElementById('homePassive').textContent = total - active;
+                document.getElementById('monitorLastUpdate').textContent = 'Son Senkronizasyon: ' + new Date().toLocaleTimeString('tr-TR');
+
                 renderCards();
-                if (currentMode === 'monitor') initOrUpdateChart();
-            } catch (e) { /* sessiz hata */ }
+                if (document.getElementById('monitor-mode').classList.contains('active')) initOrUpdateChart();
+            } catch (e) {}
         }
 
-        function updateStats() {
-            const total   = allData.length;
-            const active  = allData.filter(d => d.isUp).length;
-            const passive = total - active;
-            const timeStr = new Date().toLocaleTimeString('tr-TR');
-
-            document.getElementById('homeTotal').textContent   = total;
-            document.getElementById('homeActive').textContent  = active;
-            document.getElementById('homePassive').textContent = passive;
-            document.getElementById('chartTot').textContent    = total;
-            document.getElementById('chartUp').textContent     = active;
-            document.getElementById('chartDown').textContent1   = passive;
-            document.getElementById('monitorLastUpdate').textContent = 'Son Senkronizasyon: ' + timeStr;
-        }
-
-        /* ── KART RENDER ─────────────────────────────────────── */
         function renderCards() {
-            if (currentMode === 'home') {
+            const isHome = document.getElementById('home-mode').classList.contains('active');
+            const isMonitor = document.getElementById('monitor-mode').classList.contains('active');
+
+            if (isHome) {
                 const container = document.getElementById('home-cards');
-                container.innerHTML = '';
-                const search  = document.getElementById('searchInput').value.toLowerCase();
+                const search = document.getElementById('searchInput').value.toLowerCase();
                 const isAdmin = auth.isAdmin();
 
-                let filtered = allData.filter(d =>
-                    d.address.toLowerCase().includes(search) ||
-                    (d.name && d.name.toLowerCase().includes(search))
-                ).sort((a, b) => a.isUp === b.isUp ? 0 : a.isUp ? 1 : -1);
+                let filtered = allData.filter(d => d.address.toLowerCase().includes(search) || (d.name && d.name.toLowerCase().includes(search)))
+                                      .sort((a, b) => a.isUp === b.isUp ? 0 : a.isUp ? 1 : -1);
 
-                filtered.forEach(device => {
-                    const cls     = device.isUp ? 'up' : 'down';
+                container.innerHTML = filtered.map(d => {
+                    const cls = d.isUp ? 'up' : 'down';
+                    const timeText = d.isUp ? 'Şu an aktif' : (d.lastActiveTime ? `Kopma: ${formatTime(d.lastActiveTime)}` : 'Hiç bağlanmadı');
                     const actions = isAdmin ? `
-                        <div class="card-actions">
-                            <button class="btn-edit" onclick="openEditModal(${device.id}, '${device.name}', '${device.address}')">Düzenle</button>
-                            <button class="btn-del"  onclick="deleteDevice(${device.id})">Sil</button>
+                        <div class="device-actions">
+                            <button class="action-icon" onclick="openEditModal(${d.id}, '${d.name}', '${d.address}')">✎ Düzenle</button>
+                            <button class="action-icon del" onclick="deleteDevice(${d.id})">✖ Sil</button>
                         </div>` : '';
-                    const lastSeen = (!device.isUp && device.lastActiveTime)
-                        ? `<div class="last-seen">Son: ${formatTime(device.lastActiveTime) || '—'}</div>`
-                        : '';
-                    container.innerHTML += `
-                        <div class="card ${cls}">
-                            <span class="status-badge ${cls}">${device.isUp ? '● ONLINE' : '● OFFLINE'}</span>
-                            <div class="device-name">${device.name || '—'}</div>
-                            <div class="ip-addr">${device.address}</div>
-                            ${lastSeen}${actions}
-                        </div>`;
-                });
-            } else if (currentMode === 'monitor') {
-                const container = document.getElementById('monitor-heatmap');
-                container.innerHTML = '';
-                [...allData].sort((a, b) => a.isUp === b.isUp ? 0 : a.isUp ? 1 : -1).forEach(device => {
-                    const cls = device.isUp ? 'up' : 'down';
-                    const lastHtml = (!device.isUp && device.lastActiveTime)
-                        ? `<div class="tt-last">Kopma: ${formatTime(device.lastActiveTime)}</div>` : '';
-                    container.innerHTML += `
-                        <div class="matrix-cell">
-                            <div class="matrix-node ${cls}">
-                                ${device.isUp ? '✓' : '✖'}
-                                <div class="mn-tooltip">
-                                    <div class="tt-name">${device.name || 'Cihaz'}</div>
-                                    <div class="tt-ip">${device.address}</div>
-                                    <div class="tt-status ${cls}">${device.isUp ? 'AKTİF' : 'PASİF'}</div>
-                                    ${lastHtml}
+
+                    return `
+                        <div class="device-card ${cls}">
+                            <div class="device-header">
+                                <div class="device-info">
+                                    <h4>${d.name || 'İsimsiz'}</h4>
+                                    <p>${d.address}</p>
                                 </div>
+                                <span class="status-pill">${d.isUp ? 'Online' : 'Offline'}</span>
+                            </div>
+                            <div class="device-footer">
+                                <span class="last-seen-text">${timeText}</span>
+                                ${actions}
                             </div>
                         </div>`;
-                });
+                }).join('');
+            } else if (isMonitor) {
+                const container = document.getElementById('monitor-heatmap');
+                container.innerHTML = [...allData].sort((a, b) => a.isUp === b.isUp ? 0 : a.isUp ? 1 : -1).map(d => {
+                    return `<div class="node ${d.isUp ? 'up' : 'down'}" title="${d.name}\n${d.address}">${d.isUp ? '✓' : '!'}</div>`;
+                }).join('');
             }
         }
 
-        /* ── CİHAZ CRUD ──────────────────────────────────────── */
+        /* ── CRUD ────────────────────────────────────────────── */
         async function addDevice() {
             if (!auth.isAdmin()) return;
-            const name    = document.getElementById('nameInput').value.trim();
+            const name = document.getElementById('nameInput').value.trim();
             const address = document.getElementById('ipInput').value.trim();
-            if (!address) { showToast('IP adresi zorunludur!', 'error'); return; }
+            if (!address) { showToast('IP adresi girin.', 'error'); return; }
 
-            const res = await apiFetch(API.devices, {
-                method: 'POST',
-                body: JSON.stringify({ name, address })
-            });
-            if (!res) return;
-
-            if (res.ok) {
+            const res = await apiFetch(API.devices, { method: 'POST', body: JSON.stringify({ name, address }) });
+            if (res?.ok) {
                 document.getElementById('nameInput').value = '';
-                document.getElementById('ipInput').value   = '';
+                document.getElementById('ipInput').value = '';
                 showToast('Cihaz eklendi.', 'success');
                 loadDevices();
             } else {
@@ -1418,14 +1016,14 @@
         }
 
         async function deleteDevice(id) {
-            if (!auth.isAdmin() || !confirm('Cihaz silinsin mi?')) return;
+            if (!auth.isAdmin() || !confirm('Silmek istediğinize emin misiniz?')) return;
             const res = await apiFetch(`${API.devices}/${id}`, { method: 'DELETE' });
-            if (res?.ok) { showToast('Cihaz silindi.', 'success'); loadDevices(); }
+            if (res?.ok) { showToast('Silindi.', 'success'); loadDevices(); }
         }
 
         function openEditModal(id, name, address) {
-            document.getElementById('editDeviceId').value    = id;
-            document.getElementById('editNameInput').value   = name;
+            document.getElementById('editDeviceId').value = id;
+            document.getElementById('editNameInput').value = name;
             document.getElementById('editAddressInput').value = address;
             document.getElementById('editModal').classList.add('show');
         }
@@ -1433,24 +1031,18 @@
         function closeEditModal() { document.getElementById('editModal').classList.remove('show'); }
 
         async function saveEdit() {
-            const id      = document.getElementById('editDeviceId').value;
-            const name    = document.getElementById('editNameInput').value.trim();
+            const id = document.getElementById('editDeviceId').value;
+            const name = document.getElementById('editNameInput').value.trim();
             const address = document.getElementById('editAddressInput').value.trim();
-            if (!address) { showToast('IP adresi boş olamaz!', 'error'); return; }
+            if (!address) return;
 
-            const res = await apiFetch(`${API.devices}/${id}`, {
-                method: 'PUT',
-                body: JSON.stringify({ name, address })
-            });
-            if (!res) return;
-
-            if (res.ok) { closeEditModal(); showToast('Cihaz güncellendi.', 'success'); loadDevices(); }
-            else { const json = await res.json(); showToast(json.error || 'Güncelleme hatası!', 'error'); }
+            const res = await apiFetch(`${API.devices}/${id}`, { method: 'PUT', body: JSON.stringify({ name, address }) });
+            if (res?.ok) { closeEditModal(); showToast('Güncellendi.', 'success'); loadDevices(); }
+            else { const json = await res.json(); showToast(json.error || 'Hata!', 'error'); }
         }
 
-        /* ── CHART ───────────────────────────────────────────── */
         function initOrUpdateChart() {
-            const active  = allData.filter(d => d.isUp).length;
+            const active = allData.filter(d => d.isUp).length;
             const passive = allData.length - active;
 
             if (chartInstance) {
@@ -1462,72 +1054,61 @@
                     type: 'doughnut',
                     data: {
                         labels: ['Online', 'Offline'],
-                        datasets: [{ data: [active, passive], backgroundColor: ['#22c55e', '#ef4444'], borderWidth: 0 }]
+                        datasets: [{ data: [active, passive], backgroundColor: ['#16a34a', '#dc2626'], borderWidth: 0 }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '75%',
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: { color: '#94a3b8', usePointStyle: true, font: { family: 'Inter', size: 12 } }
-                            }
-                        }
+                        responsive: true, maintainAspectRatio: false, cutout: '75%',
+                        plugins: { legend: { position: 'bottom' } }
                     }
                 });
             }
         }
 
-        /* ── YÖNETİM PANELİ ──────────────────────────────────── */
+        /* ── ADMIN PANEL ─────────────────────────────────────── */
         async function loadAdminData() {
             const [uRes, mRes, rRes] = await Promise.all([
-                apiFetch(`${API.admin}/users`),
-                apiFetch(`${API.admin}/mailconfig`),
-                apiFetch(`${API.admin}/recipients`)
+                apiFetch(`${API.admin}/users`), apiFetch(`${API.admin}/mailconfig`), apiFetch(`${API.admin}/recipients`)
             ]);
 
             if (uRes?.ok) { allUsers = await uRes.json(); renderUsers(); }
             if (mRes?.ok) {
                 const cfg = await mRes.json();
                 if (cfg) {
-                    document.getElementById('smtpEmail').value  = cfg.senderEmail  || '';
-                    document.getElementById('smtpServer').value = cfg.smtpServer   || '';
-                    document.getElementById('smtpPort').value   = cfg.smtpPort     || 587;
-                    document.getElementById('smtpPass').value   = cfg.smtpPassword || '';
+                    document.getElementById('smtpEmail').value = cfg.senderEmail || '';
+                    document.getElementById('smtpServer').value = cfg.smtpServer || '';
+                    document.getElementById('smtpPort').value = cfg.smtpPort || 587;
+                    document.getElementById('smtpPass').value = cfg.smtpPassword || '';
                 }
             }
             if (rRes?.ok) {
-                const recs   = await rRes.json();
-                const tbody  = document.getElementById('recTableBody');
-                tbody.innerHTML = recs.map(r => `
+                const tbody = document.getElementById('recTableBody');
+                tbody.innerHTML = (await rRes.json()).map(r => `
                     <tr>
-                        <td><strong style="color:var(--text-primary)">${r.fullName}</strong></td>
+                        <td><strong>${r.fullName}</strong></td>
                         <td>${r.emailAddress}</td>
-                        <td style="text-align:right;"><button class="btn-action btn-danger" onclick="deleteRecipient(${r.id})">Sil</button></td>
+                        <td style="text-align:right"><button class="btn btn-danger" onclick="deleteRecipient(${r.id})">Sil</button></td>
                     </tr>`).join('');
             }
         }
 
         function renderUsers() {
-            const tbody    = document.getElementById('usersTableBody');
-            const search   = document.getElementById('userSearchFilter').value.toLowerCase().trim();
-            const roleFilter = document.getElementById('userRoleFilter').value;
-            const curUser  = auth.getUsername();
+            const tbody = document.getElementById('usersTableBody');
+            const search = document.getElementById('userSearchFilter').value.toLowerCase().trim();
+            const filter = document.getElementById('userRoleFilter').value;
+            const curUser = auth.getUsername();
 
-            let filtered = allUsers.filter(u => u.username.toLowerCase().includes(search));
-            if (roleFilter !== 'All') filtered = filtered.filter(u => u.role === roleFilter);
+            let f = allUsers.filter(u => u.username.toLowerCase().includes(search));
+            if (filter !== 'All') f = f.filter(u => u.role === filter);
 
-            tbody.innerHTML = filtered.map(u => {
-                let btn;
-                if (u.username === 'admin')      btn = `<button class="btn-action btn-danger" disabled style="opacity:.5">Kilitli</button>`;
-                else if (u.username === curUser) btn = `<button class="btn-action btn-danger" disabled style="opacity:.5">Oturum</button>`;
-                else                             btn = `<button class="btn-action btn-danger" onclick="deleteUser(${u.id})">Sil</button>`;
-
+            tbody.innerHTML = f.map(u => {
+                const roleBadge = u.role === 'Admin' ? 'badge admin' : 'badge';
+                const actionBtn = (u.username === 'admin' || u.username === curUser) 
+                    ? `<span style="font-size:12px;color:var(--text-muted)">Silinemez</span>`
+                    : `<button class="btn btn-danger" onclick="deleteUser(${u.id})">Sil</button>`;
                 return `<tr>
-                    <td><strong style="color:var(--text-primary)">${u.username}</strong></td>
-                    <td><span class="role-badge ${u.role.toLowerCase()}">${u.role}</span></td>
-                    <td style="text-align:right;">${btn}</td>
+                    <td><strong>${u.username}</strong></td>
+                    <td><span class="${roleBadge}">${u.role}</span></td>
+                    <td style="text-align:right">${actionBtn}</td>
                 </tr>`;
             }).join('');
         }
@@ -1535,58 +1116,44 @@
         async function addUser() {
             const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
-            const role     = document.getElementById('newRole').value;
-            if (!username || !password) { showToast('Kullanıcı adı ve şifre zorunludur.', 'error'); return; }
+            const role = document.getElementById('newRole').value;
+            if (!username || !password) return;
 
-            const res = await apiFetch(`${API.admin}/users`, {
-                method: 'POST',
-                body: JSON.stringify({ username, password, role })
-            });
-            if (!res) return;
-
-            const json = await res.json();
-            if (res.ok) {
+            const res = await apiFetch(`${API.admin}/users`, { method: 'POST', body: JSON.stringify({ username, password, role }) });
+            if (res?.ok) {
                 document.getElementById('newUsername').value = '';
                 document.getElementById('newPassword').value = '';
-                showToast('Kullanıcı eklendi.', 'success');
-                loadAdminData();
-            } else {
-                showToast(json.error || 'Kullanıcı eklenemedi!', 'error');
-            }
+                showToast('Kullanıcı oluşturuldu.', 'success'); loadAdminData();
+            } else { const j = await res.json(); showToast(j.error || 'Hata', 'error'); }
         }
 
         async function deleteUser(id) {
-            if (!confirm('Kullanıcı silinsin mi?')) return;
+            if (!confirm('Silmek istediğinize emin misiniz?')) return;
             const res = await apiFetch(`${API.admin}/users/${id}`, { method: 'DELETE' });
             if (res?.ok) { showToast('Kullanıcı silindi.', 'success'); loadAdminData(); }
         }
 
         async function saveMailConfig() {
             const cfg = {
-                senderEmail:  document.getElementById('smtpEmail').value.trim(),
-                smtpServer:   document.getElementById('smtpServer').value.trim(),
-                smtpPort:     parseInt(document.getElementById('smtpPort').value),
+                senderEmail: document.getElementById('smtpEmail').value.trim(),
+                smtpServer: document.getElementById('smtpServer').value.trim(),
+                smtpPort: parseInt(document.getElementById('smtpPort').value),
                 smtpPassword: document.getElementById('smtpPass').value
             };
             const res = await apiFetch(`${API.admin}/mailconfig`, { method: 'POST', body: JSON.stringify(cfg) });
-            if (res?.ok) showToast('Mail ayarları kaydedildi.', 'success');
-            else showToast('Kaydetme başarısız!', 'error');
+            if (res?.ok) showToast('Ayarlar kaydedildi.', 'success'); else showToast('Hata!', 'error');
         }
 
         async function addRecipient() {
-            const fullName     = document.getElementById('recName').value.trim();
+            const fullName = document.getElementById('recName').value.trim();
             const emailAddress = document.getElementById('recEmail').value.trim();
-            if (!fullName || !emailAddress) { showToast('Ad ve mail adresi zorunludur.', 'error'); return; }
+            if (!fullName || !emailAddress) return;
 
-            const res = await apiFetch(`${API.admin}/recipients`, {
-                method: 'POST',
-                body: JSON.stringify({ fullName, emailAddress })
-            });
+            const res = await apiFetch(`${API.admin}/recipients`, { method: 'POST', body: JSON.stringify({ fullName, emailAddress }) });
             if (res?.ok) {
-                document.getElementById('recName').value  = '';
+                document.getElementById('recName').value = '';
                 document.getElementById('recEmail').value = '';
-                showToast('Alıcı eklendi.', 'success');
-                loadAdminData();
+                showToast('Alıcı eklendi.', 'success'); loadAdminData();
             }
         }
 
@@ -1594,16 +1161,6 @@
             if (!confirm('Alıcı silinsin mi?')) return;
             const res = await apiFetch(`${API.admin}/recipients/${id}`, { method: 'DELETE' });
             if (res?.ok) { showToast('Alıcı silindi.', 'success'); loadAdminData(); }
-        }
-
-        async function uploadLogo() {
-            const file = document.getElementById('logoInput').files[0];
-            if (!file) return;
-            const formData = new FormData();
-            formData.append('file', file);
-            const res = await apiFetch(`${API.admin}/logo`, { method: 'POST', body: formData });
-            if (res?.ok) showToast('Logo güncellendi!', 'success');
-            else showToast('Logo yüklenemedi!', 'error');
         }
     </script>
 </body>
