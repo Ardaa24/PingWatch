@@ -1,38 +1,88 @@
 # PingWatch 📡
-
-PingWatch, ağ üzerindeki cihazların veya sunucuların erişilebilirliğini (uptime) gerçek zamanlı olarak izlemek için geliştirilmiş bir ağ izleme aracıdır. Bu proje, **Şişecam Soda Sanayi** bünyesindeki IT stajım süresince kurumsal ihtiyaçlar doğrultusunda geliştirilmiştir.
-
+PingWatch, kurumsal ağ altyapısındaki cihazların (sunucu, router, switch, kamera vb.) durumlarını gerçek zamanlı olarak izlemenizi sağlayan, hafif ve performanslı bir açık kaynak ağ izleme (Network Monitoring) sistemidir.
+Endüstriyel standartlarda, temiz mimari (Clean Architecture) prensiplerine sadık kalınarak .NET 10 ile geliştirilmiştir.
 ## 🚀 Özellikler
-* **Gerçek Zamanlı Takip:** AJAX entegrasyonu sayesinde sayfa yenilenmeden cihaz durumları anlık olarak güncellenir.
-* **Cihaz Durum Bildirimi:** Bağlı (Online) ve Bağlantı Yok (Offline) durumlarını görsel olarak raporlar.
-* **Kurumsal Uyumluluk:** Büyük ölçekli ağlarda sistem sürekliliğini takip etmek için optimize edilmiştir.
-* **Kullanıcı Dostu Arayüz:** Modern web teknolojileri ile temiz ve anlaşılır bir dashboard sunar.
-
-## 🛠️ Kullanılan Teknolojiler
-* **Backend:** C# (.NET)
-* **Frontend:** HTML5, CSS3, JavaScript (AJAX)
-* **Veri İletişimi:** JSON / XML (Ping yanıtlarının işlenmesi için)
-
-## 📂 Kurulum
-1. Projeyi bilgisayarınıza clone'layın:
+- **Gerçek Zamanlı Ağ İzleme:** Arka planda çalışan entegre worker service ile cihazlara periyodik ping atar.
+- **Modern & Kurumsal UI:** Açık tema, endüstriyel "Split-Screen" giriş paneli ve "Admin Dashboard" yerleşimi. (Herhangi bir ekstra CSS framework'ü gerektirmez, Vanilla CSS ve JS ile yazılmıştır).
+- **Ağ Topolojisi Matrisi (Heatmap):** Sisteminizin genel sağlık durumunu anlık renk kodlu matris haritasından izleyin.
+- **JWT Kimlik Doğrulama:** Bearer token tabanlı, güvenli oturum yönetimi. Rol tabanlı erişim kontrolü (Admin / Viewer).
+- **Hibrit Şifreleme (BCrypt + SHA256):** Parolalar modern standart olan BCrypt ile tuzlanarak saklanır. (Eski sistemlerden geçiş için SHA256 legacy desteği içerir).
+- **E-Posta Uyarıları (SMTP):** Bir cihaz çevrimdışı olduğunda (Offline), belirlediğiniz yönetici mail adreslerine anında uyarı e-postası gönderilir.
+- **SQLite & EF Core:** Kurulum gerektirmeyen, taşınabilir ve hızlı SQLite veritabanı altyapısı.
+## 🛠️ Teknolojiler
+- **Backend:** C# / .NET 10 (Web API)
+- **Mimari:** N-Tier / Clean Architecture (Core, Application, Infrastructure, Web)
+- **Veritabanı:** SQLite & Entity Framework Core
+- **Güvenlik:** JWT (JSON Web Tokens), BCrypt.Net-Next
+- **Frontend:** HTML5, Vanilla JavaScript, Vanilla CSS (CSS Variables)
+## 📦 Kurulum ve Çalıştırma
+Proje çalıştırıldığında veritabanı dosyası (`pingwatch.db`) otomatik olarak oluşturulacak ve varsayılan kullanıcılar eklenecektir.
+### Ön Koşullar
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) kurulu olmalıdır.
+### Adımlar
+1. Projeyi klonlayın:
    ```bash
-   git clone [https://github.com/Ardaa24/PingWatch.git](https://github.com/Ardaa24/PingWatch.git)
-2. Visual Studio ile .sln dosyasını açın.
-
-3. Gerekli bağımlılıkların yüklendiğinden emin olun.
-
-4. Projeyi çalıştırın (F5).
-
-## 📝 Staj Notu
-Bu proje, endüstriyel bir tesiste sistem izleme süreçlerini dijitalleştirmek ve IT ekiplerinin operasyonel verimliliğini artırmak amacıyla bir "Proof of Concept" (PoC) olarak tasarlanmıştır.
-
-## 👨‍💻 Geliştirici
-Arda Can Süren
-
+   git clone https://github.com/KULLANICI_ADINIZ/PingWatch.git
+   cd PingWatch/PingWatch
+   ```
+2. Gerekli paketleri indirin:
+   ```bash
+   dotnet restore
+   ```
+3. Veritabanını oluşturun (Entity Framework Migration):
+   ```bash
+   dotnet ef database update
+   ```
+   *(Eğer dotnet-ef aracı kurulu değilse: `dotnet tool install --global dotnet-ef` komutu ile kurabilirsiniz)*
+4. Projeyi çalıştırın:
+   ```bash
+   dotnet run
+   ```
+5. Tarayıcınızda şu adrese gidin:
+   ```
+   https://localhost:7153
+   ```
+### 🔑 Varsayılan Giriş Bilgileri
+|
+ Rol 
+|
+ Kullanıcı Adı 
+|
+ Şifre 
+|
+|
 ---
-
-<img width="1859" height="931" alt="image" src="https://github.com/user-attachments/assets/d9dae567-c9eb-4cc7-a6d3-7067cce4c2d8" />
-<img width="1854" height="921" alt="image" src="https://github.com/user-attachments/assets/d2fb8dc7-b782-44e9-9250-fe4d0e31f4db" />
-<img width="1854" height="915" alt="image" src="https://github.com/user-attachments/assets/acc91f9d-643d-45d1-8cd1-b981094e2f14" />
-
-
+|
+---
+|
+---
+|
+|
+**
+Yönetici (Admin)
+**
+|
+`admin`
+|
+`admin123`
+|
+|
+**
+İzleyici (Viewer)
+**
+|
+`viewer`
+|
+`viewer123`
+|
+*(Güvenliğiniz için kurulumdan sonra Yönetim Paneli üzerinden bu şifreleri değiştirin veya yeni kullanıcılar ekleyip eskilerini silin.)*
+## 📁 Proje Mimarisi
+Proje **Solid** ve **Clean Code** prensiplerine göre yapılandırılmıştır:
+- **`Core/`**: Veritabanı varlıkları (Entities), DTO'lar, arayüzler (Interfaces) ve ortak Result sınıfları. Dışarıya hiçbir bağımlılığı yoktur.
+- **`Application/`**: İş mantığının (Business Logic) bulunduğu servisler (`UserService`, `DeviceService`, `PingBackgroundService`).
+- **`Infrastructure/`**: Veritabanı bağlamı (`AppDbContext`), Repository sınıfları (`DeviceRepository` vb.), Şifreleme algoritmaları ve dış servisler (SMTP).
+- **`Controllers/`**: HTTP isteklerini karşılayan ince ve temiz REST API uç noktaları.
+## 🤝 Katkıda Bulunma
+Pull request'ler memnuniyetle kabul edilir. Büyük değişiklikler için lütfen önce neyi değiştirmek istediğinizi tartışmak için bir issue açın.
+## 📄 Lisans
+Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasına bakabilirsiniz.
