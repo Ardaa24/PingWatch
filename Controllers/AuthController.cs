@@ -1,38 +1,32 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PingWatch.Data;
-using PingWatch.Helpers;
-using PingWatch.Models;
+using Microsoft.AspNetCore.Mvc;
+using PingWatch.Core.Common;
+using PingWatch.Core.DTOs.Requests;
+using PingWatch.Core.Interfaces.Services;
 
 namespace PingWatch.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IUserService _userService;
 
-    public AuthController(AppDbContext context)
+    public AuthController(IUserService userService)
     {
-        _context = context;
+        _userService = userService;
     }
 
+    /// <summary>Kullanıcı girişi. Başarılı olursa JWT token döndürür.</summary>
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == model.Username);
+        if (!ModelState.IsValid)
+            return BadRequest(ApiResponse.Fail("Geçersiz istek."));
 
-        if (user == null || !PasswordHelper.VerifyPassword(model.Password, user.PasswordHash))
-        {
-            return Unauthorized("Hatalı kullanıcı adı veya şifre!");
-        }
+        var result = await _userService.LoginAsync(request, ct);
 
-        return Ok(new { message = "Giriş başarılı!", username = user.Username, role = user.Role });
+        return result.IsSuccess
+            ? Ok(ApiResponse<object>.Ok(result.Value!))
+            : Unauthorized(ApiResponse.Fail(result.Error!));
     }
-}
-
-public class LoginModel
-{
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
 }
