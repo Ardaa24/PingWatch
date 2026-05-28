@@ -1,8 +1,11 @@
 bin/
 obj/
-.vs/
-*.user
 *.db
 *.db-shm
 *.db-wal
-*.sqlite
+appsettings.Development.json
+.vs/
+.vscode/
+*.user
+*.suo
+TestResults/

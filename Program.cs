@@ -1,71 +1,43 @@
-using PingWatch.Services;
-using Microsoft.EntityFrameworkCore;
-using PingWatch.Data;
+using PingWatch.Extensions;
+using PingWatch.Infrastructure.Data;
+using PingWatch.Infrastructure.Data.Seed;
+using PingWatch.Core.Interfaces.Services;
+using PingWatch.Middleware;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// ── Servis Kayıtları ─────────────────────────────────────
 builder.Services.AddControllers();
-builder.Services.AddTransient<PingWatch.Services.EmailService>(); // Mail servisini kaydet
-builder.Services.AddHostedService<PingWorkerService>();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddOpenApi();
-builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddRepositories();
+builder.Services.AddApplicationServices();
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddSwaggerWithJwt();
+
 var app = builder.Build();
 
-app.MapControllers();
+// ── Middleware Pipeline ───────────────────────────────────
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
-
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
-app.UseDefaultFiles();
-
-app.UseStaticFiles();
-
-// Varsayılan Kullanıcıları (Admin ve Viewer) Oluşturma (Seed Data)
+// ── Database Seed ─────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<PingWatch.Data.AppDbContext>();
-
-    // Admin hesabı yoksa oluştur
-    if (!context.Users.Any(u => u.Username == "admin"))
-    {
-        context.Users.Add(new PingWatch.Models.User
-        {
-            Username = "admin",
-            PasswordHash = PingWatch.Helpers.PasswordHelper.HashPassword("admin123"),
-            Role = "Admin"
-        });
-    }
-
-    // Viewer (İzleyici) hesabı yoksa oluştur
-    if (!context.Users.Any(u => u.Username == "viewer"))
-    {
-        context.Users.Add(new PingWatch.Models.User
-        {
-            Username = "viewer",
-            PasswordHash = PingWatch.Helpers.PasswordHelper.HashPassword("viewer123"),
-            Role = "Viewer" // Yetkisi sadece izleyici
-        });
-    }
-
-    // Değişiklikleri veritabanına kaydet
-    context.SaveChanges();
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+    await DatabaseSeeder.SeedAsync(context, hasher);
 }
 
 app.Run();
